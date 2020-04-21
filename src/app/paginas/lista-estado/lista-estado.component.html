@@ -1,0 +1,41 @@
+<div class="container mt-3">
+    <div class="row">
+      <div class="col-md-8 mx-auto">
+        <app-error-msg></app-error-msg>
+        <div class="text-right">
+          <button type="button" class="btn btn-success" routerLink="/estado/criar">Novo estado</button>
+        </div>
+      </div>
+    </div>
+    <p></p>    
+    <div class="card">
+      <div class="card-header">Estados</div>
+      <div class="card-body">
+        <div *ngIf="!existemEstados()">
+          <p class="text-center text-muted">Nenhum estado cadastrado.</p>
+        </div>
+        <table class="table table-bordered text-center" *ngIf="existemEstados()">
+          <thead>
+            <tr>
+              <th scope="col">Sigla</th>
+              <th scope="col">Nome</th>
+              <th scope="col">Criado</th>
+              <th scope="col">Última Alteração</th>
+              <th scope="col">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let estado of estados">
+              <td>{{estado.sigla}}</td>
+              <td>{{estado.nome}}</td>
+              <td>{{estado.dataHoraCadastro | date:"dd/MM/yyyy HH:mm:ss"}}</td>
+              <td>{{estado.dataHoraUltimaAtualizacao | date:"dd/MM/yyyy HH:mm:ss"}}</td>
+              <td> 
+                <button type="button" class="btn btn-primary btn-sm ml-1" routerLink="/estado/editar/{{estado.id}}">Editar</button>
+                <button type="button" class="btn btn-danger btn-sm ml-1" (click)="deletaEstado(estado.id)">X</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+</div>

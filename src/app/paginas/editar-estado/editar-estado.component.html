@@ -1,0 +1,15 @@
+<div class="container mt-3">
+    <div class="row">
+      <div class="col-md-8 mx-auto">
+        <app-error-msg></app-error-msg>
+        <div class="card">
+          <div class="card-header">
+            Editar
+          </div>
+          <div class="card-body">
+            <app-form-estado [estado]="estado" (outputEstado)="atualizaEstado($event)"></app-form-estado>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

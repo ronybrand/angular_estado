@@ -65,6 +65,7 @@
           }
         },
         "serve": {
+          "proxyConfig": "./proxy.config.js",
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "browserTarget": "cliente-estado:build"
