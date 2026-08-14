@@ -7,6 +7,7 @@ import { ErrorMsgComponent } from '../../compartilhado/error-msg/error-msg.compo
 import { SpinnerComponent } from '../../compartilhado/spinner/spinner.component';
 import { EstadoService } from '../../services/estado.service';
 import { extraiMensagemErro } from '../../compartilhado/erro/extrai-mensagem-erro';
+import { subscreveComCarregamento } from '../../compartilhado/erro/subscreve-com-carregamento';
 
 @Component({
   selector: 'app-lista-estado',
@@ -26,17 +27,13 @@ export class ListaEstadoComponent implements OnInit {
   }
 
   getListaEstados() {
-    this.carregando.set(true);
-    this.estadoService.getListaEstados().subscribe({
-      next: (estados: Estado[]) => {
-        this.estados.set(estados);
-        this.carregando.set(false);
-      },
-      error: (error: HttpErrorResponse) => {
-        this.errorMsgComponent().setError(extraiMensagemErro(error, 'Falha ao buscar estados.'));
-        this.carregando.set(false);
-      },
-    });
+    subscreveComCarregamento(
+      this.estadoService.getListaEstados(),
+      this.carregando,
+      this.errorMsgComponent(),
+      'Falha ao buscar estados.',
+      (estados) => this.estados.set(estados),
+    );
   }
 
   deletaEstado(id: number) {
