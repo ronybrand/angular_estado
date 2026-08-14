@@ -1,5 +1,5 @@
 import { Component, input, output } from '@angular/core';
-import { Estado } from 'src/app/interfaces/estado';
+import { Estado } from '../../interfaces/estado';
 import { FormsModule } from '@angular/forms';
 
 @Component({

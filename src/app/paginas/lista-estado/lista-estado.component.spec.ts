@@ -4,8 +4,8 @@ import { provideRouter } from '@angular/router';
 import { Observable, Subject, of, throwError } from 'rxjs';
 
 import { ListaEstadoComponent } from './lista-estado.component';
-import { EstadoService } from 'src/app/services/estado.service';
-import { Estado } from 'src/app/interfaces/estado';
+import { EstadoService } from '../../services/estado.service';
+import { Estado } from '../../interfaces/estado';
 
 describe('ListaEstadoComponent', () => {
   const estados: Estado[] = [{ id: 1, sigla: 'SP', nome: 'São Paulo' } as Estado];

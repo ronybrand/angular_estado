@@ -4,8 +4,8 @@ import { Router, provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 
 import { CriarEstadoComponent } from './criar-estado.component';
-import { EstadoService } from 'src/app/services/estado.service';
-import { Estado } from 'src/app/interfaces/estado';
+import { EstadoService } from '../../services/estado.service';
+import { Estado } from '../../interfaces/estado';
 
 describe('CriarEstadoComponent', () => {
   let component: CriarEstadoComponent;

@@ -4,8 +4,8 @@ import { Router, provideRouter } from '@angular/router';
 import { Observable, Subject, of, throwError } from 'rxjs';
 
 import { EditarEstadoComponent } from './editar-estado.component';
-import { EstadoService } from 'src/app/services/estado.service';
-import { Estado } from 'src/app/interfaces/estado';
+import { EstadoService } from '../../services/estado.service';
+import { Estado } from '../../interfaces/estado';
 
 describe('EditarEstadoComponent', () => {
   const estado: Estado = { id: 1, sigla: 'SP', nome: 'São Paulo' } as Estado;

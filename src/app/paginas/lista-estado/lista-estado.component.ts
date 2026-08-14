@@ -2,11 +2,11 @@ import { Component, OnInit, viewChild, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Estado } from 'src/app/interfaces/estado';
-import { ErrorMsgComponent } from 'src/app/compartilhado/error-msg/error-msg.component';
-import { SpinnerComponent } from 'src/app/compartilhado/spinner/spinner.component';
-import { EstadoService } from 'src/app/services/estado.service';
-import { extraiMensagemErro } from 'src/app/compartilhado/erro/extrai-mensagem-erro';
+import { Estado } from '../../interfaces/estado';
+import { ErrorMsgComponent } from '../../compartilhado/error-msg/error-msg.component';
+import { SpinnerComponent } from '../../compartilhado/spinner/spinner.component';
+import { EstadoService } from '../../services/estado.service';
+import { extraiMensagemErro } from '../../compartilhado/erro/extrai-mensagem-erro';
 
 @Component({
   selector: 'app-lista-estado',
