@@ -6,10 +6,18 @@
     "start": "ng serve --proxy-config proxy.config.js",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "lint": "ng lint",
+    "format": "prettier --write \"src/**/*.{ts,html,scss}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,html,scss}\"",
+    "prepare": "husky"
   },
   "private": true,
   "packageManager": "npm@10.9.8",
+  "lint-staged": {
+    "*.{ts,html}": "eslint --fix",
+    "*.{ts,html,scss,json,md}": "prettier --write"
+  },
   "dependencies": {
     "@angular/common": "^21.2.0",
     "@angular/compiler": "^21.2.0",
@@ -26,9 +34,15 @@
     "@angular/build": "^21.2.21",
     "@angular/cli": "^21.2.21",
     "@angular/compiler-cli": "^21.2.0",
+    "@eslint/js": "^10.0.1",
+    "angular-eslint": "21.4.0",
+    "eslint": "^10.3.0",
+    "husky": "^9.1.7",
     "jsdom": "^28.0.0",
+    "lint-staged": "^17.3.0",
     "prettier": "^3.8.1",
     "typescript": "~5.9.2",
+    "typescript-eslint": "8.59.2",
     "vitest": "^4.0.8"
   }
 }

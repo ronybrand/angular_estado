@@ -13,7 +13,7 @@ describe('EstadoService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule]
+      imports: [HttpClientTestingModule],
     });
     service = TestBed.inject(EstadoService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -28,7 +28,7 @@ describe('EstadoService', () => {
   });
 
   it('getListaEstados should GET the list of estados', () => {
-    service.getListaEstados().subscribe(result => {
+    service.getListaEstados().subscribe((result) => {
       expect(result).toEqual([estado]);
     });
 
@@ -38,7 +38,7 @@ describe('EstadoService', () => {
   });
 
   it('getEstado should GET a single estado by id', () => {
-    service.getEstado(1).subscribe(result => {
+    service.getEstado(1).subscribe((result) => {
       expect(result).toEqual(estado);
     });
 
@@ -48,7 +48,7 @@ describe('EstadoService', () => {
   });
 
   it('addEstado should POST the estado', () => {
-    service.addEstado(estado).subscribe(result => {
+    service.addEstado(estado).subscribe((result) => {
       expect(result).toEqual(estado);
     });
 
@@ -59,7 +59,7 @@ describe('EstadoService', () => {
   });
 
   it('atualizaEstado should PUT the estado', () => {
-    service.atualizaEstado(estado).subscribe(result => {
+    service.atualizaEstado(estado).subscribe((result) => {
       expect(result).toEqual(estado);
     });
 
@@ -70,7 +70,7 @@ describe('EstadoService', () => {
   });
 
   it('deletaEstado should DELETE by id and not require a body in the response', () => {
-    service.deletaEstado(1).subscribe(result => {
+    service.deletaEstado(1).subscribe((result) => {
       expect(result).toBeNull();
     });
 

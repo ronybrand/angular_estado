@@ -5,11 +5,10 @@ import { Estado } from '../interfaces/estado';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class EstadoService {
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getListaEstados(): Observable<Estado[]> {
     const url = `${environment.apiUrl}/estado/`;

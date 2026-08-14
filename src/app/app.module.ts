@@ -18,16 +18,10 @@ import { EditarEstadoComponent } from './paginas/editar-estado/editar-estado.com
     ErrorMsgComponent,
     FormEstadoComponent,
     CriarEstadoComponent,
-    EditarEstadoComponent
+    EditarEstadoComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FormsModule
-  ],
-  providers: [
-    provideHttpClient()
-  ],
-  bootstrap: [AppComponent]
+  imports: [BrowserModule, AppRoutingModule, FormsModule],
+  providers: [provideHttpClient()],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
