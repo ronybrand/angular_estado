@@ -49,7 +49,7 @@ export function mockListaEstados(
     if (route.request().method() !== 'GET') {
       return route.fallback();
     }
-    return fulfillDelayed(route, estados, 200, delayMs);
+    return fulfillDelayed(route, estados, undefined, delayMs);
   });
 }
 
@@ -58,6 +58,6 @@ export function mockGetEstado(page: Page, estado: EstadoFixture, delayMs = 300):
     if (route.request().method() !== 'GET') {
       return route.fallback();
     }
-    return fulfillDelayed(route, estado, 200, delayMs);
+    return fulfillDelayed(route, estado, undefined, delayMs);
   });
 }

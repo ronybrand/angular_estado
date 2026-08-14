@@ -19,22 +19,14 @@ test.describe('Editar estado', () => {
     const estado = ESTADOS[0];
     await mockGetEstado(page, estado, 100);
     await page.route('**/api/estado/', (route) => {
-      const method = route.request().method();
-      if (method === 'PUT') {
-        return route.fulfill({
-          status: 200,
-          contentType: 'application/json',
-          body: route.request().postData() ?? '{}',
-        });
+      if (route.request().method() !== 'PUT') {
+        return route.fallback();
       }
-      if (method === 'GET') {
-        return route.fulfill({
-          status: 200,
-          contentType: 'application/json',
-          body: JSON.stringify(ESTADOS),
-        });
-      }
-      return route.fallback();
+      return route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: route.request().postData() ?? '{}',
+      });
     });
 
     await page.goto(`/estado/editar/${estado.id}`);
