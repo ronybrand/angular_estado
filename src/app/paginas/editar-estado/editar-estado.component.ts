@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Estado } from 'src/app/interfaces/estado';
 import { ErrorMsgComponent } from 'src/app/compartilhado/error-msg/error-msg.component';
+import { SpinnerComponent } from 'src/app/compartilhado/spinner/spinner.component';
 import { EstadoService } from 'src/app/services/estado.service';
 import { extraiMensagemErro } from 'src/app/compartilhado/erro/extrai-mensagem-erro';
 import { FormEstadoComponent } from 'src/app/compartilhado/form-estado/form-estado.component';
@@ -11,7 +12,7 @@ import { FormEstadoComponent } from 'src/app/compartilhado/form-estado/form-esta
   selector: 'app-editar-estado',
   templateUrl: './editar-estado.component.html',
   styleUrls: ['./editar-estado.component.scss'],
-  imports: [ErrorMsgComponent, FormEstadoComponent],
+  imports: [ErrorMsgComponent, SpinnerComponent, FormEstadoComponent],
 })
 export class EditarEstadoComponent implements OnInit {
   private estadoService = inject(EstadoService);
@@ -19,6 +20,7 @@ export class EditarEstadoComponent implements OnInit {
   private router = inject(Router);
 
   estado?: Estado;
+  carregando = true;
   readonly errorMsgComponent = viewChild.required(ErrorMsgComponent);
 
   ngOnInit() {
@@ -26,10 +28,15 @@ export class EditarEstadoComponent implements OnInit {
   }
 
   getEstado(id: number) {
+    this.carregando = true;
     this.estadoService.getEstado(id).subscribe({
-      next: (estado) => (this.estado = estado),
+      next: (estado) => {
+        this.estado = estado;
+        this.carregando = false;
+      },
       error: (error: HttpErrorResponse) => {
         this.errorMsgComponent().setError(extraiMensagemErro(error, 'Falha ao buscar estado.'));
+        this.carregando = false;
       },
     });
   }

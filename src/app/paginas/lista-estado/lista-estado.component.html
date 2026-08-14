@@ -13,12 +13,15 @@
   <div class="card">
     <div class="card-header">Estados</div>
     <div class="card-body">
-      @if (!existemEstados()) {
+      @if (carregando) {
+        <app-spinner></app-spinner>
+      }
+      @if (!carregando && !existemEstados()) {
         <div>
           <p class="text-center text-muted">Nenhum estado cadastrado.</p>
         </div>
       }
-      @if (existemEstados()) {
+      @if (!carregando && existemEstados()) {
         <table class="table table-bordered text-center">
           <thead>
             <tr>
