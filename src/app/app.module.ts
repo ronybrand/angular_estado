@@ -3,13 +3,14 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { ListaEstadoComponent } from './paginas/lista-estado/lista-estado.component';
 import { ErrorMsgComponent } from './compartilhado/error-msg/error-msg.component';
 import { FormEstadoComponent } from './compartilhado/form-estado/form-estado.component';
 import { CriarEstadoComponent } from './paginas/criar-estado/criar-estado.component';
 import { EditarEstadoComponent } from './paginas/editar-estado/editar-estado.component';
+import { timeoutRetryInterceptor } from './interceptors/timeout-retry.interceptor';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,7 @@ import { EditarEstadoComponent } from './paginas/editar-estado/editar-estado.com
     EditarEstadoComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule],
-  providers: [provideHttpClient()],
+  providers: [provideHttpClient(withInterceptors([timeoutRetryInterceptor]))],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
