@@ -3,10 +3,10 @@ updates:
   - package-ecosystem: npm
     directory: /
     schedule:
-      interval: weekly
+      interval: daily
     open-pull-requests-limit: 10
     groups:
-      weekly-batch:
+      daily-batch:
         patterns:
           - "*"
     ignore:
@@ -18,8 +18,8 @@ updates:
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: weekly
+      interval: daily
     groups:
-      weekly-batch:
+      daily-batch:
         patterns:
           - "*"
