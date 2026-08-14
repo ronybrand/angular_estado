@@ -3,17 +3,22 @@ updates:
   - package-ecosystem: npm
     directory: /
     schedule:
-      interval: daily
+      interval: weekly
     open-pull-requests-limit: 10
     groups:
       weekly-batch:
         patterns:
           - "*"
+    ignore:
+      # @angular-eslint's peer dependency still caps at typescript <6.1,
+      # so TS 7 major bumps from dependabot break npm ci with ERESOLVE.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: daily
+      interval: weekly
     groups:
       weekly-batch:
         patterns:
