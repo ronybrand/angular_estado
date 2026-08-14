@@ -1,24 +1,23 @@
-import { Component, ViewChild } from '@angular/core';
-import { EstadoService } from 'src/app/services/estado.service';
+import { Component, viewChild, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Estado } from 'src/app/interfaces/estado';
 import { ErrorMsgComponent } from 'src/app/compartilhado/error-msg/error-msg.component';
+import { EstadoService } from 'src/app/services/estado.service';
 import { extraiMensagemErro } from 'src/app/compartilhado/erro/extrai-mensagem-erro';
+import { FormEstadoComponent } from 'src/app/compartilhado/form-estado/form-estado.component';
 
 @Component({
   selector: 'app-criar-estado',
-  standalone: false,
   templateUrl: './criar-estado.component.html',
   styleUrls: ['./criar-estado.component.scss'],
+  imports: [ErrorMsgComponent, FormEstadoComponent],
 })
 export class CriarEstadoComponent {
-  @ViewChild(ErrorMsgComponent, { static: true }) errorMsgComponent!: ErrorMsgComponent;
+  private estadoService = inject(EstadoService);
+  private router = inject(Router);
 
-  constructor(
-    private estadoService: EstadoService,
-    private router: Router,
-  ) {}
+  readonly errorMsgComponent = viewChild.required(ErrorMsgComponent);
 
   addEstado(estado: Estado) {
     this.estadoService.addEstado(estado).subscribe({
@@ -26,7 +25,7 @@ export class CriarEstadoComponent {
         this.router.navigateByUrl('/');
       },
       error: (error: HttpErrorResponse) => {
-        this.errorMsgComponent.setError(extraiMensagemErro(error, 'Falha ao adicionar estado.'));
+        this.errorMsgComponent().setError(extraiMensagemErro(error, 'Falha ao adicionar estado.'));
       },
     });
   }

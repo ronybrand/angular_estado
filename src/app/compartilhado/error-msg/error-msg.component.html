@@ -1,3 +1,5 @@
-<div class="alert alert-danger" role="alert" aria-live="assertive" *ngIf="error">
-  {{ error }}
-</div>
+@if (error) {
+  <div class="alert alert-danger" role="alert" aria-live="assertive">
+    {{ error }}
+  </div>
+}

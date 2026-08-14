@@ -31,20 +31,11 @@ module.exports = defineConfig([
           style: 'kebab-case',
         },
       ],
-      // The app is still NgModule-based with constructor injection; the
-      // standalone/inject() migration is tracked separately and out of
-      // scope for the current lint rollout.
-      '@angular-eslint/prefer-standalone': 'off',
-      '@angular-eslint/prefer-inject': 'off',
     },
   },
   {
     files: ['**/*.html'],
     extends: [angular.configs.templateRecommended, angular.configs.templateAccessibility],
-    rules: {
-      // Templates still use *ngIf/*ngFor; migrating to @if/@for is
-      // tracked separately and out of scope for the current lint rollout.
-      '@angular-eslint/template/prefer-control-flow': 'off',
-    },
+    rules: {},
   },
 ]);

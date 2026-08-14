@@ -1,21 +1,23 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, viewChild, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { DatePipe } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Estado } from 'src/app/interfaces/estado';
 import { ErrorMsgComponent } from 'src/app/compartilhado/error-msg/error-msg.component';
 import { EstadoService } from 'src/app/services/estado.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { extraiMensagemErro } from 'src/app/compartilhado/erro/extrai-mensagem-erro';
 
 @Component({
   selector: 'app-lista-estado',
-  standalone: false,
   templateUrl: './lista-estado.component.html',
   styleUrls: ['./lista-estado.component.scss'],
+  imports: [ErrorMsgComponent, RouterLink, DatePipe],
 })
 export class ListaEstadoComponent implements OnInit {
-  public estados: Estado[];
-  @ViewChild(ErrorMsgComponent, { static: true }) errorMsgComponent!: ErrorMsgComponent;
+  private estadoService = inject(EstadoService);
 
-  constructor(private estadoService: EstadoService) {}
+  public estados: Estado[] = [];
+  readonly errorMsgComponent = viewChild.required(ErrorMsgComponent);
 
   ngOnInit() {
     this.getListaEstados();
@@ -27,7 +29,7 @@ export class ListaEstadoComponent implements OnInit {
         this.estados = estados;
       },
       error: (error: HttpErrorResponse) => {
-        this.errorMsgComponent.setError(extraiMensagemErro(error, 'Falha ao buscar estados.'));
+        this.errorMsgComponent().setError(extraiMensagemErro(error, 'Falha ao buscar estados.'));
       },
     });
   }
@@ -38,12 +40,12 @@ export class ListaEstadoComponent implements OnInit {
         this.getListaEstados();
       },
       error: (error: HttpErrorResponse) => {
-        this.errorMsgComponent.setError(extraiMensagemErro(error, 'Falha ao deletar estado.'));
+        this.errorMsgComponent().setError(extraiMensagemErro(error, 'Falha ao deletar estado.'));
       },
     });
   }
 
   existemEstados(): boolean {
-    return this.estados && this.estados.length > 0;
+    return this.estados.length > 0;
   }
 }

@@ -1,9 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Router, provideRouter } from '@angular/router';
 import { Observable, of, throwError } from 'rxjs';
 
-import { AppModule } from '../../app.module';
 import { EditarEstadoComponent } from './editar-estado.component';
 import { EstadoService } from 'src/app/services/estado.service';
 import { Estado } from 'src/app/interfaces/estado';
@@ -22,8 +21,8 @@ describe('EditarEstadoComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [AppModule],
-      providers: [{ provide: EstadoService, useValue: estadoService }],
+      imports: [EditarEstadoComponent],
+      providers: [provideRouter([]), { provide: EstadoService, useValue: estadoService }],
     }).compileComponents();
 
     const fixture: ComponentFixture<EditarEstadoComponent> =
@@ -47,7 +46,7 @@ describe('EditarEstadoComponent', () => {
       ),
     );
 
-    expect(component.errorMsgComponent.error).toBe('Estado não encontrado.');
+    expect(component.errorMsgComponent().error).toBe('Estado não encontrado.');
   });
 
   it('should navigate to the estado list after successfully updating', async () => {
@@ -71,6 +70,6 @@ describe('EditarEstadoComponent', () => {
 
     component.atualizaEstado(estado);
 
-    expect(component.errorMsgComponent.error).toBe('Nome inválido.');
+    expect(component.errorMsgComponent().error).toBe('Nome inválido.');
   });
 });
