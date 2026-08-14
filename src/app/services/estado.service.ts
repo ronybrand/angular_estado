@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Estado } from '../interfaces/estado';
@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class EstadoService {
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   getListaEstados(): Observable<Estado[]> {
     const url = `${environment.apiUrl}/estado/`;

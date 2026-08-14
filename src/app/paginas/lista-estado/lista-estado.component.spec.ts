@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpErrorResponse } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
 import { Observable, of, throwError } from 'rxjs';
 
-import { AppModule } from '../../app.module';
 import { ListaEstadoComponent } from './lista-estado.component';
 import { EstadoService } from 'src/app/services/estado.service';
 import { Estado } from 'src/app/interfaces/estado';
@@ -21,8 +21,8 @@ describe('ListaEstadoComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [AppModule],
-      providers: [{ provide: EstadoService, useValue: estadoService }],
+      imports: [ListaEstadoComponent],
+      providers: [provideRouter([]), { provide: EstadoService, useValue: estadoService }],
     }).compileComponents();
 
     const fixture: ComponentFixture<ListaEstadoComponent> =
@@ -58,7 +58,7 @@ describe('ListaEstadoComponent', () => {
       ),
     );
 
-    expect(component.errorMsgComponent.error).toBe('Serviço indisponível.');
+    expect(component.errorMsgComponent().error).toBe('Serviço indisponível.');
   });
 
   it('should reload the list after successfully deleting an estado', async () => {
@@ -81,6 +81,6 @@ describe('ListaEstadoComponent', () => {
 
     component.deletaEstado(1);
 
-    expect(component.errorMsgComponent.error).toBe('Estado possui vínculos.');
+    expect(component.errorMsgComponent().error).toBe('Estado possui vínculos.');
   });
 });

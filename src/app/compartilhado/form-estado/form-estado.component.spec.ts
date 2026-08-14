@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AppModule } from '../../app.module';
 import { FormEstadoComponent } from './form-estado.component';
 
 describe('FormEstadoComponent', () => {
@@ -9,7 +8,7 @@ describe('FormEstadoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppModule],
+      imports: [FormEstadoComponent],
     }).compileComponents();
   });
 

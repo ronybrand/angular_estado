@@ -11,15 +11,15 @@
         minlength="2"
         maxlength="2"
         size="2"
-        [(ngModel)]="estado.sigla"
+        [(ngModel)]="estado().sigla"
         [class.is-invalid]="!sigla.valid && sigla.touched"
         [attr.aria-invalid]="!sigla.valid && sigla.touched ? true : null"
         aria-describedby="sigla-erro"
         required
       />
-      <div id="sigla-erro" *ngIf="!sigla.valid && sigla.touched" class="text-danger">
-        Digite o sigla do estado.
-      </div>
+      @if (!sigla.valid && sigla.touched) {
+        <div id="sigla-erro" class="text-danger">Digite o sigla do estado.</div>
+      }
     </div>
   </div>
   <div class="form-group">
@@ -34,15 +34,15 @@
         maxlength="100"
         placeholder="Digite o nome do estado..."
         #nome="ngModel"
-        [(ngModel)]="estado.nome"
+        [(ngModel)]="estado().nome"
         [class.is-invalid]="!nome.valid && nome.touched"
         [attr.aria-invalid]="!nome.valid && nome.touched ? true : null"
         aria-describedby="nome-erro"
         required
       />
-      <div id="nome-erro" *ngIf="!nome.valid && nome.touched" class="text-danger">
-        Digite o nome do estado.
-      </div>
+      @if (!nome.valid && nome.touched) {
+        <div id="nome-erro" class="text-danger">Digite o nome do estado.</div>
+      }
     </div>
   </div>
   <div class="col-sm-12">

@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
+import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  standalone: false,
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
+  imports: [RouterLink, RouterOutlet],
 })
 export class AppComponent {
   title = 'Crud UF - Angular/Java';

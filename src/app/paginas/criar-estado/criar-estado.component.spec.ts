@@ -1,9 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Router, provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 
-import { AppModule } from '../../app.module';
 import { CriarEstadoComponent } from './criar-estado.component';
 import { EstadoService } from 'src/app/services/estado.service';
 import { Estado } from 'src/app/interfaces/estado';
@@ -19,8 +18,8 @@ describe('CriarEstadoComponent', () => {
     estadoService = { addEstado: vi.fn() };
 
     await TestBed.configureTestingModule({
-      imports: [AppModule],
-      providers: [{ provide: EstadoService, useValue: estadoService }],
+      imports: [CriarEstadoComponent],
+      providers: [provideRouter([]), { provide: EstadoService, useValue: estadoService }],
     }).compileComponents();
   });
 
@@ -53,7 +52,7 @@ describe('CriarEstadoComponent', () => {
 
     component.addEstado(estado);
 
-    expect(component.errorMsgComponent.error).toBe('Sigla já cadastrada.');
+    expect(component.errorMsgComponent().error).toBe('Sigla já cadastrada.');
   });
 
   it('should fall back to a generic message when the backend gives no detail', () => {
@@ -63,6 +62,6 @@ describe('CriarEstadoComponent', () => {
 
     component.addEstado(estado);
 
-    expect(component.errorMsgComponent.error).toBe('Falha ao adicionar estado.');
+    expect(component.errorMsgComponent().error).toBe('Falha ao adicionar estado.');
   });
 });

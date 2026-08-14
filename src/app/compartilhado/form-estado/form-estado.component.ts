@@ -1,17 +1,18 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { Estado } from 'src/app/interfaces/estado';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-form-estado',
-  standalone: false,
   templateUrl: './form-estado.component.html',
   styleUrls: ['./form-estado.component.scss'],
+  imports: [FormsModule],
 })
 export class FormEstadoComponent {
-  @Input() estado: Estado = {} as Estado;
-  @Output() outputEstado = new EventEmitter<Estado>();
+  readonly estado = input<Estado>({} as Estado);
+  readonly outputEstado = output<Estado>();
 
   onSubmit() {
-    this.outputEstado.emit(this.estado);
+    this.outputEstado.emit(this.estado());
   }
 }
