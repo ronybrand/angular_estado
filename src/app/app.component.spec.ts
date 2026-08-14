@@ -34,4 +34,11 @@ describe('AppComponent', () => {
     const compiled = fixture.debugElement.nativeElement;
     expect(compiled.querySelector('.navbar-brand').textContent).toContain('Crud UF - Angular/Java');
   });
+
+  it('should not render an orphan app-error-msg (each page owns its own instance)', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('app-error-msg')).toBeNull();
+  });
 });
