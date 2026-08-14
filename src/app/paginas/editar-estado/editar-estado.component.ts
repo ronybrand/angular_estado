@@ -24,24 +24,9 @@ export class EditarEstadoComponent {
     }
 
   getEstado(id: number) {
-    /*this.estadoService.getEstado(id)
-      .subscribe(data => {
-        this.siglaEstado = data.sigla;
-        this.nomeEstado = data.nome;
-      }, error => console.log(error));*/
-      /*this.estadoService.getEstado(id)
-      .subscribe(data => {
-        console.log(data);
-        this.estado = data;
-      }, () => this.errorMsgComponent.setError('Falha ao buscar estado.'));*/
-      this.estadoService.getEstado(id)
+    this.estadoService.getEstado(id)
       .subscribe(estado => this.estado = estado,
-        response => {});
-    /*this.estadoService.getEstado(id)
-      .subscribe((estado: Estado) => {
-        this.estado = estado;
-        console.log(this.estado);
-      }, () => { this.errorMsgComponent.setError('Falha ao buscar estado.'); });*/
+        () => this.errorMsgComponent.setError('Falha ao buscar estado.'));
   }
 
   atualizaEstado(estado: Estado) {
