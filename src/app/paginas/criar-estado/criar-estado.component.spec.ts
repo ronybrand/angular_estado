@@ -33,6 +33,11 @@ describe('CriarEstadoComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should wrap its content in the same container used by the other pages', () => {
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('.container.mt-3')).toBeTruthy();
+  });
+
   it('should navigate to the estado list after successfully creating an estado', () => {
     const router = TestBed.inject(Router);
     const navigateSpy = vi.spyOn(router, 'navigateByUrl').mockResolvedValue(true);

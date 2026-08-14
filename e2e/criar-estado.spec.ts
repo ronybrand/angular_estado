@@ -1,17 +1,9 @@
 import { test, expect } from '@playwright/test';
+import { mockAddEstado, mockErro } from './fixtures/estados';
 
 test.describe('Criar estado', () => {
   test('cria um novo estado e volta para a lista', async ({ page }) => {
-    await page.route('**/api/estado/', (route) => {
-      if (route.request().method() !== 'POST') {
-        return route.fallback();
-      }
-      return route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: route.request().postData() ?? '{}',
-      });
-    });
+    await mockAddEstado(page);
 
     await page.goto('/estado/criar');
     await page.locator('#sigla').fill('MG');
@@ -33,12 +25,7 @@ test.describe('Criar estado', () => {
   });
 
   test('exibe mensagem de erro quando a criação falha', async ({ page }) => {
-    await page.route('**/api/estado/', (route) => {
-      if (route.request().method() !== 'POST') {
-        return route.fallback();
-      }
-      return route.fulfill({ status: 500, contentType: 'application/json', body: '{}' });
-    });
+    await mockErro(page, '**/api/estado/', 500, 'POST');
 
     await page.goto('/estado/criar');
     await page.locator('#sigla').fill('MG');

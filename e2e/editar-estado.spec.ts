@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { ESTADOS, mockGetEstado } from './fixtures/estados';
+import { ESTADOS, mockGetEstado, mockAtualizaEstado, mockErro } from './fixtures/estados';
 
 test.describe('Editar estado', () => {
   test('preenche o formulário assim que o estado chega de forma assíncrona', async ({ page }) => {
@@ -18,16 +18,7 @@ test.describe('Editar estado', () => {
   test('atualiza o estado e volta para a lista', async ({ page }) => {
     const estado = ESTADOS[0];
     await mockGetEstado(page, estado, 100);
-    await page.route('**/api/estado/', (route) => {
-      if (route.request().method() !== 'PUT') {
-        return route.fallback();
-      }
-      return route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: route.request().postData() ?? '{}',
-      });
-    });
+    await mockAtualizaEstado(page);
 
     await page.goto(`/estado/editar/${estado.id}`);
     await expect(page.locator('#nome')).toHaveValue(estado.nome);
@@ -39,9 +30,7 @@ test.describe('Editar estado', () => {
   });
 
   test('exibe mensagem de erro quando a busca do estado falha', async ({ page }) => {
-    await page.route('**/api/estado/1', (route) =>
-      route.fulfill({ status: 404, contentType: 'application/json', body: '{}' }),
-    );
+    await mockErro(page, '**/api/estado/1', 404);
 
     await page.goto('/estado/editar/1');
 
