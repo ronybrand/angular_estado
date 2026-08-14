@@ -31,8 +31,8 @@ export class EstadoService {
     return this.http.put<Estado>(url, estado);
   }
 
-  deletaEstado(id: number): Observable<Estado> {
+  deletaEstado(id: number): Observable<void> {
     const url = `${environment.apiUrl}/estado/${id}`;
-    return this.http.delete<Estado>(url);
+    return this.http.delete<void>(url);
   }
 }
