@@ -3,6 +3,7 @@ import { Estado } from 'src/app/interfaces/estado';
 
 @Component({
   selector: 'app-form-estado',
+  standalone: false,
   templateUrl: './form-estado.component.html',
   styleUrls: ['./form-estado.component.scss']
 })

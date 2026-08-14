@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Estado } from 'src/app/interfaces/estado';
 import { ErrorMsgComponent } from 'src/app/compartilhado/error-msg/error-msg.component';
 import { EstadoService } from 'src/app/services/estado.service';
@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-editar-estado',
+  standalone: false,
   templateUrl: './editar-estado.component.html',
   styleUrls: ['./editar-estado.component.scss']
 })
@@ -13,7 +14,7 @@ export class EditarEstadoComponent {
   estado: Estado;
   public siglaEstado: string;
   public nomeEstado: string;
-  @ViewChild(ErrorMsgComponent, {static: true}) errorMsgComponent: ErrorMsgComponent;
+  @ViewChild(ErrorMsgComponent, {static: true}) errorMsgComponent!: ErrorMsgComponent;
 
   constructor(
     private estadoService: EstadoService,

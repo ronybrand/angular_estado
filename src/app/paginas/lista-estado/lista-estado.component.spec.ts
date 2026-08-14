@@ -1,17 +1,18 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { AppModule } from '../../app.module';
 import { ListaEstadoComponent } from './lista-estado.component';
 
 describe('ListaEstadoComponent', () => {
   let component: ListaEstadoComponent;
   let fixture: ComponentFixture<ListaEstadoComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ ListaEstadoComponent ]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [ AppModule ]
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ListaEstadoComponent);
