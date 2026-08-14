@@ -4,6 +4,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "baseUrl": "./",
+    "ignoreDeprecations": "6.0",
     "skipLibCheck": true,
     "isolatedModules": true,
     "experimentalDecorators": true,

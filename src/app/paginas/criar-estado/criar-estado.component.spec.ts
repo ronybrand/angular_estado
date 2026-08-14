@@ -52,7 +52,7 @@ describe('CriarEstadoComponent', () => {
 
     component.addEstado(estado);
 
-    expect(component.errorMsgComponent().error).toBe('Sigla já cadastrada.');
+    expect(component.errorMsgComponent().error()).toBe('Sigla já cadastrada.');
   });
 
   it('should fall back to a generic message when the backend gives no detail', () => {
@@ -62,6 +62,6 @@ describe('CriarEstadoComponent', () => {
 
     component.addEstado(estado);
 
-    expect(component.errorMsgComponent().error).toBe('Falha ao adicionar estado.');
+    expect(component.errorMsgComponent().error()).toBe('Falha ao adicionar estado.');
   });
 });

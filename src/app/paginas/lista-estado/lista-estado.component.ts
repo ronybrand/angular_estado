@@ -1,4 +1,4 @@
-import { Component, OnInit, viewChild, inject } from '@angular/core';
+import { Component, OnInit, viewChild, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -17,8 +17,8 @@ import { extraiMensagemErro } from 'src/app/compartilhado/erro/extrai-mensagem-e
 export class ListaEstadoComponent implements OnInit {
   private estadoService = inject(EstadoService);
 
-  public estados: Estado[] = [];
-  public carregando = true;
+  public estados = signal<Estado[]>([]);
+  public carregando = signal(true);
   readonly errorMsgComponent = viewChild.required(ErrorMsgComponent);
 
   ngOnInit() {
@@ -26,15 +26,15 @@ export class ListaEstadoComponent implements OnInit {
   }
 
   getListaEstados() {
-    this.carregando = true;
+    this.carregando.set(true);
     this.estadoService.getListaEstados().subscribe({
       next: (estados: Estado[]) => {
-        this.estados = estados;
-        this.carregando = false;
+        this.estados.set(estados);
+        this.carregando.set(false);
       },
       error: (error: HttpErrorResponse) => {
         this.errorMsgComponent().setError(extraiMensagemErro(error, 'Falha ao buscar estados.'));
-        this.carregando = false;
+        this.carregando.set(false);
       },
     });
   }
@@ -54,6 +54,6 @@ export class ListaEstadoComponent implements OnInit {
   }
 
   existemEstados(): boolean {
-    return this.estados.length > 0;
+    return this.estados().length > 0;
   }
 }

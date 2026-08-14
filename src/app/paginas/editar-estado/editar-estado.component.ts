@@ -1,4 +1,4 @@
-import { Component, OnInit, viewChild, inject } from '@angular/core';
+import { Component, OnInit, viewChild, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Estado } from 'src/app/interfaces/estado';
@@ -19,8 +19,8 @@ export class EditarEstadoComponent implements OnInit {
   private activatedRoute = inject(ActivatedRoute);
   private router = inject(Router);
 
-  estado?: Estado;
-  carregando = true;
+  estado = signal<Estado | undefined>(undefined);
+  carregando = signal(true);
   readonly errorMsgComponent = viewChild.required(ErrorMsgComponent);
 
   ngOnInit() {
@@ -28,15 +28,15 @@ export class EditarEstadoComponent implements OnInit {
   }
 
   getEstado(id: number) {
-    this.carregando = true;
+    this.carregando.set(true);
     this.estadoService.getEstado(id).subscribe({
       next: (estado) => {
-        this.estado = estado;
-        this.carregando = false;
+        this.estado.set(estado);
+        this.carregando.set(false);
       },
       error: (error: HttpErrorResponse) => {
         this.errorMsgComponent().setError(extraiMensagemErro(error, 'Falha ao buscar estado.'));
-        this.carregando = false;
+        this.carregando.set(false);
       },
     });
   }
