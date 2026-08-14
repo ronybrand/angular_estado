@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router, provideRouter } from '@angular/router';
-import { of, throwError } from 'rxjs';
+import { Subject, of, throwError } from 'rxjs';
 
 import { CriarEstadoComponent } from './criar-estado.component';
 import { EstadoService } from '../../services/estado.service';
@@ -63,5 +63,28 @@ describe('CriarEstadoComponent', () => {
     component.addEstado(estado);
 
     expect(component.errorMsgComponent().error()).toBe('Falha ao adicionar estado.');
+  });
+
+  it('should mark salvando while the create request is in flight, guarding against double submission', () => {
+    const subject = new Subject<Estado>();
+    estadoService.addEstado.mockReturnValue(subject);
+
+    component.addEstado(estado);
+
+    expect(component.salvando()).toBe(true);
+
+    subject.next(estado);
+
+    expect(component.salvando()).toBe(false);
+  });
+
+  it('should clear salvando when creation fails', () => {
+    estadoService.addEstado.mockReturnValue(
+      throwError(() => new HttpErrorResponse({ status: 500 })),
+    );
+
+    component.addEstado(estado);
+
+    expect(component.salvando()).toBe(false);
   });
 });

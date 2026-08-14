@@ -52,6 +52,7 @@
                     type="button"
                     class="btn btn-danger btn-sm ml-1"
                     [attr.aria-label]="'Excluir ' + estado.sigla"
+                    [disabled]="excluindo()"
                     (click)="deletaEstado(estado.id)"
                   >
                     X

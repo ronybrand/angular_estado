@@ -1,10 +1,9 @@
-import { Component, viewChild, inject } from '@angular/core';
+import { Component, viewChild, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Estado } from '../../interfaces/estado';
 import { ErrorMsgComponent } from '../../compartilhado/error-msg/error-msg.component';
 import { EstadoService } from '../../services/estado.service';
-import { extraiMensagemErro } from '../../compartilhado/erro/extrai-mensagem-erro';
+import { subscreveComProcessando } from '../../compartilhado/erro/subscreve-com-processando';
 import { FormEstadoComponent } from '../../compartilhado/form-estado/form-estado.component';
 
 @Component({
@@ -18,15 +17,15 @@ export class CriarEstadoComponent {
   private router = inject(Router);
 
   readonly errorMsgComponent = viewChild.required(ErrorMsgComponent);
+  salvando = signal(false);
 
   addEstado(estado: Estado) {
-    this.estadoService.addEstado(estado).subscribe({
-      next: () => {
-        this.router.navigateByUrl('/');
-      },
-      error: (error: HttpErrorResponse) => {
-        this.errorMsgComponent().setError(extraiMensagemErro(error, 'Falha ao adicionar estado.'));
-      },
-    });
+    subscreveComProcessando(
+      this.estadoService.addEstado(estado),
+      this.salvando,
+      this.errorMsgComponent(),
+      'Falha ao adicionar estado.',
+      () => this.router.navigateByUrl('/'),
+    );
   }
 }

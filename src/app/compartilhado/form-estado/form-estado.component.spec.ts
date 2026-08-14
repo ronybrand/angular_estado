@@ -56,4 +56,15 @@ describe('FormEstadoComponent', () => {
 
     expect(sigla.getAttribute('aria-invalid')).toBe('true');
   });
+
+  it('should disable the submit button when desabilitado is true, even with a valid form', () => {
+    fixture.componentRef.setInput('estado', { sigla: 'SP', nome: 'São Paulo' });
+    fixture.componentRef.setInput('desabilitado', true);
+    fixture.detectChanges();
+
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    const submitButton: HTMLButtonElement = compiled.querySelector('button[type="submit"]')!;
+
+    expect(submitButton.disabled).toBe(true);
+  });
 });

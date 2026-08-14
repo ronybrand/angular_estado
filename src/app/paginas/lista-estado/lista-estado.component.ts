@@ -1,13 +1,11 @@
 import { Component, OnInit, viewChild, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Estado } from '../../interfaces/estado';
 import { ErrorMsgComponent } from '../../compartilhado/error-msg/error-msg.component';
 import { SpinnerComponent } from '../../compartilhado/spinner/spinner.component';
 import { EstadoService } from '../../services/estado.service';
-import { extraiMensagemErro } from '../../compartilhado/erro/extrai-mensagem-erro';
-import { subscreveComCarregamento } from '../../compartilhado/erro/subscreve-com-carregamento';
+import { subscreveComProcessando } from '../../compartilhado/erro/subscreve-com-processando';
 
 @Component({
   selector: 'app-lista-estado',
@@ -20,6 +18,7 @@ export class ListaEstadoComponent implements OnInit {
 
   public estados = signal<Estado[]>([]);
   public carregando = signal(true);
+  public excluindo = signal(false);
   readonly errorMsgComponent = viewChild.required(ErrorMsgComponent);
 
   ngOnInit() {
@@ -27,7 +26,7 @@ export class ListaEstadoComponent implements OnInit {
   }
 
   getListaEstados() {
-    subscreveComCarregamento(
+    subscreveComProcessando(
       this.estadoService.getListaEstados(),
       this.carregando,
       this.errorMsgComponent(),
@@ -40,14 +39,13 @@ export class ListaEstadoComponent implements OnInit {
     if (!window.confirm('Tem certeza que deseja excluir este estado?')) {
       return;
     }
-    this.estadoService.deletaEstado(id).subscribe({
-      next: () => {
-        this.getListaEstados();
-      },
-      error: (error: HttpErrorResponse) => {
-        this.errorMsgComponent().setError(extraiMensagemErro(error, 'Falha ao deletar estado.'));
-      },
-    });
+    subscreveComProcessando(
+      this.estadoService.deletaEstado(id),
+      this.excluindo,
+      this.errorMsgComponent(),
+      'Falha ao deletar estado.',
+      () => this.getListaEstados(),
+    );
   }
 
   existemEstados(): boolean {

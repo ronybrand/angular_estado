@@ -11,6 +11,7 @@
           @if (!carregando() && estado()) {
             <app-form-estado
               [estado]="estado()!"
+              [desabilitado]="salvando()"
               (outputEstado)="atualizaEstado($event)"
             ></app-form-estado>
           }
