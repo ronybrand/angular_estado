@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router, provideRouter } from '@angular/router';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, Subject, of, throwError } from 'rxjs';
 
 import { EditarEstadoComponent } from './editar-estado.component';
 import { EstadoService } from 'src/app/services/estado.service';
@@ -71,5 +71,30 @@ describe('EditarEstadoComponent', () => {
     component.atualizaEstado(estado);
 
     expect(component.errorMsgComponent().error).toBe('Nome inválido.');
+  });
+
+  it('should show a loading indicator while fetching the estado', async () => {
+    const subject = new Subject<Estado>();
+    const { component, fixture } = await setup(subject);
+
+    expect(component.carregando).toBe(true);
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('app-spinner')).toBeTruthy();
+
+    subject.next(estado);
+    fixture.detectChanges();
+
+    expect(component.carregando).toBe(false);
+    expect(compiled.querySelector('app-spinner')).toBeFalsy();
+  });
+
+  it('should hide the loading indicator when loading the estado fails', async () => {
+    const { component } = await setup(
+      throwError(
+        () => new HttpErrorResponse({ error: { message: 'Estado não encontrado.' }, status: 404 }),
+      ),
+    );
+
+    expect(component.carregando).toBe(false);
   });
 });
