@@ -13,9 +13,7 @@ import { extraiMensagemErro } from 'src/app/compartilhado/erro/extrai-mensagem-e
   styleUrls: ['./editar-estado.component.scss'],
 })
 export class EditarEstadoComponent implements OnInit {
-  estado: Estado;
-  public siglaEstado: string;
-  public nomeEstado: string;
+  estado?: Estado;
   @ViewChild(ErrorMsgComponent, { static: true }) errorMsgComponent!: ErrorMsgComponent;
 
   constructor(
@@ -25,7 +23,7 @@ export class EditarEstadoComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.getEstado(this.activatedRoute.snapshot.params.id);
+    this.getEstado(this.activatedRoute.snapshot.params['id']);
   }
 
   getEstado(id: number) {

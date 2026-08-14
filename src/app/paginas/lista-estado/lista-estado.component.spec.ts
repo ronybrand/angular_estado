@@ -44,8 +44,8 @@ describe('ListaEstadoComponent', () => {
     fixture.detectChanges();
     const compiled: HTMLElement = fixture.debugElement.nativeElement;
 
-    const editar: HTMLButtonElement = compiled.querySelector('button.btn-primary');
-    const excluir: HTMLButtonElement = compiled.querySelector('button.btn-danger');
+    const editar: HTMLButtonElement = compiled.querySelector('button.btn-primary')!;
+    const excluir: HTMLButtonElement = compiled.querySelector('button.btn-danger')!;
 
     expect(editar.getAttribute('aria-label')).toBe('Editar SP');
     expect(excluir.getAttribute('aria-label')).toBe('Excluir SP');

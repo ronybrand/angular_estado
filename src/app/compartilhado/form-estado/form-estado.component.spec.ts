@@ -25,7 +25,7 @@ describe('FormEstadoComponent', () => {
 
   it('should associate the sigla error message with its input via aria-describedby', () => {
     const compiled: HTMLElement = fixture.debugElement.nativeElement;
-    const sigla: HTMLInputElement = compiled.querySelector('#sigla');
+    const sigla: HTMLInputElement = compiled.querySelector('#sigla')!;
     expect(sigla.getAttribute('aria-describedby')).toBe('sigla-erro');
 
     sigla.dispatchEvent(new Event('focus'));
@@ -37,7 +37,7 @@ describe('FormEstadoComponent', () => {
 
   it('should associate the nome error message with its input via aria-describedby', () => {
     const compiled: HTMLElement = fixture.debugElement.nativeElement;
-    const nome: HTMLInputElement = compiled.querySelector('#nome');
+    const nome: HTMLInputElement = compiled.querySelector('#nome')!;
     expect(nome.getAttribute('aria-describedby')).toBe('nome-erro');
 
     nome.dispatchEvent(new Event('focus'));
@@ -49,7 +49,7 @@ describe('FormEstadoComponent', () => {
 
   it('should mark invalid, touched fields with aria-invalid="true"', () => {
     const compiled: HTMLElement = fixture.debugElement.nativeElement;
-    const sigla: HTMLInputElement = compiled.querySelector('#sigla');
+    const sigla: HTMLInputElement = compiled.querySelector('#sigla')!;
 
     sigla.dispatchEvent(new Event('focus'));
     sigla.dispatchEvent(new Event('blur'));

@@ -12,7 +12,7 @@ import { extraiMensagemErro } from 'src/app/compartilhado/erro/extrai-mensagem-e
   styleUrls: ['./lista-estado.component.scss'],
 })
 export class ListaEstadoComponent implements OnInit {
-  public estados: Estado[];
+  public estados: Estado[] = [];
   @ViewChild(ErrorMsgComponent, { static: true }) errorMsgComponent!: ErrorMsgComponent;
 
   constructor(private estadoService: EstadoService) {}
@@ -44,6 +44,6 @@ export class ListaEstadoComponent implements OnInit {
   }
 
   existemEstados(): boolean {
-    return this.estados && this.estados.length > 0;
+    return this.estados.length > 0;
   }
 }
