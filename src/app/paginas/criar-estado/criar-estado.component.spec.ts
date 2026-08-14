@@ -4,8 +4,8 @@ import { Router, provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 
 import { CriarEstadoComponent } from './criar-estado.component';
-import { EstadoService } from 'src/app/services/estado.service';
-import { Estado } from 'src/app/interfaces/estado';
+import { EstadoService } from '../../services/estado.service';
+import { Estado } from '../../interfaces/estado';
 
 describe('CriarEstadoComponent', () => {
   let component: CriarEstadoComponent;
@@ -52,7 +52,7 @@ describe('CriarEstadoComponent', () => {
 
     component.addEstado(estado);
 
-    expect(component.errorMsgComponent().error).toBe('Sigla já cadastrada.');
+    expect(component.errorMsgComponent().error()).toBe('Sigla já cadastrada.');
   });
 
   it('should fall back to a generic message when the backend gives no detail', () => {
@@ -62,6 +62,6 @@ describe('CriarEstadoComponent', () => {
 
     component.addEstado(estado);
 
-    expect(component.errorMsgComponent().error).toBe('Falha ao adicionar estado.');
+    expect(component.errorMsgComponent().error()).toBe('Falha ao adicionar estado.');
   });
 });

@@ -1,12 +1,13 @@
-import { Component, OnInit, viewChild, inject } from '@angular/core';
+import { Component, OnInit, viewChild, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Estado } from 'src/app/interfaces/estado';
-import { ErrorMsgComponent } from 'src/app/compartilhado/error-msg/error-msg.component';
-import { SpinnerComponent } from 'src/app/compartilhado/spinner/spinner.component';
-import { EstadoService } from 'src/app/services/estado.service';
-import { extraiMensagemErro } from 'src/app/compartilhado/erro/extrai-mensagem-erro';
-import { FormEstadoComponent } from 'src/app/compartilhado/form-estado/form-estado.component';
+import { Estado } from '../../interfaces/estado';
+import { ErrorMsgComponent } from '../../compartilhado/error-msg/error-msg.component';
+import { SpinnerComponent } from '../../compartilhado/spinner/spinner.component';
+import { EstadoService } from '../../services/estado.service';
+import { extraiMensagemErro } from '../../compartilhado/erro/extrai-mensagem-erro';
+import { subscreveComCarregamento } from '../../compartilhado/erro/subscreve-com-carregamento';
+import { FormEstadoComponent } from '../../compartilhado/form-estado/form-estado.component';
 
 @Component({
   selector: 'app-editar-estado',
@@ -19,8 +20,8 @@ export class EditarEstadoComponent implements OnInit {
   private activatedRoute = inject(ActivatedRoute);
   private router = inject(Router);
 
-  estado?: Estado;
-  carregando = true;
+  estado = signal<Estado | undefined>(undefined);
+  carregando = signal(true);
   readonly errorMsgComponent = viewChild.required(ErrorMsgComponent);
 
   ngOnInit() {
@@ -28,17 +29,13 @@ export class EditarEstadoComponent implements OnInit {
   }
 
   getEstado(id: number) {
-    this.carregando = true;
-    this.estadoService.getEstado(id).subscribe({
-      next: (estado) => {
-        this.estado = estado;
-        this.carregando = false;
-      },
-      error: (error: HttpErrorResponse) => {
-        this.errorMsgComponent().setError(extraiMensagemErro(error, 'Falha ao buscar estado.'));
-        this.carregando = false;
-      },
-    });
+    subscreveComCarregamento(
+      this.estadoService.getEstado(id),
+      this.carregando,
+      this.errorMsgComponent(),
+      'Falha ao buscar estado.',
+      (estado) => this.estado.set(estado),
+    );
   }
 
   atualizaEstado(estado: Estado) {

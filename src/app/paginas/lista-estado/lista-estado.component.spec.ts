@@ -4,8 +4,8 @@ import { provideRouter } from '@angular/router';
 import { Observable, Subject, of, throwError } from 'rxjs';
 
 import { ListaEstadoComponent } from './lista-estado.component';
-import { EstadoService } from 'src/app/services/estado.service';
-import { Estado } from 'src/app/interfaces/estado';
+import { EstadoService } from '../../services/estado.service';
+import { Estado } from '../../interfaces/estado';
 
 describe('ListaEstadoComponent', () => {
   const estados: Estado[] = [{ id: 1, sigla: 'SP', nome: 'São Paulo' } as Estado];
@@ -40,7 +40,7 @@ describe('ListaEstadoComponent', () => {
     const { component } = await setup();
 
     expect(component).toBeTruthy();
-    expect(component.estados).toEqual(estados);
+    expect(component.estados()).toEqual(estados);
   });
 
   it('should label the row action buttons with the estado they act on', async () => {
@@ -62,7 +62,7 @@ describe('ListaEstadoComponent', () => {
       ),
     );
 
-    expect(component.errorMsgComponent().error).toBe('Serviço indisponível.');
+    expect(component.errorMsgComponent().error()).toBe('Serviço indisponível.');
   });
 
   it('should reload the list after successfully deleting an estado', async () => {
@@ -85,7 +85,7 @@ describe('ListaEstadoComponent', () => {
 
     component.deletaEstado(1);
 
-    expect(component.errorMsgComponent().error).toBe('Estado possui vínculos.');
+    expect(component.errorMsgComponent().error()).toBe('Estado possui vínculos.');
   });
 
   it('should ask for confirmation before deleting an estado', async () => {
@@ -112,7 +112,7 @@ describe('ListaEstadoComponent', () => {
     const subject = new Subject<Estado[]>();
     const { component, fixture } = await setup(subject);
 
-    expect(component.carregando).toBe(true);
+    expect(component.carregando()).toBe(true);
     const compiled: HTMLElement = fixture.debugElement.nativeElement;
     expect(compiled.querySelector('app-spinner')).toBeTruthy();
     expect(compiled.textContent).not.toContain('Nenhum estado cadastrado.');
@@ -120,7 +120,7 @@ describe('ListaEstadoComponent', () => {
     subject.next(estados);
     fixture.detectChanges();
 
-    expect(component.carregando).toBe(false);
+    expect(component.carregando()).toBe(false);
     expect(compiled.querySelector('app-spinner')).toBeFalsy();
   });
 
@@ -131,6 +131,6 @@ describe('ListaEstadoComponent', () => {
       ),
     );
 
-    expect(component.carregando).toBe(false);
+    expect(component.carregando()).toBe(false);
   });
 });

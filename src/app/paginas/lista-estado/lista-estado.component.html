@@ -13,15 +13,15 @@
   <div class="card">
     <div class="card-header">Estados</div>
     <div class="card-body">
-      @if (carregando) {
+      @if (carregando()) {
         <app-spinner></app-spinner>
       }
-      @if (!carregando && !existemEstados()) {
+      @if (!carregando() && !existemEstados()) {
         <div>
           <p class="text-center text-muted">Nenhum estado cadastrado.</p>
         </div>
       }
-      @if (!carregando && existemEstados()) {
+      @if (!carregando() && existemEstados()) {
         <table class="table table-bordered text-center">
           <thead>
             <tr>
@@ -33,7 +33,7 @@
             </tr>
           </thead>
           <tbody>
-            @for (estado of estados; track estado) {
+            @for (estado of estados(); track estado) {
               <tr>
                 <td>{{ estado.sigla }}</td>
                 <td>{{ estado.nome }}</td>

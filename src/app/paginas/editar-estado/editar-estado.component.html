@@ -5,12 +5,12 @@
       <div class="card">
         <div class="card-header">Editar</div>
         <div class="card-body">
-          @if (carregando) {
+          @if (carregando()) {
             <app-spinner></app-spinner>
           }
-          @if (!carregando && estado) {
+          @if (!carregando() && estado()) {
             <app-form-estado
-              [estado]="estado"
+              [estado]="estado()!"
               (outputEstado)="atualizaEstado($event)"
             ></app-form-estado>
           }

@@ -4,8 +4,8 @@ import { Router, provideRouter } from '@angular/router';
 import { Observable, Subject, of, throwError } from 'rxjs';
 
 import { EditarEstadoComponent } from './editar-estado.component';
-import { EstadoService } from 'src/app/services/estado.service';
-import { Estado } from 'src/app/interfaces/estado';
+import { EstadoService } from '../../services/estado.service';
+import { Estado } from '../../interfaces/estado';
 
 describe('EditarEstadoComponent', () => {
   const estado: Estado = { id: 1, sigla: 'SP', nome: 'São Paulo' } as Estado;
@@ -36,7 +36,7 @@ describe('EditarEstadoComponent', () => {
     const { component } = await setup();
 
     expect(component).toBeTruthy();
-    expect(component.estado).toEqual(estado);
+    expect(component.estado()).toEqual(estado);
   });
 
   it('should surface the backend error message when loading the estado fails', async () => {
@@ -46,7 +46,7 @@ describe('EditarEstadoComponent', () => {
       ),
     );
 
-    expect(component.errorMsgComponent().error).toBe('Estado não encontrado.');
+    expect(component.errorMsgComponent().error()).toBe('Estado não encontrado.');
   });
 
   it('should navigate to the estado list after successfully updating', async () => {
@@ -70,21 +70,21 @@ describe('EditarEstadoComponent', () => {
 
     component.atualizaEstado(estado);
 
-    expect(component.errorMsgComponent().error).toBe('Nome inválido.');
+    expect(component.errorMsgComponent().error()).toBe('Nome inválido.');
   });
 
   it('should show a loading indicator while fetching the estado', async () => {
     const subject = new Subject<Estado>();
     const { component, fixture } = await setup(subject);
 
-    expect(component.carregando).toBe(true);
+    expect(component.carregando()).toBe(true);
     const compiled: HTMLElement = fixture.debugElement.nativeElement;
     expect(compiled.querySelector('app-spinner')).toBeTruthy();
 
     subject.next(estado);
     fixture.detectChanges();
 
-    expect(component.carregando).toBe(false);
+    expect(component.carregando()).toBe(false);
     expect(compiled.querySelector('app-spinner')).toBeFalsy();
   });
 
@@ -95,6 +95,6 @@ describe('EditarEstadoComponent', () => {
       ),
     );
 
-    expect(component.carregando).toBe(false);
+    expect(component.carregando()).toBe(false);
   });
 });

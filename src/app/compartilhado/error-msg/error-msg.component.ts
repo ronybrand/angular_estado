@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 
 @Component({
   selector: 'app-error-msg',
@@ -6,12 +6,12 @@ import { Component } from '@angular/core';
   styleUrls: ['./error-msg.component.scss'],
 })
 export class ErrorMsgComponent {
-  public error: string | null = null;
+  public error = signal<string | null>(null);
 
   setError(error: string, tempo = 5000) {
-    this.error = error;
+    this.error.set(error);
     setTimeout(() => {
-      this.error = null;
+      this.error.set(null);
     }, tempo);
   }
 }

@@ -1,12 +1,13 @@
-import { Component, OnInit, viewChild, inject } from '@angular/core';
+import { Component, OnInit, viewChild, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Estado } from 'src/app/interfaces/estado';
-import { ErrorMsgComponent } from 'src/app/compartilhado/error-msg/error-msg.component';
-import { SpinnerComponent } from 'src/app/compartilhado/spinner/spinner.component';
-import { EstadoService } from 'src/app/services/estado.service';
-import { extraiMensagemErro } from 'src/app/compartilhado/erro/extrai-mensagem-erro';
+import { Estado } from '../../interfaces/estado';
+import { ErrorMsgComponent } from '../../compartilhado/error-msg/error-msg.component';
+import { SpinnerComponent } from '../../compartilhado/spinner/spinner.component';
+import { EstadoService } from '../../services/estado.service';
+import { extraiMensagemErro } from '../../compartilhado/erro/extrai-mensagem-erro';
+import { subscreveComCarregamento } from '../../compartilhado/erro/subscreve-com-carregamento';
 
 @Component({
   selector: 'app-lista-estado',
@@ -17,8 +18,8 @@ import { extraiMensagemErro } from 'src/app/compartilhado/erro/extrai-mensagem-e
 export class ListaEstadoComponent implements OnInit {
   private estadoService = inject(EstadoService);
 
-  public estados: Estado[] = [];
-  public carregando = true;
+  public estados = signal<Estado[]>([]);
+  public carregando = signal(true);
   readonly errorMsgComponent = viewChild.required(ErrorMsgComponent);
 
   ngOnInit() {
@@ -26,17 +27,13 @@ export class ListaEstadoComponent implements OnInit {
   }
 
   getListaEstados() {
-    this.carregando = true;
-    this.estadoService.getListaEstados().subscribe({
-      next: (estados: Estado[]) => {
-        this.estados = estados;
-        this.carregando = false;
-      },
-      error: (error: HttpErrorResponse) => {
-        this.errorMsgComponent().setError(extraiMensagemErro(error, 'Falha ao buscar estados.'));
-        this.carregando = false;
-      },
-    });
+    subscreveComCarregamento(
+      this.estadoService.getListaEstados(),
+      this.carregando,
+      this.errorMsgComponent(),
+      'Falha ao buscar estados.',
+      (estados) => this.estados.set(estados),
+    );
   }
 
   deletaEstado(id: number) {
@@ -54,6 +51,6 @@ export class ListaEstadoComponent implements OnInit {
   }
 
   existemEstados(): boolean {
-    return this.estados.length > 0;
+    return this.estados().length > 0;
   }
 }
