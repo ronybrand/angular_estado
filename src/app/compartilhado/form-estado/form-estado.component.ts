@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class FormEstadoComponent {
   readonly estado = input<Estado>({} as Estado);
+  readonly desabilitado = input(false);
   readonly outputEstado = output<Estado>();
 
   onSubmit() {

@@ -1,12 +1,10 @@
 import { Component, OnInit, viewChild, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Estado } from '../../interfaces/estado';
 import { ErrorMsgComponent } from '../../compartilhado/error-msg/error-msg.component';
 import { SpinnerComponent } from '../../compartilhado/spinner/spinner.component';
 import { EstadoService } from '../../services/estado.service';
-import { extraiMensagemErro } from '../../compartilhado/erro/extrai-mensagem-erro';
-import { subscreveComCarregamento } from '../../compartilhado/erro/subscreve-com-carregamento';
+import { subscreveComProcessando } from '../../compartilhado/erro/subscreve-com-processando';
 import { FormEstadoComponent } from '../../compartilhado/form-estado/form-estado.component';
 
 @Component({
@@ -22,6 +20,7 @@ export class EditarEstadoComponent implements OnInit {
 
   estado = signal<Estado | undefined>(undefined);
   carregando = signal(true);
+  salvando = signal(false);
   readonly errorMsgComponent = viewChild.required(ErrorMsgComponent);
 
   ngOnInit() {
@@ -29,7 +28,7 @@ export class EditarEstadoComponent implements OnInit {
   }
 
   getEstado(id: number) {
-    subscreveComCarregamento(
+    subscreveComProcessando(
       this.estadoService.getEstado(id),
       this.carregando,
       this.errorMsgComponent(),
@@ -39,13 +38,12 @@ export class EditarEstadoComponent implements OnInit {
   }
 
   atualizaEstado(estado: Estado) {
-    this.estadoService.atualizaEstado(estado).subscribe({
-      next: () => {
-        this.router.navigateByUrl('/');
-      },
-      error: (error: HttpErrorResponse) => {
-        this.errorMsgComponent().setError(extraiMensagemErro(error, 'Falha ao atualizar estado.'));
-      },
-    });
+    subscreveComProcessando(
+      this.estadoService.atualizaEstado(estado),
+      this.salvando,
+      this.errorMsgComponent(),
+      'Falha ao atualizar estado.',
+      () => this.router.navigateByUrl('/'),
+    );
   }
 }

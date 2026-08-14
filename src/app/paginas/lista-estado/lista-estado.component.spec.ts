@@ -108,6 +108,37 @@ describe('ListaEstadoComponent', () => {
     expect(estadoService.deletaEstado).not.toHaveBeenCalled();
   });
 
+  it('should disable the exclude buttons while a deletion is in flight, guarding against double clicks', async () => {
+    const { component, fixture } = await setup();
+    const subject = new Subject<void>();
+    estadoService.deletaEstado.mockReturnValue(subject);
+
+    component.deletaEstado(1);
+    fixture.detectChanges();
+
+    expect(component.excluindo()).toBe(true);
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    const excluir: HTMLButtonElement = compiled.querySelector('button.btn-danger')!;
+    expect(excluir.disabled).toBe(true);
+
+    estadoService.getListaEstados.mockReturnValue(of(estados));
+    subject.next();
+    fixture.detectChanges();
+
+    expect(component.excluindo()).toBe(false);
+  });
+
+  it('should re-enable the exclude buttons when deletion fails', async () => {
+    const { component } = await setup();
+    estadoService.deletaEstado.mockReturnValue(
+      throwError(() => new HttpErrorResponse({ status: 500 })),
+    );
+
+    component.deletaEstado(1);
+
+    expect(component.excluindo()).toBe(false);
+  });
+
   it('should show a loading indicator while fetching the list', async () => {
     const subject = new Subject<Estado[]>();
     const { component, fixture } = await setup(subject);

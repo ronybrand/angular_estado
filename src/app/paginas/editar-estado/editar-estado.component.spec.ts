@@ -97,4 +97,29 @@ describe('EditarEstadoComponent', () => {
 
     expect(component.carregando()).toBe(false);
   });
+
+  it('should mark salvando while the update request is in flight, guarding against double submission', async () => {
+    const { component } = await setup();
+    const subject = new Subject<Estado>();
+    estadoService.atualizaEstado.mockReturnValue(subject);
+
+    component.atualizaEstado(estado);
+
+    expect(component.salvando()).toBe(true);
+
+    subject.next(estado);
+
+    expect(component.salvando()).toBe(false);
+  });
+
+  it('should clear salvando when updating fails', async () => {
+    const { component } = await setup();
+    estadoService.atualizaEstado.mockReturnValue(
+      throwError(() => new HttpErrorResponse({ status: 500 })),
+    );
+
+    component.atualizaEstado(estado);
+
+    expect(component.salvando()).toBe(false);
+  });
 });

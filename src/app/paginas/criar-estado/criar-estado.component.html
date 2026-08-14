@@ -4,7 +4,10 @@
     <div class="card">
       <div class="card-header">Criar</div>
       <div class="card-body">
-        <app-form-estado (outputEstado)="addEstado($event)"></app-form-estado>
+        <app-form-estado
+          [desabilitado]="salvando()"
+          (outputEstado)="addEstado($event)"
+        ></app-form-estado>
       </div>
     </div>
   </div>
