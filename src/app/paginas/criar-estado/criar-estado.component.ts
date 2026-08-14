@@ -6,14 +6,15 @@ import { ErrorMsgComponent } from 'src/app/compartilhado/error-msg/error-msg.com
 
 @Component({
   selector: 'app-criar-estado',
+  standalone: false,
   templateUrl: './criar-estado.component.html',
   styleUrls: ['./criar-estado.component.scss']
 })
 export class CriarEstadoComponent {
-  @ViewChild(ErrorMsgComponent, {static: true}) errorMsgComponent: ErrorMsgComponent;
+  @ViewChild(ErrorMsgComponent, {static: true}) errorMsgComponent!: ErrorMsgComponent;
 
   constructor(private estadoService: EstadoService, private router: Router) { }
- 
+
   addEstado(estado: Estado) {
     this.estadoService.addEstado(estado)
       .subscribe(

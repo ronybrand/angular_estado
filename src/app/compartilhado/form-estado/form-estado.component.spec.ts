@@ -1,17 +1,18 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { AppModule } from '../../app.module';
 import { FormEstadoComponent } from './form-estado.component';
 
 describe('FormEstadoComponent', () => {
   let component: FormEstadoComponent;
   let fixture: ComponentFixture<FormEstadoComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ FormEstadoComponent ]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [ AppModule ]
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(FormEstadoComponent);

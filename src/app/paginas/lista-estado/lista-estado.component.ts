@@ -5,13 +5,14 @@ import { EstadoService } from 'src/app/services/estado.service';
 
 @Component({
   selector: 'app-lista-estado',
+  standalone: false,
   templateUrl: './lista-estado.component.html',
   styleUrls: ['./lista-estado.component.scss']
 })
 export class ListaEstadoComponent implements OnInit {
 
   public estados: Estado[];
-  @ViewChild(ErrorMsgComponent, {static: true}) errorMsgComponent: ErrorMsgComponent;
+  @ViewChild(ErrorMsgComponent, {static: true}) errorMsgComponent!: ErrorMsgComponent;
 
 
   constructor(private estadoService: EstadoService) { }
@@ -26,17 +27,17 @@ export class ListaEstadoComponent implements OnInit {
         this.estados = estados;
       }, () => { this.errorMsgComponent.setError('Falha ao buscar estados.'); });
   }
- 
+
   deletaEstado(id: number) {
     this.estadoService.deletaEstado(id)
       .subscribe(() => {
         this.getListaEstados();
       }, () => { this.errorMsgComponent.setError('Falha ao deletar estado.'); });
   }
- 
+
   existemEstados(): boolean {
     return this.estados && this.estados.length > 0;
   }
- 
+
 
 }

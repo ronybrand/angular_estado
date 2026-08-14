@@ -7,7 +7,7 @@
             Editar
           </div>
           <div class="card-body">
-            <app-form-estado [estado]="estado" (outputEstado)="atualizaEstado($event)"></app-form-estado>
+            <app-form-estado *ngIf="estado" [estado]="estado" (outputEstado)="atualizaEstado($event)"></app-form-estado>
           </div>
         </div>
       </div>

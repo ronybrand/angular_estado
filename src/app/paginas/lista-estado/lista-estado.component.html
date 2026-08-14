@@ -7,7 +7,7 @@
         </div>
       </div>
     </div>
-    <p></p>    
+    <p></p>
     <div class="card">
       <div class="card-header">Estados</div>
       <div class="card-body">
@@ -30,7 +30,7 @@
               <td>{{estado.nome}}</td>
               <td>{{estado.dataHoraCadastro | date:"dd/MM/yyyy HH:mm:ss"}}</td>
               <td>{{estado.dataHoraUltimaAtualizacao | date:"dd/MM/yyyy HH:mm:ss"}}</td>
-              <td> 
+              <td>
                 <button type="button" class="btn btn-primary btn-sm ml-1" routerLink="/estado/editar/{{estado.id}}">Editar</button>
                 <button type="button" class="btn btn-danger btn-sm ml-1" (click)="deletaEstado(estado.id)">X</button>
               </td>
