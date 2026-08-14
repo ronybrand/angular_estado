@@ -9,29 +9,25 @@ import { Observable } from 'rxjs';
 })
 export class EstadoService {
   private http = inject(HttpClient);
+  private readonly baseUrl = `${environment.apiUrl}/estado`;
 
   getListaEstados(): Observable<Estado[]> {
-    const url = `${environment.apiUrl}/estado/`;
-    return this.http.get<Estado[]>(url);
+    return this.http.get<Estado[]>(`${this.baseUrl}/`);
   }
 
   getEstado(id: number): Observable<Estado> {
-    const url = `${environment.apiUrl}/estado/${id}`;
-    return this.http.get<Estado>(url);
+    return this.http.get<Estado>(`${this.baseUrl}/${id}`);
   }
 
   addEstado(estado: Estado): Observable<Estado> {
-    const url = `${environment.apiUrl}/estado/`;
-    return this.http.post<Estado>(url, estado);
+    return this.http.post<Estado>(`${this.baseUrl}/`, estado);
   }
 
   atualizaEstado(estado: Estado): Observable<Estado> {
-    const url = `${environment.apiUrl}/estado/`;
-    return this.http.put<Estado>(url, estado);
+    return this.http.put<Estado>(`${this.baseUrl}/`, estado);
   }
 
   deletaEstado(id: number): Observable<void> {
-    const url = `${environment.apiUrl}/estado/${id}`;
-    return this.http.delete<void>(url);
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 }
