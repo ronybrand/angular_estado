@@ -6,13 +6,8 @@ import { ErrorMsgComponent } from './compartilhado/error-msg/error-msg.component
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule
-      ],
-      declarations: [
-        AppComponent,
-        ErrorMsgComponent
-      ],
+      imports: [RouterTestingModule],
+      declarations: [AppComponent, ErrorMsgComponent],
     }).compileComponents();
   });
 

@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
   selector: 'app-root',
   standalone: false,
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
   title = 'Crud UF - Angular/Java';

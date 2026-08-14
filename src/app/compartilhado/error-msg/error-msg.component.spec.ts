@@ -9,10 +9,9 @@ describe('ErrorMsgComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ErrorMsgComponent ],
-      imports: [ CommonModule ]
-    })
-    .compileComponents();
+      declarations: [ErrorMsgComponent],
+      imports: [CommonModule],
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -23,5 +22,14 @@ describe('ErrorMsgComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should announce the error to assistive technology via role="alert" and aria-live', () => {
+    component.setError('Falha ao buscar estado.');
+    fixture.detectChanges();
+
+    const alertEl: HTMLElement = fixture.debugElement.nativeElement.querySelector('.alert-danger');
+    expect(alertEl.getAttribute('role')).toBe('alert');
+    expect(alertEl.getAttribute('aria-live')).toBe('assertive');
   });
 });
