@@ -7,11 +7,14 @@ import { Component, signal } from '@angular/core';
 })
 export class ErrorMsgComponent {
   public error = signal<string | null>(null);
+  public requestId = signal<string | null>(null);
 
-  setError(error: string, tempo = 5000) {
+  setError(error: string, requestId: string | null = null, tempo = 5000) {
     this.error.set(error);
+    this.requestId.set(requestId);
     setTimeout(() => {
       this.error.set(null);
+      this.requestId.set(null);
     }, tempo);
   }
 }

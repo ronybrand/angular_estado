@@ -1,5 +1,8 @@
 @if (error()) {
   <div class="alert alert-danger" role="alert" aria-live="assertive">
     {{ error() }}
+    @if (requestId()) {
+      <small class="d-block text-muted">ID de referência: {{ requestId() }}</small>
+    }
   </div>
 }
