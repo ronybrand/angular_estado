@@ -30,4 +30,20 @@ describe('ErrorMsgComponent', () => {
     expect(alertEl.getAttribute('role')).toBe('alert');
     expect(alertEl.getAttribute('aria-live')).toBe('assertive');
   });
+
+  it('should show the requestId when provided', () => {
+    component.setError('Falha ao buscar estado.', 'abc-123');
+    fixture.detectChanges();
+
+    const el: HTMLElement = fixture.debugElement.nativeElement;
+    expect(el.textContent).toContain('abc-123');
+  });
+
+  it('should not render a requestId element when none is provided', () => {
+    component.setError('Falha ao buscar estado.');
+    fixture.detectChanges();
+
+    const el: HTMLElement = fixture.debugElement.nativeElement;
+    expect(el.querySelector('small')).toBeNull();
+  });
 });
