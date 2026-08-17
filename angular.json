@@ -49,6 +49,11 @@
               ],
               "outputHashing": "all",
               "sourceMap": true,
+              "optimization": {
+                "styles": {
+                  "inlineCritical": false
+                }
+              },
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
