@@ -15,6 +15,11 @@ if ! docker info >/dev/null 2>&1; then
   exit 0
 fi
 
+# Pinado por digest (em vez de :latest) pra build reprodutivel e pra nao
+# puxar uma imagem trocada silenciosamente do Docker Hub. Atualizar rodando
+# `docker pull rhysd/actionlint:latest` e copiando o digest reportado.
+ACTIONLINT_IMAGE="rhysd/actionlint@sha256:b1934ee5f1c509618f2508e6eb47ee0d3520686341fec936f3b79331f9315667"
+
 # MSYS_NO_PATHCONV evita que o Git Bash no Windows reescreva os paths
 # absolutos (/repo) do container em paths do host antes de chegar no docker.
-MSYS_NO_PATHCONV=1 docker run --rm -v "$PWD:/repo" -w /repo rhysd/actionlint:latest -color
+MSYS_NO_PATHCONV=1 docker run --rm -v "$PWD:/repo" -w /repo "$ACTIONLINT_IMAGE" -color
