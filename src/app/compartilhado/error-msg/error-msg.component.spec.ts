@@ -46,4 +46,23 @@ describe('ErrorMsgComponent', () => {
     const el: HTMLElement = fixture.debugElement.nativeElement;
     expect(el.querySelector('small')).toBeNull();
   });
+
+  it('should not let an earlier error clear a newer one that arrived before the first timeout', () => {
+    vi.useFakeTimers();
+
+    component.setError('Erro 1', null, 5000);
+    vi.advanceTimersByTime(3000);
+    component.setError('Erro 2', null, 5000);
+
+    // Momento em que somente o timeout do "Erro 1" (agendado aos 5000ms
+    // originais) já disparou - o "Erro 2" tem seu próprio prazo de 5000ms
+    // a partir de quando foi definido e ainda não deveria ter sido limpo.
+    vi.advanceTimersByTime(2000);
+    expect(component.error()).toBe('Erro 2');
+
+    vi.advanceTimersByTime(3000);
+    expect(component.error()).toBeNull();
+
+    vi.useRealTimers();
+  });
 });

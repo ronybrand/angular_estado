@@ -17,8 +17,11 @@
         <app-spinner></app-spinner>
       }
       @if (!carregando() && !existemEstados()) {
-        <div>
-          <p class="text-center text-muted">Nenhum estado cadastrado.</p>
+        <div class="text-center text-muted py-3">
+          <p>Nenhum estado cadastrado.</p>
+          <button type="button" class="btn btn-success btn-sm" routerLink="/estado/criar">
+            Criar o primeiro estado
+          </button>
         </div>
       }
       @if (!carregando() && existemEstados()) {
@@ -33,7 +36,7 @@
             </tr>
           </thead>
           <tbody>
-            @for (estado of estados(); track estado) {
+            @for (estado of estados(); track estado.id) {
               <tr>
                 <td>{{ estado.sigla }}</td>
                 <td>{{ estado.nome }}</td>
@@ -55,7 +58,7 @@
                     [disabled]="excluindo()"
                     (click)="deletaEstado(estado.id)"
                   >
-                    X
+                    Excluir
                   </button>
                 </td>
               </tr>

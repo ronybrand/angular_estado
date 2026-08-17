@@ -24,7 +24,7 @@ export class EditarEstadoComponent implements OnInit {
   readonly errorMsgComponent = viewChild.required(ErrorMsgComponent);
 
   ngOnInit() {
-    this.getEstado(this.activatedRoute.snapshot.params['id']);
+    this.getEstado(Number(this.activatedRoute.snapshot.params['id']));
   }
 
   getEstado(id: number) {
