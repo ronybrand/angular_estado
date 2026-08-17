@@ -9,7 +9,18 @@ on:
 
 jobs:
   deploy:
-    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    # workflow_run inclui PRs de fora (inclusive forks), ja que o CI roda em
+    # pull_request - so faz deploy se o CI que passou foi disparado por um
+    # push (codigo ja mergeado em master), nunca pelo head de um PR nao
+    # confiavel. A restricao de sub no trust policy OIDC (terraform) nao
+    # protege aqui: o contexto do token reflete o branch do workflow deploy.yml
+    # (sempre master via workflow_run), nao o branch/PR de origem do head_sha
+    # que seria de fato buildado e publicado no S3/CloudFront.
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.event == 'push' &&
+       github.event.workflow_run.head_repository.full_name == github.repository)
     runs-on: ubuntu-latest
     permissions:
       id-token: write
