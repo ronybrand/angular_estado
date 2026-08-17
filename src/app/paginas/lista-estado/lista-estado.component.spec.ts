@@ -139,6 +139,20 @@ describe('ListaEstadoComponent', () => {
     expect(component.excluindo()).toBe(false);
   });
 
+  it('should keep the same row DOM node across re-renders identified by estado.id', async () => {
+    const { component, fixture } = await setup();
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    const rowBefore = compiled.querySelector('tbody tr');
+
+    // Mesmo id, objeto com identidade diferente (como viria de um novo GET) -
+    // com track por id o Angular deve reutilizar o mesmo nó, não recriar.
+    component.estados.set([{ ...estados[0] }]);
+    fixture.detectChanges();
+
+    const rowAfter = compiled.querySelector('tbody tr');
+    expect(rowAfter).toBe(rowBefore);
+  });
+
   it('should show a loading indicator while fetching the list', async () => {
     const subject = new Subject<Estado[]>();
     const { component, fixture } = await setup(subject);

@@ -33,7 +33,7 @@
             </tr>
           </thead>
           <tbody>
-            @for (estado of estados(); track estado) {
+            @for (estado of estados(); track estado.id) {
               <tr>
                 <td>{{ estado.sigla }}</td>
                 <td>{{ estado.nome }}</td>
