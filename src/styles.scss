@@ -1,1 +1,73 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --brand: #155e63;
+  --brand-dark: #0f4448;
+  --success: #2f7a4f;
+  --danger: #b4432e;
+  --font-display: 'Space Grotesk', var(--bs-font-sans-serif);
+}
+
+body {
+  font-family: 'Inter', var(--bs-font-sans-serif);
+}
+
+h1,
+h2,
+h3,
+.card-header,
+.navbar-brand {
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+
+:root,
+[data-bs-theme='light'] {
+  --bs-primary: var(--brand);
+  --bs-primary-rgb: 21, 94, 99;
+  --bs-success: var(--success);
+  --bs-success-rgb: 47, 122, 79;
+  --bs-danger: var(--danger);
+  --bs-danger-rgb: 180, 67, 46;
+  --bs-link-color: var(--brand);
+  --bs-link-color-rgb: 21, 94, 99;
+  --bs-link-hover-color: var(--brand-dark);
+  --bs-link-hover-color-rgb: 15, 68, 72;
+}
+
+.btn-primary {
+  --bs-btn-bg: var(--brand);
+  --bs-btn-border-color: var(--brand);
+  --bs-btn-hover-bg: var(--brand-dark);
+  --bs-btn-hover-border-color: var(--brand-dark);
+  --bs-btn-active-bg: var(--brand-dark);
+  --bs-btn-active-border-color: var(--brand-dark);
+}
+
+.btn-success {
+  --bs-btn-bg: var(--success);
+  --bs-btn-border-color: var(--success);
+}
+
+.btn-danger {
+  --bs-btn-bg: var(--danger);
+  --bs-btn-border-color: var(--danger);
+}
+
+.form-control:focus-visible,
+.form-control:focus,
+.btn:focus-visible {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 0.2rem rgba(21, 94, 99, 0.25);
+}
+
+.text-mono {
+  font-family: var(--bs-font-monospace);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
