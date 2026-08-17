@@ -2,13 +2,14 @@
 
 Revisão feita em 2026-08-17 na branch `fix/bugs-e-modernizacao`. Itens de copy/acessibilidade/scaffold já foram corrigidos nesta branch. `chore/migrar-bootstrap-5` foi mergeada em `master` em 2026-08-17 (Bootstrap 5.3.8 via npm, sem resíduos de classes Bootstrap 4). Este documento registra o que ficou pendente e por quê.
 
-## Pendente: identidade visual própria (item 1)
+## Concluído: identidade visual própria (item 1)
 
-**Achado:** o app não tem nenhuma identidade visual — `styles.scss` e todos os `.scss` de componentes estão vazios, e o layout é o Bootstrap padrão sem paleta, tipografia ou conceito de layout próprios.
+Implementado em `feature/design-visual`. Decisão: manter Bootstrap 5 e customizá-lo via CSS variables, em vez de migrar para Tailwind — menos esforço, zero risco de quebrar a build, e mais fácil de justificar ("customizei o tema do Bootstrap com design tokens") num contexto de avaliação técnica onde o foco é backend.
 
-**Status:** migração para Bootstrap 5 concluída — o bloqueio técnico foi removido. Próximo passo liberado.
-
-**Próximo passo sugerido:** abrir uma branch dedicada (ex.: `feature/design-visual`) e aplicar um design system real: paleta (4–6 cores nomeadas), par de tipografias (display + texto), conceito de layout e um elemento de assinatura — em vez de continuar no Bootstrap sem customização.
+- Paleta própria (`--brand`, `--success`, `--danger`) sobrescrevendo as variáveis do Bootstrap 5 (`--bs-primary`, `--bs-btn-bg`, etc.), incluindo o estado `disabled` dos botões.
+- Tipografia: Inter (corpo) + Space Grotesk (títulos/headers de card), via Google Fonts.
+- Badge redondo para a sigla do estado, datas em fonte monoespaçada, ícones inline (SVG copiados do Bootstrap Icons, sem adicionar a dependência inteira só por 4 ícones).
+- `prefers-reduced-motion` e foco visível (`:focus-visible`) tratados globalmente em `src/styles.scss`.
 
 ## Concluído nesta branch
 
