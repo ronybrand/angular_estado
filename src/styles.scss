@@ -52,6 +52,11 @@ h3,
   --bs-btn-border-color: var(--danger);
 }
 
+.btn svg {
+  margin-right: 0.25rem;
+  vertical-align: -0.125em;
+}
+
 .form-control:focus-visible,
 .form-control:focus,
 .btn:focus-visible {
