@@ -1,16 +1,18 @@
-# ClienteEstadoNew
+# cliente-estado
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.21.
+Front-end Angular do [Projeto Estado](https://github.com/ronybrand/estado) — CRUD de unidades federativas do Brasil (estados). Consome a API Spring Boot do backend em `/api/*`.
+
+Gerado originalmente com [Angular CLI](https://github.com/angular/angular-cli); hoje em Angular 22 (ver `package.json`).
 
 ## Development server
 
 To start a local development server, run:
 
 ```bash
-ng serve
+npm start
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Isso roda `ng serve --proxy-config proxy.config.js`, proxiando `/api` para o backend local em `http://localhost:8090` (ver `proxy.config.js`). Abra `http://localhost:4200/` — a aplicação recarrega automaticamente a cada mudança nos arquivos-fonte.
 
 ## Code scaffolding
 
@@ -31,28 +33,40 @@ ng generate --help
 To build the project run:
 
 ```bash
-ng build
+npm run build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Compila e grava os artefatos em `dist/cliente-estado/browser/`. Por padrão usa a configuração `production` (otimizada, com `outputHashing` nos nomes dos arquivos).
+
+## Lint e formatação
+
+```bash
+npm run lint          # eslint (angular-eslint + typescript-eslint)
+npm run format:check  # prettier --check
+npm run format        # prettier --write
+```
+
+Husky + lint-staged rodam `eslint --fix` e `prettier --write` automaticamente no pre-commit.
 
 ## Running unit tests
 
 To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
 
 ```bash
-ng test
+npm test
 ```
 
 ## Running end-to-end tests
 
-For end-to-end (e2e) testing, run:
+Testes e2e com [Playwright](https://playwright.dev/) (chromium e firefox):
 
 ```bash
-ng e2e
+npm run e2e
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## CI/CD
+
+`.github/workflows/ci.yml` roda lint, unit tests, build e e2e em todo push/PR para `master`. Ver a seção [Deploy](#deploy) abaixo para o pipeline de publicação.
 
 ## Deploy
 
