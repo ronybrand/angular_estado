@@ -4,6 +4,8 @@ Front-end Angular do [Projeto Estado](https://github.com/ronybrand/estado) — C
 
 Gerado originalmente com [Angular CLI](https://github.com/angular/angular-cli); hoje em Angular 22 (ver `package.json`).
 
+Desenvolvido com assistência do [Claude Code](https://claude.com/claude-code) (Anthropic).
+
 ## Development server
 
 To start a local development server, run:
