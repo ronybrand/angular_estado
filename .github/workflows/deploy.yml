@@ -1,0 +1,51 @@
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: sa-east-1
+
+      # index.html precisa de revalidacao a cada carga (senao o navegador
+      # cacheia a versao antiga e nunca pega o hash novo dos bundles); os
+      # demais arquivos ja tem hash no nome (outputHashing: all no
+      # angular.json), entao podem ser cacheados por muito tempo.
+      - run: |
+          aws s3 sync dist/cliente-estado/browser/ s3://${{ vars.AWS_FRONTEND_BUCKET }} \
+            --delete \
+            --cache-control "public, max-age=31536000, immutable" \
+            --exclude "index.html"
+
+          aws s3 cp dist/cliente-estado/browser/index.html s3://${{ vars.AWS_FRONTEND_BUCKET }}/index.html \
+            --cache-control "no-cache"
+
+      - run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ vars.AWS_CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/index.html" "/"
