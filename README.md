@@ -64,6 +64,14 @@ Testes e2e com [Playwright](https://playwright.dev/) (chromium e firefox):
 npm run e2e
 ```
 
+## Decisões de design
+
+A identidade visual (`feature/design-visual`) customiza o Bootstrap 5 via CSS
+variables (paleta própria, tipografia Inter + Space Grotesk, ícones inline)
+em vez de migrar para Tailwind ou outro framework — menos esforço, zero risco
+de quebrar a build, e mantém o foco do projeto no backend. Ver
+[`src/styles.scss`](src/styles.scss).
+
 ## CI/CD
 
 `.github/workflows/ci.yml` roda lint, unit tests, build e e2e em todo push/PR para `master`. Ver a seção [Deploy](#deploy) abaixo para o pipeline de publicação.
