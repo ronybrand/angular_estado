@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Router, provideRouter } from '@angular/router';
+import { ActivatedRoute, Router, provideRouter } from '@angular/router';
 import { Observable, Subject, of, throwError } from 'rxjs';
 
 import { EditarEstadoComponent } from './editar-estado.component';
@@ -14,7 +14,7 @@ describe('EditarEstadoComponent', () => {
     atualizaEstado: ReturnType<typeof vi.fn>;
   };
 
-  async function setup(getEstadoReturn: Observable<Estado> = of(estado)) {
+  async function setup(getEstadoReturn: Observable<Estado> = of(estado), routeId = '1') {
     estadoService = {
       getEstado: vi.fn(() => getEstadoReturn),
       atualizaEstado: vi.fn(),
@@ -22,7 +22,14 @@ describe('EditarEstadoComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [EditarEstadoComponent],
-      providers: [provideRouter([]), { provide: EstadoService, useValue: estadoService }],
+      providers: [
+        provideRouter([]),
+        { provide: EstadoService, useValue: estadoService },
+        {
+          provide: ActivatedRoute,
+          useValue: { snapshot: { params: { id: routeId } } },
+        },
+      ],
     }).compileComponents();
 
     const fixture: ComponentFixture<EditarEstadoComponent> =
@@ -37,6 +44,12 @@ describe('EditarEstadoComponent', () => {
 
     expect(component).toBeTruthy();
     expect(component.estado()).toEqual(estado);
+  });
+
+  it('should convert the route id param (a string) to a number before requesting the estado', async () => {
+    await setup(of(estado), '42');
+
+    expect(estadoService.getEstado).toHaveBeenCalledWith(42);
   });
 
   it('should surface the backend error message when loading the estado fails', async () => {
