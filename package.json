@@ -11,13 +11,15 @@
     "lint": "ng lint",
     "format": "prettier --write \"src/**/*.{ts,html,scss}\"",
     "format:check": "prettier --check \"src/**/*.{ts,html,scss}\"",
+    "lint:workflows": "bash scripts/lint-workflows.sh",
     "prepare": "husky"
   },
   "private": true,
   "packageManager": "npm@10.9.8",
   "lint-staged": {
     "*.{ts,html}": "eslint --fix",
-    "*.{ts,html,scss,json,md}": "prettier --write"
+    "*.{ts,html,scss,json,md}": "prettier --write",
+    ".github/workflows/*.{yml,yaml}": "npm run lint:workflows --"
   },
   "dependencies": {
     "@angular/common": "^22.1.1",
