@@ -9,6 +9,41 @@ Front-end Angular do [Projeto Estado](https://github.com/ronybrand/estado) — C
 
 Gerado originalmente com [Angular CLI](https://github.com/angular/angular-cli); hoje em Angular 22 (ver `package.json`).
 
+## Arquitetura
+
+```mermaid
+flowchart LR
+    Browser["Navegador"]
+
+    subgraph CloudFront["CloudFront"]
+        direction LR
+        S3["S3\n(bundle Angular)"]
+        Caddy["Caddy\n(reverse proxy)"]
+    end
+
+    subgraph EC2["EC2 (Docker)"]
+        direction LR
+        App["estado-app\n(Spring Boot)"]
+        DB[("Postgres")]
+        Alloy["Grafana Alloy"]
+    end
+
+    Grafana["Grafana Cloud"]
+
+    Browser -- "/ (estático)" --> S3
+    Browser -- "/api/*" --> Caddy
+    Caddy --> App
+    App --> DB
+    Alloy -- "scrape /actuator/prometheus" --> App
+    Alloy -- métricas/logs --> Grafana
+```
+
+Front (S3/CloudFront, estático) e back (EC2 único, Docker: app + Postgres
+
+- Alloy) publicados de repositórios e pipelines separados — ver seção
+  [Deploy](#deploy) abaixo e o `docs/adr/` do repo
+  [`estado`](https://github.com/ronybrand/estado) para o histórico de decisões.
+
 ## Stack
 
 - [Angular 22](https://angular.dev/) (standalone, signals) + Bootstrap 5
@@ -101,7 +136,7 @@ encaminha pro backend EC2/Caddy) — por isso `environment.prod.ts` usa
 `apiUrl: '/api'` relativo, sem CORS cross-origin real.
 
 O rodapé da aplicação mostra o commit e a data de build do frontend
-(`public/version.json`, gerado no `deploy.yml`) e o commit, versão e
-data de build do backend publicado (`/actuator/info`, via
-`InfoService`) — permite conferir rapidamente se o que está no ar
-corresponde ao último push.
+(`public/version.json`, gerado no `deploy.yml`) e o commit e data de
+build do backend publicado (`/actuator/info`, via `InfoService`) —
+permite conferir rapidamente se o que está no ar corresponde ao
+último push.
