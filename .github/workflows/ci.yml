@@ -31,8 +31,9 @@ jobs:
       - run: npm test -- --watch=false
       - uses: codecov/codecov-action@v7
         with:
-          files: coverage/lcov.info
+          files: coverage/cliente-estado/lcov.info
           fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   build:
     runs-on: ubuntu-latest
