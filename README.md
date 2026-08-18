@@ -2,6 +2,8 @@
 
 [![CI](https://github.com/ronybrand/angular_estado/actions/workflows/ci.yml/badge.svg)](https://github.com/ronybrand/angular_estado/actions/workflows/ci.yml)
 
+🔗 **[Aplicação em produção](https://d3bqbg07tehy1h.cloudfront.net/)**
+
 Front-end Angular do [Projeto Estado](https://github.com/ronybrand/estado) — CRUD de unidades federativas do Brasil (estados). Consome a API Spring Boot do backend em `/api/*`.
 
 Gerado originalmente com [Angular CLI](https://github.com/angular/angular-cli); hoje em Angular 22 (ver `package.json`).
