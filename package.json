@@ -40,6 +40,7 @@
     "@angular/compiler-cli": "^22.1.1",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.62.1",
+    "@vitest/coverage-v8": "^4.1.11",
     "angular-eslint": "22.1.0",
     "eslint": "^10.3.0",
     "husky": "^9.1.7",
