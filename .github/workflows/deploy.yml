@@ -36,6 +36,14 @@ jobs:
           cache: npm
 
       - run: npm ci
+
+      # Sobrescreve o placeholder de dev com o commit/data reais do build -
+      # exibido no rodapé (app-footer) para conferir se o deploy está em dia.
+      - run: |
+          COMMIT=$(git rev-parse --short HEAD)
+          DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          printf '{"commit":"%s","buildDate":"%s"}\n' "$COMMIT" "$DATE" > public/version.json
+
       - run: npm run build
 
       - uses: aws-actions/configure-aws-credentials@v6
@@ -54,7 +62,8 @@ jobs:
             --delete \
             --cache-control "public, max-age=31536000, immutable" \
             --exclude "index.html" \
-            --exclude "favicon.ico"
+            --exclude "favicon.ico" \
+            --exclude "version.json"
 
           aws s3 cp dist/cliente-estado/browser/index.html s3://${{ vars.AWS_FRONTEND_BUCKET }}/index.html \
             --cache-control "no-cache"
@@ -62,7 +71,10 @@ jobs:
           aws s3 cp dist/cliente-estado/browser/favicon.ico s3://${{ vars.AWS_FRONTEND_BUCKET }}/favicon.ico \
             --cache-control "no-cache"
 
+          aws s3 cp dist/cliente-estado/browser/version.json s3://${{ vars.AWS_FRONTEND_BUCKET }}/version.json \
+            --cache-control "no-cache"
+
       - run: |
           aws cloudfront create-invalidation \
             --distribution-id ${{ vars.AWS_CLOUDFRONT_DISTRIBUTION_ID }} \
-            --paths "/index.html" "/favicon.ico" "/"
+            --paths "/index.html" "/favicon.ico" "/version.json" "/"
