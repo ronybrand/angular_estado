@@ -14,20 +14,6 @@ npm start
 
 Isso roda `ng serve --proxy-config proxy.config.js`, proxiando `/api` para o backend local em `http://localhost:8090` (ver `proxy.config.js`). Abra `http://localhost:4200/` — a aplicação recarrega automaticamente a cada mudança nos arquivos-fonte.
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
 ## Building
 
 To build the project run:
@@ -95,7 +81,3 @@ Variables) necessárias, obtidas nos outputs do Terraform do backend
 A API é acessada em `/api/*` sob o mesmo domínio do CloudFront (que
 encaminha pro backend EC2/Caddy) — por isso `environment.prod.ts` usa
 `apiUrl: '/api'` relativo, sem CORS cross-origin real.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
