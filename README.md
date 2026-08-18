@@ -57,7 +57,7 @@ To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use th
 npm test
 ```
 
-13 arquivos de spec cobrindo componentes, serviço e interceptors.
+15 arquivos de spec cobrindo componentes, serviços e interceptors.
 
 ## Running end-to-end tests
 
@@ -98,3 +98,8 @@ Variables) necessárias, obtidas nos outputs do Terraform do backend
 A API é acessada em `/api/*` sob o mesmo domínio do CloudFront (que
 encaminha pro backend EC2/Caddy) — por isso `environment.prod.ts` usa
 `apiUrl: '/api'` relativo, sem CORS cross-origin real.
+
+O rodapé da aplicação mostra o commit e a data de build do frontend
+(`public/version.json`, gerado no `deploy.yml`) e o commit/versão do
+backend publicado (`/actuator/info`, via `InfoService`) — permite
+conferir rapidamente se o que está no ar corresponde ao último push.
