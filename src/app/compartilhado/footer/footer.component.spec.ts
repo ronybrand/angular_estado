@@ -16,7 +16,7 @@ describe('FooterComponent', () => {
 
   const frontendVersion: FrontendVersion = { commit: 'a1b2c3d', buildDate: '2026-08-18T12:00:00Z' };
   const backendInfo: BackendInfo = {
-    build: { version: '0.0.1-SNAPSHOT', time: '2026-08-18T12:00:00Z', commit: 'e4f5g6h' },
+    build: { time: '2026-08-18T12:00:00Z', commit: 'e4f5g6h' },
   };
 
   function setup() {
@@ -53,7 +53,7 @@ describe('FooterComponent', () => {
     expect(el.textContent).toContain('a1b2c3d');
   });
 
-  it('should show the backend commit and version once loaded', () => {
+  it('should show the backend commit once loaded', () => {
     infoService.getFrontendVersion.mockReturnValue(of(frontendVersion));
     infoService.getBackendInfo.mockReturnValue(of(backendInfo));
 
@@ -61,7 +61,6 @@ describe('FooterComponent', () => {
 
     const el: HTMLElement = fixture.debugElement.nativeElement;
     expect(el.textContent).toContain('e4f5g6h');
-    expect(el.textContent).toContain('0.0.1-SNAPSHOT');
   });
 
   it('should show the backend build date once loaded', () => {

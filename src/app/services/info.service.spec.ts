@@ -41,7 +41,7 @@ describe('InfoService', () => {
 
   it('getBackendInfo should GET the actuator info endpoint', () => {
     const info: BackendInfo = {
-      build: { version: '0.0.1-SNAPSHOT', time: '2026-08-18T12:00:00Z', commit: 'e4f5g6h' },
+      build: { time: '2026-08-18T12:00:00Z', commit: 'e4f5g6h' },
     };
 
     service.getBackendInfo().subscribe((result) => {
