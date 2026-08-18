@@ -38,11 +38,11 @@ flowchart LR
     Alloy -- métricas/logs --> Grafana
 ```
 
-Front (S3/CloudFront, estático) e back (EC2 único, Docker: app + Postgres
-
-- Alloy) publicados de repositórios e pipelines separados — ver seção
-  [Deploy](#deploy) abaixo e o `docs/adr/` do repo
-  [`estado`](https://github.com/ronybrand/estado) para o histórico de decisões.
+Front (S3/CloudFront, estático) e back (EC2 único rodando app, Postgres
+e Grafana Alloy em containers Docker) são publicados a partir de
+repositórios e pipelines separados — ver seção [Deploy](#deploy) abaixo
+e o `docs/adr/` do repo [`estado`](https://github.com/ronybrand/estado)
+para o histórico de decisões.
 
 ## Stack
 
