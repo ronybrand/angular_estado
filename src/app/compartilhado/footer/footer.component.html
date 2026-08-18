@@ -7,7 +7,10 @@
       <span class="mx-2">|</span>
     }
     @if (backendInfo(); as info) {
-      <span>back {{ info.build.commit }} · v{{ info.build.version }}</span>
+      <span
+        >back {{ info.build.commit }} · v{{ info.build.version }} ·
+        {{ info.build.time | date: 'short' }}</span
+      >
     }
   </footer>
 }

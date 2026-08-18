@@ -64,6 +64,16 @@ describe('FooterComponent', () => {
     expect(el.textContent).toContain('0.0.1-SNAPSHOT');
   });
 
+  it('should show the backend build date once loaded', () => {
+    infoService.getFrontendVersion.mockReturnValue(of(frontendVersion));
+    infoService.getBackendInfo.mockReturnValue(of(backendInfo));
+
+    setup();
+
+    const el: HTMLElement = fixture.debugElement.nativeElement;
+    expect(el.textContent).toMatch(/\d{1,2}\/\d{1,2}\/\d{2,4}/);
+  });
+
   it('should not break when the backend info request fails, keeping the frontend info visible', () => {
     infoService.getFrontendVersion.mockReturnValue(of(frontendVersion));
     infoService.getBackendInfo.mockReturnValue(throwError(() => new Error('offline')));
