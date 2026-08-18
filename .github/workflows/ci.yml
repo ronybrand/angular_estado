@@ -53,6 +53,11 @@ jobs:
     # bater com @playwright/test do package.json.
     container:
       image: mcr.microsoft.com/playwright:v1.62.1-noble
+    env:
+      # O container roda como root, mas $HOME aponta pro workspace montado
+      # pelo runner (dono pwuser) - Firefox recusa rodar assim (ver doc da
+      # própria Playwright: precisa de $HOME que o usuário atual possua).
+      HOME: /root
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
