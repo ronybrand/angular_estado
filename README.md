@@ -1,8 +1,21 @@
 # cliente-estado
 
+[![CI](https://github.com/ronybrand/angular_estado/actions/workflows/ci.yml/badge.svg)](https://github.com/ronybrand/angular_estado/actions/workflows/ci.yml)
+
 Front-end Angular do [Projeto Estado](https://github.com/ronybrand/estado) — CRUD de unidades federativas do Brasil (estados). Consome a API Spring Boot do backend em `/api/*`.
 
 Gerado originalmente com [Angular CLI](https://github.com/angular/angular-cli); hoje em Angular 22 (ver `package.json`).
+
+## Stack
+
+- [Angular 22](https://angular.dev/) (standalone, signals) + Bootstrap 5
+- [Vitest](https://vitest.dev/) (unit) + [Playwright](https://playwright.dev/) (e2e, chromium/firefox)
+- ESLint + Prettier + Husky/lint-staged
+- GitHub Actions (CI + deploy) + AWS S3/CloudFront
+
+## Pré-requisitos
+
+Requer o backend do [Projeto Estado](https://github.com/ronybrand/estado) rodando localmente em `http://localhost:8090` — sem ele, `npm start` sobe a UI mas as chamadas a `/api/*` falham.
 
 ## Development server
 
@@ -42,9 +55,11 @@ To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use th
 npm test
 ```
 
+13 arquivos de spec cobrindo componentes, serviço e interceptors.
+
 ## Running end-to-end tests
 
-Testes e2e com [Playwright](https://playwright.dev/) (chromium e firefox):
+Testes e2e com [Playwright](https://playwright.dev/) (chromium e firefox), cobrindo os fluxos de listar, criar, editar e excluir estado:
 
 ```bash
 npm run e2e
