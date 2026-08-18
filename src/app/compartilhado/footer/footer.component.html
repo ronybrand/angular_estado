@@ -1,0 +1,13 @@
+@if (frontendVersion() || backendInfo()) {
+  <footer class="app-footer text-center text-muted small py-3 mt-4">
+    @if (frontendVersion(); as versao) {
+      <span>front {{ versao.commit }} · {{ versao.buildDate | date: 'short' }}</span>
+    }
+    @if (frontendVersion() && backendInfo()) {
+      <span class="mx-2">|</span>
+    }
+    @if (backendInfo(); as info) {
+      <span>back {{ info.build.commit }} · v{{ info.build.version }}</span>
+    }
+  </footer>
+}
