@@ -100,6 +100,7 @@ encaminha pro backend EC2/Caddy) — por isso `environment.prod.ts` usa
 `apiUrl: '/api'` relativo, sem CORS cross-origin real.
 
 O rodapé da aplicação mostra o commit e a data de build do frontend
-(`public/version.json`, gerado no `deploy.yml`) e o commit/versão do
-backend publicado (`/actuator/info`, via `InfoService`) — permite
-conferir rapidamente se o que está no ar corresponde ao último push.
+(`public/version.json`, gerado no `deploy.yml`) e o commit, versão e
+data de build do backend publicado (`/actuator/info`, via
+`InfoService`) — permite conferir rapidamente se o que está no ar
+corresponde ao último push.
