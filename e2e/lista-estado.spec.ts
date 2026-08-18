@@ -61,4 +61,20 @@ test.describe('Lista de estados', () => {
     await expect(page.getByRole('row', { name: /SP.*São Paulo/ })).not.toBeVisible();
     expect(requestedDelete).toBe(true);
   });
+
+  test('exibe mensagem de erro quando a exclusão falha, mantendo a linha na tabela', async ({
+    page,
+  }) => {
+    await mockListaEstados(page, ESTADOS, 100);
+    await mockErro(page, '**/api/estado/1', 500, 'DELETE');
+
+    await page.goto('/');
+    await expect(page.getByRole('table')).toBeVisible();
+
+    page.once('dialog', (dialog) => dialog.accept());
+    await page.getByRole('button', { name: 'Excluir SP' }).click();
+
+    await expect(page.getByRole('alert')).toContainText('Falha ao deletar estado.');
+    await expect(page.getByRole('row', { name: /SP.*São Paulo/ })).toBeVisible();
+  });
 });
