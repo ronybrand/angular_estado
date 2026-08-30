@@ -1,5 +1,5 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
@@ -17,7 +17,7 @@ registerLocaleData(localePt, 'pt-BR');
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: LOCALE_ID, useValue: 'pt-BR' },
-    provideRouter(routes),
+    provideRouter(routes, withComponentInputBinding()),
     // requestIdInterceptor precisa vir ANTES do timeoutRetryInterceptor:
     // gera o id uma vez por ação do usuário, não uma vez por tentativa de
     // rede - se a ordem for invertida, cada retry ganha um id novo e perde

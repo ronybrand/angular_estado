@@ -51,6 +51,44 @@ para o histórico de decisões.
 - ESLint + Prettier + Husky/lint-staged
 - GitHub Actions (CI + deploy) + AWS S3/CloudFront
 
+## Estrutura do projeto
+
+```
+src/app/
+├── paginas/          # Componentes de rota (lista-estado, criar-estado, editar-estado)
+├── compartilhado/     # Componentes e helpers reutilizáveis entre páginas
+│   ├── form-estado/    # Form compartilhado por criar/editar
+│   ├── error-msg/       # Exibição de erro (role="alert")
+│   ├── spinner/          # Indicador de carregamento (role="status")
+│   ├── icon/              # app-icon — ícones SVG centralizados (ver icon-paths.ts)
+│   └── erro/               # extraiMensagemErro, extraiRequestIdErro, subscreveComProcessando
+├── services/          # Wrappers finos sobre HttpClient (EstadoService, InfoService)
+├── interceptors/      # HttpInterceptorFn (request-id, timeout-retry)
+├── interfaces/         # Tipos (Estado, BackendInfo, FrontendVersion)
+└── app.routes.ts       # Rotas com lazy loading (loadComponent)
+```
+
+Nomenclatura em português nas pastas e nos componentes de domínio (`paginas`,
+`estado`), consistente com o domínio do [backend](https://github.com/ronybrand/estado).
+
+### Convenções de código
+
+- Componentes standalone, sem `NgModule`; `inject()` em vez de injeção via
+  construtor.
+- Estado local com Signals (`signal`/`computed`); rotas lazy usam
+  `input()` amarrado ao parâmetro via `withComponentInputBinding()`
+  (ver `editar-estado.component.ts`) em vez de `ActivatedRoute.snapshot`.
+- APIs novas do Angular: `input()`/`output()`/`viewChild.required()` e
+  control flow `@if`/`@for` — sem decorators (`@Input`/`@Output`/`@ViewChild`)
+  nem `*ngIf`/`*ngFor` em nenhum lugar do código.
+- `subscreveComProcessando` (`compartilhado/erro/`) centraliza o padrão
+  "signal de loading + subscribe + tratamento de erro via `ErrorMsgComponent`",
+  reutilizado nas 3 páginas — é a abstração de estado mais reaproveitada do
+  projeto.
+- Cada página injeta seu próprio `ErrorMsgComponent` via `viewChild.required`
+  — não há serviço global de notificação de erro; o erro é sempre local à
+  página onde ocorreu.
+
 ## Pré-requisitos
 
 Requer o backend do [Projeto Estado](https://github.com/ronybrand/estado) rodando localmente em `http://localhost:8090` — sem ele, `npm start` sobe a UI mas as chamadas a `/api/*` falham.

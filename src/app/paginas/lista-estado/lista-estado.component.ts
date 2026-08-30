@@ -1,9 +1,10 @@
-import { Component, OnInit, viewChild, inject, signal } from '@angular/core';
+import { Component, OnInit, viewChild, inject, computed, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { Estado } from '../../interfaces/estado';
 import { ErrorMsgComponent } from '../../compartilhado/error-msg/error-msg.component';
 import { SpinnerComponent } from '../../compartilhado/spinner/spinner.component';
+import { IconComponent } from '../../compartilhado/icon/icon.component';
 import { EstadoService } from '../../services/estado.service';
 import { subscreveComProcessando } from '../../compartilhado/erro/subscreve-com-processando';
 
@@ -11,7 +12,7 @@ import { subscreveComProcessando } from '../../compartilhado/erro/subscreve-com-
   selector: 'app-lista-estado',
   templateUrl: './lista-estado.component.html',
   styleUrls: ['./lista-estado.component.scss'],
-  imports: [ErrorMsgComponent, SpinnerComponent, RouterLink, DatePipe],
+  imports: [ErrorMsgComponent, SpinnerComponent, IconComponent, RouterLink, DatePipe],
 })
 export class ListaEstadoComponent implements OnInit {
   private estadoService = inject(EstadoService);
@@ -19,6 +20,7 @@ export class ListaEstadoComponent implements OnInit {
   public estados = signal<Estado[]>([]);
   public carregando = signal(true);
   public excluindo = signal(false);
+  public existemEstados = computed(() => this.estados().length > 0);
   readonly errorMsgComponent = viewChild.required(ErrorMsgComponent);
 
   ngOnInit() {
@@ -46,9 +48,5 @@ export class ListaEstadoComponent implements OnInit {
       'Falha ao deletar estado.',
       () => this.getListaEstados(),
     );
-  }
-
-  existemEstados(): boolean {
-    return this.estados().length > 0;
   }
 }

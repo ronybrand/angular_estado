@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ActivatedRoute, Router, provideRouter } from '@angular/router';
+import { Router, provideRouter } from '@angular/router';
 import { Observable, Subject, of, throwError } from 'rxjs';
 
 import { EditarEstadoComponent } from './editar-estado.component';
@@ -22,19 +22,13 @@ describe('EditarEstadoComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [EditarEstadoComponent],
-      providers: [
-        provideRouter([]),
-        { provide: EstadoService, useValue: estadoService },
-        {
-          provide: ActivatedRoute,
-          useValue: { snapshot: { params: { id: routeId } } },
-        },
-      ],
+      providers: [provideRouter([]), { provide: EstadoService, useValue: estadoService }],
     }).compileComponents();
 
     const fixture: ComponentFixture<EditarEstadoComponent> =
       TestBed.createComponent(EditarEstadoComponent);
     const component = fixture.componentInstance;
+    fixture.componentRef.setInput('id', routeId);
     fixture.detectChanges();
     return { fixture, component };
   }

@@ -1,0 +1,18 @@
+# Gate de cobertura, bloqueando PRs. O alvo de 60% inicialmente cogitado
+# (espelhando o backend, be-java-spring/pom.xml, JaCoCo BUNDLE/LINE/
+# COVEREDRATIO >= 0.60) foi descartado aqui: a cobertura real do front já
+# está em ~96-99%, então 60% nunca dispararia o gate. Usamos 90% de alvo
+# (com folga de 2% contra flutuações pequenas) e 80% para o código novo de
+# cada PR, evitando travar em diffs triviais.
+coverage:
+  status:
+    project:
+      default:
+        target: 90%
+        threshold: 2%
+    patch:
+      default:
+        target: 80%
+
+comment:
+  layout: 'reach, diff, flags, files'
