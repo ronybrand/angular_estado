@@ -4,6 +4,7 @@ import { DatePipe } from '@angular/common';
 import { Estado } from '../../interfaces/estado';
 import { ErrorMsgComponent } from '../../compartilhado/error-msg/error-msg.component';
 import { SpinnerComponent } from '../../compartilhado/spinner/spinner.component';
+import { IconComponent } from '../../compartilhado/icon/icon.component';
 import { EstadoService } from '../../services/estado.service';
 import { subscreveComProcessando } from '../../compartilhado/erro/subscreve-com-processando';
 
@@ -11,7 +12,7 @@ import { subscreveComProcessando } from '../../compartilhado/erro/subscreve-com-
   selector: 'app-lista-estado',
   templateUrl: './lista-estado.component.html',
   styleUrls: ['./lista-estado.component.scss'],
-  imports: [ErrorMsgComponent, SpinnerComponent, RouterLink, DatePipe],
+  imports: [ErrorMsgComponent, SpinnerComponent, IconComponent, RouterLink, DatePipe],
 })
 export class ListaEstadoComponent implements OnInit {
   private estadoService = inject(EstadoService);
