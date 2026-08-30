@@ -1,5 +1,5 @@
-import { Component, OnInit, viewChild, inject, signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, viewChild, inject, input, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { Estado } from '../../interfaces/estado';
 import { ErrorMsgComponent } from '../../compartilhado/error-msg/error-msg.component';
 import { SpinnerComponent } from '../../compartilhado/spinner/spinner.component';
@@ -15,8 +15,9 @@ import { FormEstadoComponent } from '../../compartilhado/form-estado/form-estado
 })
 export class EditarEstadoComponent implements OnInit {
   private estadoService = inject(EstadoService);
-  private activatedRoute = inject(ActivatedRoute);
   private router = inject(Router);
+
+  readonly id = input.required<string>();
 
   estado = signal<Estado | undefined>(undefined);
   carregando = signal(true);
@@ -24,7 +25,7 @@ export class EditarEstadoComponent implements OnInit {
   readonly errorMsgComponent = viewChild.required(ErrorMsgComponent);
 
   ngOnInit() {
-    this.getEstado(Number(this.activatedRoute.snapshot.params['id']));
+    this.getEstado(Number(this.id()));
   }
 
   getEstado(id: number) {
