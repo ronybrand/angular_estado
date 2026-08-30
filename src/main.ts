@@ -1,14 +1,22 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { LOCALE_ID } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
 
 import { requestIdInterceptor } from './app/interceptors/request-id.interceptor';
 import { timeoutRetryInterceptor } from './app/interceptors/timeout-retry.interceptor';
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 
+// UI is entirely in pt-BR (see index.html's lang="pt-BR") - dates formatted by
+// DatePipe should follow suit instead of Angular's en-US default.
+registerLocaleData(localePt, 'pt-BR');
+
 bootstrapApplication(AppComponent, {
   providers: [
+    { provide: LOCALE_ID, useValue: 'pt-BR' },
     provideRouter(routes),
     // requestIdInterceptor precisa vir ANTES do timeoutRetryInterceptor:
     // gera o id uma vez por ação do usuário, não uma vez por tentativa de
