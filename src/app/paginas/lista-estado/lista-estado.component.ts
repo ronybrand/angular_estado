@@ -1,4 +1,4 @@
-import { Component, OnInit, viewChild, inject, signal } from '@angular/core';
+import { Component, OnInit, viewChild, inject, computed, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { Estado } from '../../interfaces/estado';
@@ -20,6 +20,7 @@ export class ListaEstadoComponent implements OnInit {
   public estados = signal<Estado[]>([]);
   public carregando = signal(true);
   public excluindo = signal(false);
+  public existemEstados = computed(() => this.estados().length > 0);
   readonly errorMsgComponent = viewChild.required(ErrorMsgComponent);
 
   ngOnInit() {
@@ -47,9 +48,5 @@ export class ListaEstadoComponent implements OnInit {
       'Falha ao deletar estado.',
       () => this.getListaEstados(),
     );
-  }
-
-  existemEstados(): boolean {
-    return this.estados().length > 0;
   }
 }
