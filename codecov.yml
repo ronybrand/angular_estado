@@ -1,17 +1,18 @@
-# Reporte contra o mesmo alvo de cobertura do backend (be-java-spring/pom.xml,
-# regra JaCoCo BUNDLE/LINE/COVEREDRATIO >= 0.60), mas ainda em modo
-# informativo: não bloqueia PRs até a baseline atual ser revisada. Quando
-# decidirem travar o gate, basta remover `informational: true` (mesmo ponto de
-# decisão do backend ao vincular o goal `check` à fase `verify`).
+# Gate de cobertura, bloqueando PRs. O alvo de 60% inicialmente cogitado
+# (espelhando o backend, be-java-spring/pom.xml, JaCoCo BUNDLE/LINE/
+# COVEREDRATIO >= 0.60) foi descartado aqui: a cobertura real do front já
+# está em ~96-99%, então 60% nunca dispararia o gate. Usamos 90% de alvo
+# (com folga de 2% contra flutuações pequenas) e 80% para o código novo de
+# cada PR, evitando travar em diffs triviais.
 coverage:
   status:
     project:
       default:
-        target: 60%
-        informational: true
+        target: 90%
+        threshold: 2%
     patch:
       default:
-        informational: true
+        target: 80%
 
 comment:
   layout: 'reach, diff, flags, files'
