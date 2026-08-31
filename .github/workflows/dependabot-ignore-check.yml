@@ -1,0 +1,56 @@
+name: Check dependabot ignore rules
+
+on:
+  schedule:
+    - cron: '0 6 1 * *'
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check peer-dependency range
+        id: peers
+        run: |
+          ts_eslint_range=$(npm view typescript-eslint@latest peerDependencies.typescript)
+          echo "ts_eslint_range=$ts_eslint_range" >> "$GITHUB_OUTPUT"
+
+          ts_ok="yes"
+          npx --yes semver -r "$ts_eslint_range" -- 7.0.0 >/dev/null 2>&1 && ts_ok="no - update available"
+          echo "ts_ok=$ts_ok" >> "$GITHUB_OUTPUT"
+
+      - name: Build report
+        id: report
+        env:
+          TS_ESLINT_RANGE: ${{ steps.peers.outputs.ts_eslint_range }}
+          TS_OK: ${{ steps.peers.outputs.ts_ok }}
+        run: |
+          body=$(cat <<EOF
+          Monthly check of the major-version \`ignore\` rule in [\`dependabot.yml\`](../blob/master/.github/dependabot.yml).
+
+          | Rule | Signal | Still needed? |
+          | --- | --- | --- |
+          | \`typescript\` major | typescript-eslint\@latest peer range: \`$TS_ESLINT_RANGE\` (allows typescript 7.0.0?) | $TS_OK |
+
+          If the row says "no", remove the rule from \`dependabot.yml\`, let dependabot open the bump PR, and confirm CI passes before merging.
+          EOF
+          )
+          echo "body<<BODYEOF" >> "$GITHUB_OUTPUT"
+          echo "$body" >> "$GITHUB_OUTPUT"
+          echo "BODYEOF" >> "$GITHUB_OUTPUT"
+
+      - name: Open or update tracking issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          BODY: ${{ steps.report.outputs.body }}
+        run: |
+          existing=$(gh issue list --search "Dependabot ignore rules check in:title" --state open --json number --jq '.[0].number')
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "$BODY"
+          else
+            gh issue create --title "Dependabot ignore rules check" --body "$BODY" --label "dependencies"
+          fi
