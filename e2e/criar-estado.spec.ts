@@ -1,8 +1,10 @@
 import { test, expect } from '@playwright/test';
 import { mockAddEstado, mockErro } from './fixtures/estados';
+import { autenticado } from './fixtures/auth';
 
 test.describe('Criar estado', () => {
   test('cria um novo estado e volta para a lista', async ({ page }) => {
+    await autenticado(page);
     await mockAddEstado(page);
 
     await page.goto('/estado/criar');
@@ -14,6 +16,7 @@ test.describe('Criar estado', () => {
   });
 
   test('mantém o botão desabilitado enquanto o formulário é inválido', async ({ page }) => {
+    await autenticado(page);
     await page.goto('/estado/criar');
 
     await expect(page.getByRole('button', { name: 'Salvar' })).toBeDisabled();
@@ -25,6 +28,7 @@ test.describe('Criar estado', () => {
   });
 
   test('exibe mensagem de erro quando a criação falha', async ({ page }) => {
+    await autenticado(page);
     await mockErro(page, '**/api/estado/', 500, 'POST');
 
     await page.goto('/estado/criar');
