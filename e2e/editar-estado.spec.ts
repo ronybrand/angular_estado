@@ -1,8 +1,10 @@
 import { test, expect } from '@playwright/test';
 import { ESTADOS, mockGetEstado, mockAtualizaEstado, mockErro } from './fixtures/estados';
+import { autenticado } from './fixtures/auth';
 
 test.describe('Editar estado', () => {
   test('preenche o formulário assim que o estado chega de forma assíncrona', async ({ page }) => {
+    await autenticado(page);
     const estado = ESTADOS[0];
     await mockGetEstado(page, estado, 500);
     await page.goto(`/estado/editar/${estado.id}`);
@@ -16,6 +18,7 @@ test.describe('Editar estado', () => {
   });
 
   test('atualiza o estado e volta para a lista', async ({ page }) => {
+    await autenticado(page);
     const estado = ESTADOS[0];
     await mockGetEstado(page, estado, 100);
     await mockAtualizaEstado(page);
@@ -30,6 +33,7 @@ test.describe('Editar estado', () => {
   });
 
   test('exibe mensagem de erro quando a busca do estado falha', async ({ page }) => {
+    await autenticado(page);
     await mockErro(page, '**/api/estado/1', 404);
 
     await page.goto('/estado/editar/1');

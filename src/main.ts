@@ -7,6 +7,8 @@ import localePt from '@angular/common/locales/pt';
 
 import { requestIdInterceptor } from './app/interceptors/request-id.interceptor';
 import { timeoutRetryInterceptor } from './app/interceptors/timeout-retry.interceptor';
+import { authInterceptor } from './app/interceptors/auth.interceptor';
+import { authErrorInterceptor } from './app/interceptors/auth-error.interceptor';
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 
@@ -21,7 +23,16 @@ bootstrapApplication(AppComponent, {
     // requestIdInterceptor precisa vir ANTES do timeoutRetryInterceptor:
     // gera o id uma vez por ação do usuário, não uma vez por tentativa de
     // rede - se a ordem for invertida, cada retry ganha um id novo e perde
-    // a correlação no backend.
-    provideHttpClient(withInterceptors([requestIdInterceptor, timeoutRetryInterceptor])),
+    // a correlação no backend. authInterceptor anexa o header de auth antes
+    // da requisição sair; authErrorInterceptor trata 401 na volta,
+    // independente de quantas tentativas o retry fizer.
+    provideHttpClient(
+      withInterceptors([
+        requestIdInterceptor,
+        authInterceptor,
+        authErrorInterceptor,
+        timeoutRetryInterceptor,
+      ]),
+    ),
   ],
 }).catch((err) => console.error(err));

@@ -58,15 +58,16 @@ for the decision history.
 
 ```
 src/app/
-├── paginas/          # Route components (lista-estado, criar-estado, editar-estado)
+├── paginas/          # Route components (lista-estado, criar-estado, editar-estado, login)
 ├── compartilhado/     # Components and helpers shared across pages
 │   ├── form-estado/    # Form shared by create/edit
 │   ├── error-msg/       # Error display (role="alert")
 │   ├── spinner/          # Loading indicator (role="status")
 │   ├── icon/              # app-icon — centralized SVG icons (see icon-paths.ts)
 │   └── erro/               # extraiMensagemErro, extraiRequestIdErro, subscreveComProcessando
+├── auth/              # AuthService, authGuard, token-storage (JWT, see backend's ADR 0017)
 ├── services/          # Thin wrappers over HttpClient (EstadoService, InfoService)
-├── interceptors/      # HttpInterceptorFn (request-id, timeout-retry)
+├── interceptors/      # HttpInterceptorFn (request-id, timeout-retry, auth, auth-error)
 ├── interfaces/         # Types (Estado, BackendInfo, FrontendVersion)
 └── app.routes.ts       # Routes with lazy loading (loadComponent)
 ```
@@ -91,6 +92,15 @@ consistent with the [backend](https://github.com/ronybrand/estado)'s domain.
 - Each page injects its own `ErrorMsgComponent` via `viewChild.required` —
   there's no global error-notification service; errors are always local to
   the page where they occurred.
+
+### Authentication
+
+`/estado/criar` and `/estado/editar/:id` are behind `authGuard`; `/` (the
+list) stays public, matching the backend's GET-is-public decision (see its
+[ADR 0017](https://github.com/ronybrand/estado/blob/master/docs/adr/0017-autenticacao-jwt-admin-unico.md)).
+Login posts to `/auth/login` and the JWT is kept in `localStorage`
+(`authInterceptor` attaches it; `authErrorInterceptor` clears it and
+redirects to `/login` on any `401`).
 
 ## Prerequisites
 
