@@ -78,6 +78,16 @@ describe('timeoutRetryInterceptor', () => {
     expect(error).toBeTruthy();
   });
 
+  it('should not retry a GET request that failed with a 4xx status', async () => {
+    let error: unknown;
+    http.get('/api/estado/999').subscribe({ error: (err) => (error = err) });
+
+    const req = httpMock.expectOne('/api/estado/999');
+    req.flush('erro', { status: 404, statusText: 'Not Found' });
+
+    expect(error).toBeTruthy();
+  });
+
   it('should not retry a failed POST request (non-idempotent)', async () => {
     let error: unknown;
     http.post('/api/estado/', {}).subscribe({ error: (err) => (error = err) });
