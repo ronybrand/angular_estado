@@ -10,6 +10,8 @@
   --brand-dark: #0f4448;
   --success: #2f7a4f;
   --danger: #b4432e;
+  // --danger não passa em 4.5:1 (WCAG AA) como texto sobre o fundo claro do .alert-danger.
+  --danger-text: #a23c29;
   --font-display: 'Space Grotesk', var(--bs-font-sans-serif);
 }
 
