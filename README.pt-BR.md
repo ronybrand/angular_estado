@@ -58,15 +58,16 @@ para o histórico de decisões.
 
 ```
 src/app/
-├── paginas/          # Componentes de rota (lista-estado, criar-estado, editar-estado)
+├── paginas/          # Componentes de rota (lista-estado, criar-estado, editar-estado, login)
 ├── compartilhado/     # Componentes e helpers reutilizáveis entre páginas
 │   ├── form-estado/    # Form compartilhado por criar/editar
 │   ├── error-msg/       # Exibição de erro (role="alert")
 │   ├── spinner/          # Indicador de carregamento (role="status")
 │   ├── icon/              # app-icon — ícones SVG centralizados (ver icon-paths.ts)
 │   └── erro/               # extraiMensagemErro, extraiRequestIdErro, subscreveComProcessando
+├── auth/              # AuthService, authGuard, token-storage (JWT, ver ADR 0017 do backend)
 ├── services/          # Wrappers finos sobre HttpClient (EstadoService, InfoService)
-├── interceptors/      # HttpInterceptorFn (request-id, timeout-retry)
+├── interceptors/      # HttpInterceptorFn (request-id, timeout-retry, auth, auth-error)
 ├── interfaces/         # Tipos (Estado, BackendInfo, FrontendVersion)
 └── app.routes.ts       # Rotas com lazy loading (loadComponent)
 ```
@@ -91,6 +92,15 @@ Nomenclatura em português nas pastas e nos componentes de domínio (`paginas`,
 - Cada página injeta seu próprio `ErrorMsgComponent` via `viewChild.required`
   — não há serviço global de notificação de erro; o erro é sempre local à
   página onde ocorreu.
+
+### Autenticação
+
+`/estado/criar` e `/estado/editar/:id` ficam atrás do `authGuard`; `/` (a
+lista) continua público, consistente com a decisão do backend de deixar o
+GET público (ver [ADR 0017](https://github.com/ronybrand/estado/blob/master/docs/adr/0017-autenticacao-jwt-admin-unico.md)
+do backend). O login faz `POST` em `/auth/login` e o JWT fica no
+`localStorage` (`authInterceptor` anexa o token; `authErrorInterceptor`
+limpa e redireciona pra `/login` em qualquer `401`).
 
 ## Pré-requisitos
 
