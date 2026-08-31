@@ -15,11 +15,11 @@ export const timeoutRetryInterceptor: HttpInterceptorFn = (req, next) => {
   return response$.pipe(
     retry({
       count: RETRY_COUNT,
-      delay: (error: unknown) => {
+      delay: (error: unknown, retryCount: number) => {
         if (error instanceof HttpErrorResponse && error.status >= 400 && error.status < 500) {
           return throwError(() => error);
         }
-        return timer(RETRY_DELAY_MS);
+        return timer(RETRY_DELAY_MS * 2 ** (retryCount - 1));
       },
     }),
   );

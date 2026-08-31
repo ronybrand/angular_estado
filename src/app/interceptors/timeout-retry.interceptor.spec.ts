@@ -39,7 +39,7 @@ describe('timeoutRetryInterceptor', () => {
       httpMock.expectOne('/api/estado/');
       await vi.advanceTimersByTimeAsync(TIMEOUT_MS + 1);
       if (attempt < RETRY_COUNT) {
-        await vi.advanceTimersByTimeAsync(RETRY_DELAY_MS + 1);
+        await vi.advanceTimersByTimeAsync(RETRY_DELAY_MS * 2 ** attempt + 1);
       }
     }
 
@@ -54,7 +54,7 @@ describe('timeoutRetryInterceptor', () => {
       const req = httpMock.expectOne('/api/estado/');
       if (attempt < RETRY_COUNT) {
         req.flush('erro', { status: 500, statusText: 'Server Error' });
-        await vi.advanceTimersByTimeAsync(RETRY_DELAY_MS);
+        await vi.advanceTimersByTimeAsync(RETRY_DELAY_MS * 2 ** attempt);
       } else {
         req.flush([{ id: 1, sigla: 'SP' }]);
       }
@@ -71,11 +71,40 @@ describe('timeoutRetryInterceptor', () => {
       const req = httpMock.expectOne('/api/estado/');
       req.flush('erro', { status: 500, statusText: 'Server Error' });
       if (attempt < RETRY_COUNT) {
-        await vi.advanceTimersByTimeAsync(RETRY_DELAY_MS);
+        await vi.advanceTimersByTimeAsync(RETRY_DELAY_MS * 2 ** attempt);
       }
     }
 
     expect(error).toBeTruthy();
+  });
+
+  it('should wait longer between each retry attempt (exponential backoff)', async () => {
+    let result: unknown;
+    http.get('/api/estado/').subscribe((res) => (result = res));
+
+    const first = httpMock.expectOne('/api/estado/');
+    first.flush('erro', { status: 500, statusText: 'Server Error' });
+
+    // First retry delay is RETRY_DELAY_MS - not enough time must not
+    // trigger it early, and just short of it must still be pending.
+    await vi.advanceTimersByTimeAsync(RETRY_DELAY_MS - 1);
+    httpMock.expectNone('/api/estado/');
+    await vi.advanceTimersByTimeAsync(1);
+
+    const second = httpMock.expectOne('/api/estado/');
+    second.flush('erro', { status: 500, statusText: 'Server Error' });
+
+    // Second retry delay doubles to RETRY_DELAY_MS * 2 - waiting only
+    // RETRY_DELAY_MS (what the old fixed-delay behavior used) must not
+    // be enough to trigger it yet.
+    await vi.advanceTimersByTimeAsync(RETRY_DELAY_MS);
+    httpMock.expectNone('/api/estado/');
+    await vi.advanceTimersByTimeAsync(RETRY_DELAY_MS);
+
+    const third = httpMock.expectOne('/api/estado/');
+    third.flush([{ id: 1, sigla: 'SP' }]);
+
+    expect(result).toEqual([{ id: 1, sigla: 'SP' }]);
   });
 
   it('should not retry a GET request that failed with a 4xx status', async () => {
