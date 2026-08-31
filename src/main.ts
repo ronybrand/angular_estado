@@ -26,6 +26,11 @@ bootstrapApplication(AppComponent, {
     // a correlação no backend. authInterceptor anexa o header de auth antes
     // da requisição sair; authErrorInterceptor trata 401 na volta,
     // independente de quantas tentativas o retry fizer.
+    // authInterceptor também precisa vir ANTES de authErrorInterceptor: como
+    // os interceptors funcionais formam uma cadeia, o handler de erro só
+    // "vê" a resposta depois que ela passa de volta por quem vier depois
+    // dele na lista - se authErrorInterceptor for movido para antes de
+    // authInterceptor, essa garantia de ordem se perde silenciosamente.
     provideHttpClient(
       withInterceptors([
         requestIdInterceptor,
