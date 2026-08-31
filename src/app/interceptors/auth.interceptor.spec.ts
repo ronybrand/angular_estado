@@ -54,4 +54,25 @@ describe('authInterceptor', () => {
     expect(req.request.headers.has('Authorization')).toBe(false);
     req.flush([]);
   });
+
+  it('should not attach the Authorization header to a URL that merely shares the apiUrl prefix', () => {
+    setToken('token-armazenado');
+
+    const urlVizinha = `${environment.apiUrl}evil.example.com/recurso`;
+    http.get(urlVizinha).subscribe();
+
+    const req = httpMock.expectOne(urlVizinha);
+    expect(req.request.headers.has('Authorization')).toBe(false);
+    req.flush([]);
+  });
+
+  it('should attach the Authorization header to the apiUrl itself with no trailing path', () => {
+    setToken('token-armazenado');
+
+    http.get(environment.apiUrl).subscribe();
+
+    const req = httpMock.expectOne(environment.apiUrl);
+    expect(req.request.headers.get('Authorization')).toBe('Bearer token-armazenado');
+    req.flush([]);
+  });
 });
