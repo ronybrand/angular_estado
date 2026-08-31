@@ -78,7 +78,7 @@ describe('requestIdInterceptor + timeoutRetryInterceptor (ordem importa)', () =>
       ids.push(req.request.headers.get(REQUEST_ID_HEADER));
       req.flush('erro', { status: 500, statusText: 'Server Error' });
       if (attempt < RETRY_COUNT) {
-        await vi.advanceTimersByTimeAsync(RETRY_DELAY_MS);
+        await vi.advanceTimersByTimeAsync(RETRY_DELAY_MS * 2 ** attempt);
       }
     }
 
