@@ -3,6 +3,7 @@ import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 
 import { authInterceptor } from './auth.interceptor';
+import { environment } from '../../environments/environment';
 import { clearToken, setToken } from '../auth/token-storage';
 
 describe('authInterceptor', () => {
@@ -29,17 +30,27 @@ describe('authInterceptor', () => {
   it('should attach the Authorization header when a token is stored', () => {
     setToken('token-armazenado');
 
-    http.get('/api/estado/').subscribe();
+    http.get(`${environment.apiUrl}/estado/`).subscribe();
 
-    const req = httpMock.expectOne('/api/estado/');
+    const req = httpMock.expectOne(`${environment.apiUrl}/estado/`);
     expect(req.request.headers.get('Authorization')).toBe('Bearer token-armazenado');
     req.flush([]);
   });
 
   it('should not attach the Authorization header when there is no token', () => {
-    http.get('/api/estado/').subscribe();
+    http.get(`${environment.apiUrl}/estado/`).subscribe();
 
-    const req = httpMock.expectOne('/api/estado/');
+    const req = httpMock.expectOne(`${environment.apiUrl}/estado/`);
+    expect(req.request.headers.has('Authorization')).toBe(false);
+    req.flush([]);
+  });
+
+  it('should not attach the Authorization header to a request outside the API origin', () => {
+    setToken('token-armazenado');
+
+    http.get('https://terceiro.example.com/recurso').subscribe();
+
+    const req = httpMock.expectOne('https://terceiro.example.com/recurso');
     expect(req.request.headers.has('Authorization')).toBe(false);
     req.flush([]);
   });

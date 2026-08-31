@@ -4,6 +4,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { Router, provideRouter } from '@angular/router';
 
 import { authErrorInterceptor } from './auth-error.interceptor';
+import { environment } from '../../environments/environment';
 import { getToken, setToken } from '../auth/token-storage';
 
 describe('authErrorInterceptor', () => {
@@ -38,6 +39,22 @@ describe('authErrorInterceptor', () => {
 
     expect(getToken()).toBeNull();
     expect(navigateSpy).toHaveBeenCalledWith('/login');
+    expect(error).toBeTruthy();
+  });
+
+  it('should leave the token untouched and not redirect on a 401 from the login request itself', () => {
+    const router = TestBed.inject(Router);
+    const navigateSpy = vi.spyOn(router, 'navigateByUrl').mockResolvedValue(true);
+    let error: unknown;
+
+    http.post(`${environment.apiUrl}/auth/login`, {}).subscribe({ error: (err) => (error = err) });
+
+    httpMock
+      .expectOne(`${environment.apiUrl}/auth/login`)
+      .flush('erro', { status: 401, statusText: 'Unauthorized' });
+
+    expect(getToken()).toBe('token-existente');
+    expect(navigateSpy).not.toHaveBeenCalled();
     expect(error).toBeTruthy();
   });
 
