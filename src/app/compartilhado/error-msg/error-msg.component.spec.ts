@@ -65,4 +65,16 @@ describe('ErrorMsgComponent', () => {
 
     vi.useRealTimers();
   });
+
+  it('clearError should clear the error immediately, without waiting for the timeout', () => {
+    vi.useFakeTimers();
+
+    component.setError('Erro 1', 'abc-123', 5000);
+    component.clearError();
+
+    expect(component.error()).toBeNull();
+    expect(component.requestId()).toBeNull();
+
+    vi.useRealTimers();
+  });
 });

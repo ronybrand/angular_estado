@@ -15,6 +15,7 @@ export function subscreveComProcessando<T>(
   processando.set(true);
   observable.subscribe({
     next: (valor) => {
+      errorMsgComponent.clearError();
       onSuccess(valor);
       processando.set(false);
     },

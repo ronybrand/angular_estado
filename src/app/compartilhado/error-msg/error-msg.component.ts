@@ -20,4 +20,10 @@ export class ErrorMsgComponent {
       this.requestId.set(null);
     }, tempo);
   }
+
+  clearError() {
+    clearTimeout(this.limpezaTimeoutId);
+    this.error.set(null);
+    this.requestId.set(null);
+  }
 }
