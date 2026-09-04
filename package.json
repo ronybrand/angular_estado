@@ -15,6 +15,9 @@
   },
   "private": true,
   "packageManager": "npm@10.9.8",
+  "overrides": {
+    "fast-uri": "^3.1.6"
+  },
   "lint-staged": {
     "*.{ts,html}": "eslint --fix",
     "*.{ts,html,scss,json,md}": "prettier --write"
