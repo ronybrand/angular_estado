@@ -86,7 +86,8 @@
           "options": {
             "coverage": true,
             "coverageReporters": ["text-summary", "lcov", "html"],
-            "coverageExclude": ["src/environments/**", "src/main.ts"]
+            "coverageExclude": ["src/environments/**", "src/main.ts"],
+            "setupFiles": ["src/test-setup.ts"]
           }
         },
         "lint": {

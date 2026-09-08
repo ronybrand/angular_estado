@@ -14,10 +14,6 @@ describe('ListaEstadoComponent', () => {
     deletaEstado: ReturnType<typeof vi.fn>;
   };
 
-  beforeEach(() => {
-    vi.spyOn(window, 'confirm').mockReturnValue(true);
-  });
-
   async function setup(getListaEstadosReturn: Observable<Estado[]> = of(estados)) {
     estadoService = {
       getListaEstados: vi.fn(() => getListaEstadosReturn),
@@ -65,13 +61,25 @@ describe('ListaEstadoComponent', () => {
     expect(component.errorMsgComponent().error()).toBe('Serviço indisponível.');
   });
 
-  it('should reload the list after successfully deleting an estado', async () => {
+  it('should open the confirm dialog instead of deleting immediately', async () => {
+    const { component } = await setup();
+    const abrirSpy = vi.spyOn(component.confirmDialog(), 'abrir');
+
+    component.deletaEstado(1);
+
+    expect(abrirSpy).toHaveBeenCalled();
+    expect(estadoService.deletaEstado).not.toHaveBeenCalled();
+  });
+
+  it('should reload the list after confirming and successfully deleting an estado', async () => {
     const { component } = await setup();
     estadoService.deletaEstado.mockReturnValue(of(undefined));
     estadoService.getListaEstados.mockReturnValue(of(estados));
 
     component.deletaEstado(1);
+    component.confirmaExclusao();
 
+    expect(estadoService.deletaEstado).toHaveBeenCalledWith(1);
     expect(estadoService.getListaEstados).toHaveBeenCalledTimes(2);
   });
 
@@ -84,26 +92,27 @@ describe('ListaEstadoComponent', () => {
     );
 
     component.deletaEstado(1);
+    component.confirmaExclusao();
 
     expect(component.errorMsgComponent().error()).toBe('Estado possui vínculos.');
   });
 
-  it('should ask for confirmation before deleting an estado', async () => {
+  it('should do nothing if confirmaExclusao is called without a pending delete', async () => {
+    // Guarda defensiva: confirmar() do dialog so deveria chamar isso depois
+    // de deletaEstado() ja ter guardado um id - cobre o caminho em que isso
+    // nao aconteceu (idParaExcluir ainda null).
     const { component } = await setup();
-    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true);
-    estadoService.deletaEstado.mockReturnValue(of(undefined));
 
-    component.deletaEstado(1);
+    component.confirmaExclusao();
 
-    expect(confirmSpy).toHaveBeenCalled();
-    expect(estadoService.deletaEstado).toHaveBeenCalledWith(1);
+    expect(estadoService.deletaEstado).not.toHaveBeenCalled();
   });
 
-  it('should not delete the estado when the confirmation is cancelled', async () => {
+  it('should not delete the estado when the confirmation dialog is cancelled', async () => {
     const { component } = await setup();
-    vi.spyOn(window, 'confirm').mockReturnValue(false);
 
     component.deletaEstado(1);
+    component.cancelaExclusao();
 
     expect(estadoService.deletaEstado).not.toHaveBeenCalled();
   });
@@ -114,6 +123,7 @@ describe('ListaEstadoComponent', () => {
     estadoService.deletaEstado.mockReturnValue(subject);
 
     component.deletaEstado(1);
+    component.confirmaExclusao();
     fixture.detectChanges();
 
     expect(component.excluindo()).toBe(true);
@@ -135,6 +145,7 @@ describe('ListaEstadoComponent', () => {
     );
 
     component.deletaEstado(1);
+    component.confirmaExclusao();
 
     expect(component.excluindo()).toBe(false);
   });

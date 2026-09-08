@@ -43,6 +43,17 @@ test.describe('Acessibilidade (axe-core, WCAG 2.1 A/AA)', () => {
     expect(results.violations).toEqual([]);
   });
 
+  test('modal de confirmação de exclusão não tem violações', async ({ page }) => {
+    await mockListaEstados(page, ESTADOS, 0);
+    await page.goto('/');
+    await page.getByRole('button', { name: 'Excluir SP' }).click();
+    await expect(page.getByRole('button', { name: 'Confirmar' })).toBeVisible();
+
+    const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
+
+    expect(results.violations).toEqual([]);
+  });
+
   test('formulário de criação não tem violações', async ({ page }) => {
     await autenticado(page);
     await page.goto('/estado/criar');

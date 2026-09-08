@@ -61,11 +61,28 @@ test.describe('Lista de estados', () => {
     await page.goto('/');
     await expect(page.getByRole('table')).toBeVisible();
 
-    page.once('dialog', (dialog) => dialog.accept());
     await page.getByRole('button', { name: 'Excluir SP' }).click();
+    await page.getByRole('button', { name: 'Confirmar' }).click();
 
     await expect(page.getByRole('row', { name: /SP.*São Paulo/ })).not.toBeVisible();
     expect(requestedDelete).toBe(true);
+  });
+
+  test('não exclui quando a confirmação é cancelada', async ({ page }) => {
+    let requestedDelete = false;
+    await mockListaEstados(page, ESTADOS);
+    await mockDeletaEstado(page, 1, () => {
+      requestedDelete = true;
+    });
+
+    await page.goto('/');
+    await expect(page.getByRole('table')).toBeVisible();
+
+    await page.getByRole('button', { name: 'Excluir SP' }).click();
+    await page.getByRole('button', { name: 'Cancelar' }).click();
+
+    await expect(page.getByRole('row', { name: /SP.*São Paulo/ })).toBeVisible();
+    expect(requestedDelete).toBe(false);
   });
 
   test('exibe mensagem de erro quando a exclusão falha, mantendo a linha na tabela', async ({
@@ -77,8 +94,8 @@ test.describe('Lista de estados', () => {
     await page.goto('/');
     await expect(page.getByRole('table')).toBeVisible();
 
-    page.once('dialog', (dialog) => dialog.accept());
     await page.getByRole('button', { name: 'Excluir SP' }).click();
+    await page.getByRole('button', { name: 'Confirmar' }).click();
 
     await expect(page.getByRole('alert')).toContainText('Falha ao deletar estado.');
     await expect(page.getByRole('row', { name: /SP.*São Paulo/ })).toBeVisible();
