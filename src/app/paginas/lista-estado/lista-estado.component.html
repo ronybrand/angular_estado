@@ -80,3 +80,8 @@
     </div>
   </div>
 </div>
+<app-confirm-dialog
+  mensagem="Tem certeza que deseja excluir este estado?"
+  (confirmar)="confirmaExclusao()"
+  (cancelar)="cancelaExclusao()"
+></app-confirm-dialog>

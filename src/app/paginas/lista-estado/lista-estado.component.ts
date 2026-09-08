@@ -5,6 +5,7 @@ import { Estado } from '../../interfaces/estado';
 import { ErrorMsgComponent } from '../../compartilhado/error-msg/error-msg.component';
 import { SpinnerComponent } from '../../compartilhado/spinner/spinner.component';
 import { IconComponent } from '../../compartilhado/icon/icon.component';
+import { ConfirmDialogComponent } from '../../compartilhado/confirm-dialog/confirm-dialog.component';
 import { EstadoService } from '../../services/estado.service';
 import { subscreveComProcessando } from '../../compartilhado/erro/subscreve-com-processando';
 
@@ -12,16 +13,26 @@ import { subscreveComProcessando } from '../../compartilhado/erro/subscreve-com-
   selector: 'app-lista-estado',
   templateUrl: './lista-estado.component.html',
   styleUrls: ['./lista-estado.component.scss'],
-  imports: [ErrorMsgComponent, SpinnerComponent, IconComponent, RouterLink, DatePipe],
+  imports: [
+    ErrorMsgComponent,
+    SpinnerComponent,
+    IconComponent,
+    ConfirmDialogComponent,
+    RouterLink,
+    DatePipe,
+  ],
 })
 export class ListaEstadoComponent implements OnInit {
-  private estadoService = inject(EstadoService);
+  private readonly estadoService = inject(EstadoService);
 
   public estados = signal<Estado[]>([]);
   public carregando = signal(true);
   public excluindo = signal(false);
   public existemEstados = computed(() => this.estados().length > 0);
   readonly errorMsgComponent = viewChild.required(ErrorMsgComponent);
+  readonly confirmDialog = viewChild.required(ConfirmDialogComponent);
+
+  private idParaExcluir: number | null = null;
 
   ngOnInit() {
     this.getListaEstados();
@@ -37,8 +48,17 @@ export class ListaEstadoComponent implements OnInit {
     );
   }
 
+  // Abre o modal de confirmacao em vez de excluir na hora - a exclusao de
+  // fato so acontece em confirmaExclusao(), chamada quando o usuario
+  // confirma no <app-confirm-dialog> (ver ConfirmDialogComponent).
   deletaEstado(id: number) {
-    if (!window.confirm('Tem certeza que deseja excluir este estado?')) {
+    this.idParaExcluir = id;
+    this.confirmDialog().abrir();
+  }
+
+  confirmaExclusao() {
+    const id = this.idParaExcluir;
+    if (id === null) {
       return;
     }
     subscreveComProcessando(
@@ -48,5 +68,9 @@ export class ListaEstadoComponent implements OnInit {
       'Falha ao deletar estado.',
       () => this.getListaEstados(),
     );
+  }
+
+  cancelaExclusao() {
+    this.idParaExcluir = null;
   }
 }
