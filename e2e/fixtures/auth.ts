@@ -1,6 +1,5 @@
 import type { Page } from '@playwright/test';
-
-const CHAVE_TOKEN = 'estado_jwt';
+import { CHAVE_TOKEN } from '../../src/app/auth/token-storage';
 
 /**
  * Seeds a fake-but-well-shaped JWT (future `exp`, no real signature) into
