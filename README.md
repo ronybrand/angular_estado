@@ -102,6 +102,13 @@ Login posts to `/auth/login` and the JWT is kept in `localStorage`
 (`authInterceptor` attaches it; `authErrorInterceptor` clears it and
 redirects to `/login` on any `401`).
 
+A JWT in `localStorage` is exposed to XSS via any script injected into the
+page context — mitigated by a real Content-Security-Policy (HTTP header,
+not a meta tag, so `frame-ancestors` actually applies) set on the
+CloudFront distribution that serves this app, not in this repository: see
+[`terraform/modules/frontend-static/main.tf`](https://github.com/ronybrand/estado/blob/master/terraform/modules/frontend-static/main.tf#L113-L144)
+in the `estado` repo.
+
 ## Prerequisites
 
 Requires the [Estado project](https://github.com/ronybrand/estado) backend running locally at `http://localhost:8090` — without it, `npm start` still serves the UI, but calls to `/api/*` fail.

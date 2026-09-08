@@ -102,6 +102,13 @@ do backend). O login faz `POST` em `/auth/login` e o JWT fica no
 `localStorage` (`authInterceptor` anexa o token; `authErrorInterceptor`
 limpa e redireciona pra `/login` em qualquer `401`).
 
+JWT em `localStorage` fica exposto a XSS via qualquer script injetado no
+contexto da pagina — mitigado pela Content-Security-Policy real (header
+HTTP, nao meta tag, entao `frame-ancestors` funciona) definida no
+CloudFront que serve este app, nao neste repositorio: ver
+[`terraform/modules/frontend-static/main.tf`](https://github.com/ronybrand/estado/blob/master/terraform/modules/frontend-static/main.tf#L113-L144)
+no repo `estado`.
+
 ## Pré-requisitos
 
 Requer o backend do [Projeto Estado](https://github.com/ronybrand/estado) rodando localmente em `http://localhost:8090` — sem ele, `npm start` sobe a UI mas as chamadas a `/api/*` falham.
