@@ -40,16 +40,26 @@ export async function fulfillDelayed(
   await route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(body) });
 }
 
+// Backend so tem GET /estado/paginado (o GET /estado sem paginacao foi
+// removido, ver ADR 0018 no repo estado) - toda resposta de listagem segue
+// o envelope { content, page } do Spring Data, nao um array puro.
+export function paginaDe(estados: EstadoFixture[]): unknown {
+  return {
+    content: estados,
+    page: { size: 100, number: 0, totalElements: estados.length, totalPages: 1 },
+  };
+}
+
 export function mockListaEstados(
   page: Page,
   estados: EstadoFixture[] = ESTADOS,
   delayMs = 300,
 ): Promise<void> {
-  return page.route('**/api/estado/', (route) => {
+  return page.route('**/api/estado/paginado**', (route) => {
     if (route.request().method() !== 'GET') {
       return route.fallback();
     }
-    return fulfillDelayed(route, estados, undefined, delayMs);
+    return fulfillDelayed(route, paginaDe(estados), undefined, delayMs);
   });
 }
 
@@ -62,9 +72,9 @@ export function mockGetEstado(page: Page, estado: EstadoFixture, delayMs = 300):
   });
 }
 
-function mockSalvaEstado(page: Page, method: 'POST' | 'PUT', status = 200): Promise<void> {
+export function mockAddEstado(page: Page, status = 200): Promise<void> {
   return page.route('**/api/estado/', (route) => {
-    if (route.request().method() !== method) {
+    if (route.request().method() !== 'POST') {
       return route.fallback();
     }
     const body = status === 200 ? (route.request().postData() ?? '{}') : '{}';
@@ -72,12 +82,16 @@ function mockSalvaEstado(page: Page, method: 'POST' | 'PUT', status = 200): Prom
   });
 }
 
-export function mockAddEstado(page: Page, status = 200): Promise<void> {
-  return mockSalvaEstado(page, 'POST', status);
-}
-
-export function mockAtualizaEstado(page: Page, status = 200): Promise<void> {
-  return mockSalvaEstado(page, 'PUT', status);
+// PUT vai pro id na URL agora (PUT /estado/{id}, ver ADR 0018 no repo
+// estado), nao mais pra raiz `/estado/`.
+export function mockAtualizaEstado(page: Page, id: number, status = 200): Promise<void> {
+  return page.route(`**/api/estado/${id}`, (route) => {
+    if (route.request().method() !== 'PUT') {
+      return route.fallback();
+    }
+    const body = status === 200 ? (route.request().postData() ?? '{}') : '{}';
+    return route.fulfill({ status, contentType: 'application/json', body });
+  });
 }
 
 export function mockDeletaEstado(page: Page, id: number, onDelete?: () => void): Promise<void> {
