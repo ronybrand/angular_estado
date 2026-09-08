@@ -97,6 +97,17 @@ describe('ListaEstadoComponent', () => {
     expect(component.errorMsgComponent().error()).toBe('Estado possui vínculos.');
   });
 
+  it('should do nothing if confirmaExclusao is called without a pending delete', async () => {
+    // Guarda defensiva: confirmar() do dialog so deveria chamar isso depois
+    // de deletaEstado() ja ter guardado um id - cobre o caminho em que isso
+    // nao aconteceu (idParaExcluir ainda null).
+    const { component } = await setup();
+
+    component.confirmaExclusao();
+
+    expect(estadoService.deletaEstado).not.toHaveBeenCalled();
+  });
+
   it('should not delete the estado when the confirmation dialog is cancelled', async () => {
     const { component } = await setup();
 
