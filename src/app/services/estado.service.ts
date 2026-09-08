@@ -1,8 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Estado } from '../interfaces/estado';
-import { Observable } from 'rxjs';
+import { PaginaResponse } from '../interfaces/pagina-response';
+import { Observable, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +13,15 @@ export class EstadoService {
   private readonly baseUrl = `${environment.apiUrl}/estado`;
 
   getListaEstados(): Observable<Estado[]> {
-    return this.http.get<Estado[]>(`${this.baseUrl}/`);
+    // size=100 cobre o dataset inteiro (27 estados) numa unica pagina - o
+    // backend clampa qualquer valor acima de app.pagination.max-size, entao
+    // e seguro pedir mais do que existe. Ver ADR 0018 no backend (GET
+    // /estado sem paginacao foi removido, /paginado e o unico endpoint de
+    // listagem agora).
+    const params = new HttpParams().set('size', '100');
+    return this.http
+      .get<PaginaResponse<Estado>>(`${this.baseUrl}/paginado`, { params })
+      .pipe(map((pagina) => pagina.content));
   }
 
   getEstado(id: number): Observable<Estado> {
@@ -24,7 +33,10 @@ export class EstadoService {
   }
 
   atualizaEstado(estado: Estado): Observable<Estado> {
-    return this.http.put<Estado>(`${this.baseUrl}/`, estado);
+    // id vai na URL, nao no corpo - PUT /estado/{id} (ver ADR 0018 no
+    // backend). nome/sigla e tudo que o backend aceita no corpo agora.
+    const { id, nome, sigla } = estado;
+    return this.http.put<Estado>(`${this.baseUrl}/${id}`, { nome, sigla });
   }
 
   deletaEstado(id: number): Observable<void> {

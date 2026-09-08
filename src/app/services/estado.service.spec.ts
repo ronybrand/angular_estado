@@ -28,14 +28,17 @@ describe('EstadoService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('getListaEstados should GET the list of estados', () => {
+  it('getListaEstados should GET the paginated content and unwrap it into a flat array', () => {
     service.getListaEstados().subscribe((result) => {
       expect(result).toEqual([estado]);
     });
 
-    const req = httpMock.expectOne(`${environment.apiUrl}/estado/`);
+    const req = httpMock.expectOne(`${environment.apiUrl}/estado/paginado?size=100`);
     expect(req.request.method).toBe('GET');
-    req.flush([estado]);
+    req.flush({
+      content: [estado],
+      page: { size: 100, number: 0, totalElements: 1, totalPages: 1 },
+    });
   });
 
   it('getEstado should GET a single estado by id', () => {
@@ -59,14 +62,14 @@ describe('EstadoService', () => {
     req.flush(estado);
   });
 
-  it('atualizaEstado should PUT the estado', () => {
+  it('atualizaEstado should PUT to /estado/{id} with nome/sigla, id out of the body', () => {
     service.atualizaEstado(estado).subscribe((result) => {
       expect(result).toEqual(estado);
     });
 
-    const req = httpMock.expectOne(`${environment.apiUrl}/estado/`);
+    const req = httpMock.expectOne(`${environment.apiUrl}/estado/${estado.id}`);
     expect(req.request.method).toBe('PUT');
-    expect(req.request.body).toEqual(estado);
+    expect(req.request.body).toEqual({ nome: estado.nome, sigla: estado.sigla });
     req.flush(estado);
   });
 
