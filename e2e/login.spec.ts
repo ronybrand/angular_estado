@@ -14,8 +14,15 @@ test.describe('Login', () => {
   });
 
   test('lista de estados continua acessível sem autenticação', async ({ page }) => {
-    await page.route('**/api/estado/', (route) =>
-      route.fulfill({ status: 200, contentType: 'application/json', body: '[]' }),
+    await page.route('**/api/estado/paginado**', (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          content: [],
+          page: { size: 100, number: 0, totalElements: 0, totalPages: 0 },
+        }),
+      }),
     );
 
     await page.goto('/');

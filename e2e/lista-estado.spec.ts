@@ -1,5 +1,11 @@
 import { test, expect } from '@playwright/test';
-import { ESTADOS, mockListaEstados, mockDeletaEstado, mockErro } from './fixtures/estados';
+import {
+  ESTADOS,
+  mockListaEstados,
+  mockDeletaEstado,
+  mockErro,
+  paginaDe,
+} from './fixtures/estados';
 
 test.describe('Lista de estados', () => {
   test('exibe os estados assim que a resposta assíncrona chega, após o primeiro ciclo de renderização', async ({
@@ -28,7 +34,7 @@ test.describe('Lista de estados', () => {
   });
 
   test('exibe mensagem de erro quando a busca falha', async ({ page }) => {
-    await mockErro(page, '**/api/estado/', 500);
+    await mockErro(page, '**/api/estado/paginado**', 500);
     await page.goto('/');
 
     await expect(page.getByRole('alert')).toContainText('Falha ao buscar estados.');
@@ -37,14 +43,14 @@ test.describe('Lista de estados', () => {
   test('exclui um estado após confirmação', async ({ page }) => {
     let requestedDelete = false;
     let estados = [...ESTADOS];
-    await page.route('**/api/estado/', (route) => {
+    await page.route('**/api/estado/paginado**', (route) => {
       if (route.request().method() !== 'GET') {
         return route.fallback();
       }
       return route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify(estados),
+        body: JSON.stringify(paginaDe(estados)),
       });
     });
     await mockDeletaEstado(page, 1, () => {

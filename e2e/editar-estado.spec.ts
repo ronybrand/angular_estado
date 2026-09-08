@@ -21,7 +21,7 @@ test.describe('Editar estado', () => {
     await autenticado(page);
     const estado = ESTADOS[0];
     await mockGetEstado(page, estado, 100);
-    await mockAtualizaEstado(page);
+    await mockAtualizaEstado(page, estado.id);
 
     await page.goto(`/estado/editar/${estado.id}`);
     await expect(page.locator('#nome')).toHaveValue(estado.nome);
