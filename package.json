@@ -23,13 +23,13 @@
     "*.{ts,html,scss,json,md}": "prettier --write"
   },
   "dependencies": {
-    "@angular/common": "^22.1.5",
-    "@angular/compiler": "^22.1.5",
-    "@angular/core": "^22.1.5",
-    "@angular/forms": "^22.1.5",
-    "@angular/platform-browser": "^22.1.5",
-    "@angular/platform-browser-dynamic": "^22.1.5",
-    "@angular/router": "^22.1.5",
+    "@angular/common": "^22.1.6",
+    "@angular/compiler": "^22.1.6",
+    "@angular/core": "^22.1.6",
+    "@angular/forms": "^22.1.6",
+    "@angular/platform-browser": "^22.1.6",
+    "@angular/platform-browser-dynamic": "^22.1.6",
+    "@angular/router": "^22.1.6",
     "@fontsource/inter": "^5.3.0",
     "@fontsource/space-grotesk": "^5.3.0",
     "bootstrap": "^5.3.8",
@@ -40,19 +40,19 @@
   "devDependencies": {
     "@angular/build": "^22.1.7",
     "@angular/cli": "^22.1.7",
-    "@angular/compiler-cli": "^22.1.5",
+    "@angular/compiler-cli": "^22.1.6",
     "@axe-core/playwright": "^4.13.0",
     "@eslint/js": "^10.0.1",
-    "@playwright/test": "^1.62.1",
-    "@vitest/coverage-v8": "^4.1.11",
-    "angular-eslint": "22.2.0",
-    "eslint": "^10.9.1",
+    "@playwright/test": "^1.63.0",
+    "@vitest/coverage-v8": "^5.0.0",
+    "angular-eslint": "22.5.0",
+    "eslint": "^10.10.0",
     "husky": "^9.1.7",
     "jsdom": "^30.0.1",
-    "lint-staged": "^17.4.1",
+    "lint-staged": "^17.5.0",
     "prettier": "^3.8.1",
     "typescript": "~6.0.3",
-    "typescript-eslint": "8.69.0",
-    "vitest": "^4.0.8"
+    "typescript-eslint": "8.70.0",
+    "vitest": "^5.0.0"
   }
 }
