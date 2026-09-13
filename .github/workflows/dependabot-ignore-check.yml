@@ -22,20 +22,30 @@ jobs:
           npx --yes semver -r "$ts_eslint_range" -- 7.0.0 >/dev/null 2>&1 && ts_ok="no - update available"
           echo "ts_ok=$ts_ok" >> "$GITHUB_OUTPUT"
 
+          angular_build_vitest_range=$(npm view @angular/build@latest peerDependencies.vitest)
+          echo "angular_build_vitest_range=$angular_build_vitest_range" >> "$GITHUB_OUTPUT"
+
+          vitest_ok="yes"
+          npx --yes semver -r "$angular_build_vitest_range" -- 5.0.0 >/dev/null 2>&1 && vitest_ok="no - update available"
+          echo "vitest_ok=$vitest_ok" >> "$GITHUB_OUTPUT"
+
       - name: Build report
         id: report
         env:
           TS_ESLINT_RANGE: ${{ steps.peers.outputs.ts_eslint_range }}
           TS_OK: ${{ steps.peers.outputs.ts_ok }}
+          ANGULAR_BUILD_VITEST_RANGE: ${{ steps.peers.outputs.angular_build_vitest_range }}
+          VITEST_OK: ${{ steps.peers.outputs.vitest_ok }}
         run: |
           body=$(cat <<EOF
-          Monthly check of the major-version \`ignore\` rule in [\`dependabot.yml\`](../blob/master/.github/dependabot.yml).
+          Monthly check of the major-version \`ignore\` rules in [\`dependabot.yml\`](../blob/master/.github/dependabot.yml).
 
           | Rule | Signal | Still needed? |
           | --- | --- | --- |
           | \`typescript\` major | typescript-eslint\@latest peer range: \`$TS_ESLINT_RANGE\` (allows typescript 7.0.0?) | $TS_OK |
+          | \`vitest\` / \`@vitest/coverage-v8\` major | @angular/build\@latest peer range: \`$ANGULAR_BUILD_VITEST_RANGE\` (allows vitest 5.0.0?) | $VITEST_OK |
 
-          If the row says "no", remove the rule from \`dependabot.yml\`, let dependabot open the bump PR, and confirm CI passes before merging.
+          If a row says "no", remove that rule from \`dependabot.yml\`, let dependabot open the bump PR, and confirm CI passes before merging.
           EOF
           )
           echo "body<<BODYEOF" >> "$GITHUB_OUTPUT"
