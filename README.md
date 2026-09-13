@@ -102,6 +102,9 @@ Login posts to `/auth/login` and the JWT is kept in `localStorage`
 (`authInterceptor` attaches it; `authErrorInterceptor` clears it and
 redirects to `/login` on any `401`).
 
+Demo credentials (intentionally public): see the backend's
+[`estado`](https://github.com/ronybrand/estado#readme) README.
+
 A JWT in `localStorage` is exposed to XSS via any script injected into the
 page context — mitigated by a real Content-Security-Policy (HTTP header,
 not a meta tag, so `frame-ancestors` actually applies) set on the
