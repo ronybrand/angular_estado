@@ -9,10 +9,24 @@ updates:
       weekly-batch:
         patterns:
           - "*"
+        exclude-patterns:
+          - "vitest"
+          - "@vitest/coverage-v8"
+      vitest:
+        patterns:
+          - "vitest"
+          - "@vitest/coverage-v8"
     ignore:
       # @angular-eslint's peer dependency still caps at typescript <6.1,
       # so TS 7 major bumps from dependabot break npm ci with ERESOLVE.
       - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      # @angular/build's peerDependency caps at vitest ^4.0.8 (even on its
+      # latest next prerelease), so a vitest/coverage-v8 major bump to 5.x
+      # breaks npm ci with ERESOLVE. Remove once @angular/build supports it.
+      - dependency-name: "vitest"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@vitest/coverage-v8"
         update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions
