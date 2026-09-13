@@ -60,7 +60,8 @@ jobs:
         run: |
           existing=$(gh issue list --search "Dependabot ignore rules check in:title" --state open --json number --jq '.[0].number')
           if [ -n "$existing" ]; then
-            gh issue comment "$existing" --body "$BODY"
+            gh issue edit "$existing" --body "$BODY"
+            gh issue comment "$existing" --body "Atualizado em $(date -u +%Y-%m-%d)."
           else
             gh issue create --title "Dependabot ignore rules check" --body "$BODY" --label "dependencies"
           fi
