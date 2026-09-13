@@ -53,7 +53,7 @@ jobs:
     # que já travou o job por 15min+ em mirrors instáveis). Versão precisa
     # bater com @playwright/test do package.json.
     container:
-      image: mcr.microsoft.com/playwright:v1.62.1-noble
+      image: mcr.microsoft.com/playwright:v1.63.0-noble
     env:
       # O container roda como root, mas $HOME aponta pro workspace montado
       # pelo runner (dono pwuser) - Firefox recusa rodar assim (ver doc da
