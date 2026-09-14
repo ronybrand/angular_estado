@@ -86,6 +86,13 @@ export class ListaEstadoComponent implements OnInit, OnDestroy {
     this.getListaEstados();
   }
 
+  ariaSort(campo: CampoOrdenavel): 'ascending' | 'descending' | 'none' {
+    if (this.sortCampo() !== campo) {
+      return 'none';
+    }
+    return this.sortDirecao() === 'asc' ? 'ascending' : 'descending';
+  }
+
   // Abre o modal de confirmacao em vez de excluir na hora - a exclusao de
   // fato so acontece em confirmaExclusao(), chamada quando o usuario
   // confirma no <app-confirm-dialog> (ver ConfirmDialogComponent).
