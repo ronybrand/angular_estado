@@ -140,6 +140,43 @@ describe('FormEstadoComponent', () => {
     expect(emitSpy).not.toHaveBeenCalled();
   });
 
+  it('should mark all fields as touched when submitting an invalid form', () => {
+    component.form.controls.sigla.setValue('S');
+    component.form.controls.nome.setValue('AB');
+
+    expect(component.form.controls.sigla.touched).toBe(false);
+
+    component.onSubmit();
+
+    expect(component.form.controls.sigla.touched).toBe(true);
+    expect(component.form.controls.nome.touched).toBe(true);
+  });
+
+  it('should not overwrite in-progress user edits when estado is reassigned with the same values already emitted', () => {
+    fixture.componentRef.setInput('estado', { sigla: 'SP', nome: 'São Paulo' });
+    fixture.detectChanges();
+
+    component.form.controls.nome.setValue('São Paulo Editado');
+    component.form.controls.nome.markAsTouched();
+
+    fixture.componentRef.setInput('estado', { sigla: 'SP', nome: 'São Paulo' });
+    fixture.detectChanges();
+
+    expect(component.form.controls.nome.value).toBe('São Paulo Editado');
+    expect(component.form.controls.nome.touched).toBe(true);
+  });
+
+  it('should still patch the form when estado actually changes to a new value', () => {
+    fixture.componentRef.setInput('estado', { sigla: 'SP', nome: 'São Paulo' });
+    fixture.detectChanges();
+
+    fixture.componentRef.setInput('estado', { sigla: 'RJ', nome: 'Rio de Janeiro' });
+    fixture.detectChanges();
+
+    expect(component.form.controls.sigla.value).toBe('RJ');
+    expect(component.form.controls.nome.value).toBe('Rio de Janeiro');
+  });
+
   it('should emit outputEstado preserving fields not present in the form (id, datas)', () => {
     fixture.componentRef.setInput('estado', {
       id: 42,

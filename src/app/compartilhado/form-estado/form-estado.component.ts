@@ -22,18 +22,26 @@ export class FormEstadoComponent {
     nome: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
   });
 
+  private ultimoSigla: string | undefined;
+  private ultimoNome: string | undefined;
+
   constructor() {
     effect(() => {
       const estado = this.estado();
-      this.form.patchValue(
-        { sigla: estado.sigla ?? '', nome: estado.nome ?? '' },
-        { emitEvent: false },
-      );
+      const sigla = estado.sigla ?? '';
+      const nome = estado.nome ?? '';
+      if (sigla === this.ultimoSigla && nome === this.ultimoNome) {
+        return;
+      }
+      this.ultimoSigla = sigla;
+      this.ultimoNome = nome;
+      this.form.patchValue({ sigla, nome }, { emitEvent: false });
     });
   }
 
   onSubmit() {
     if (this.form.invalid) {
+      this.form.markAllAsTouched();
       return;
     }
     this.outputEstado.emit({ ...this.estado(), ...this.form.getRawValue() });
