@@ -16,7 +16,13 @@
         aria-describedby="sigla-erro"
       />
       @if (form.controls.sigla.invalid && form.controls.sigla.touched) {
-        <div id="sigla-erro" class="text-danger">Digite a sigla do estado com 2 letras.</div>
+        <div id="sigla-erro" class="text-danger">
+          @if (form.controls.sigla.hasError('siglaDuplicada')) {
+            Já existe um estado cadastrado com essa sigla.
+          } @else {
+            Digite a sigla do estado com 2 letras maiúsculas.
+          }
+        </div>
       }
     </div>
   </div>

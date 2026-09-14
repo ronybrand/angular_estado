@@ -33,8 +33,37 @@ describe('FormEstadoComponent', () => {
     fixture.detectChanges();
 
     expect(compiled.querySelector('#sigla-erro')?.textContent?.trim()).toBe(
-      'Digite a sigla do estado com 2 letras.',
+      'Digite a sigla do estado com 2 letras maiúsculas.',
     );
+  });
+
+  it('should show a specific message when sigla duplicates an existing one', () => {
+    fixture.componentRef.setInput('siglasExistentes', ['SP', 'RJ']);
+    fixture.detectChanges();
+
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    component.form.controls.sigla.setValue('SP');
+    component.form.controls.sigla.markAsTouched();
+    fixture.detectChanges();
+
+    expect(compiled.querySelector('#sigla-erro')?.textContent?.trim()).toBe(
+      'Já existe um estado cadastrado com essa sigla.',
+    );
+  });
+
+  it('should not flag siglaDuplicada when the value matches estadoOriginal (editing without changing sigla)', () => {
+    fixture.componentRef.setInput('estado', { sigla: 'SP', nome: 'São Paulo' });
+    fixture.componentRef.setInput('estadoOriginal', { sigla: 'SP', nome: 'São Paulo' });
+    fixture.componentRef.setInput('siglasExistentes', ['SP', 'RJ']);
+    fixture.detectChanges();
+
+    expect(component.form.controls.sigla.hasError('siglaDuplicada')).toBe(false);
+  });
+
+  it('should uppercase sigla as the user types', () => {
+    component.form.controls.sigla.setValue('sp');
+
+    expect(component.form.controls.sigla.value).toBe('SP');
   });
 
   it('should associate the nome error message with its input via aria-describedby', () => {

@@ -23,10 +23,18 @@ export class EditarEstadoComponent implements OnInit {
   estadoOriginal = signal<Estado | undefined>(undefined);
   carregando = signal(true);
   salvando = signal(false);
+  siglasExistentes = signal<string[]>([]);
   readonly errorMsgComponent = viewChild.required(ErrorMsgComponent);
 
   ngOnInit() {
     this.getEstado(Number(this.id()));
+    this.estadoService.getListaEstados().subscribe({
+      next: (estados) => this.siglasExistentes.set(estados.map((e) => e.sigla)),
+      error: () => {
+        // Falha ao pre-carregar siglas so desativa a checagem de duplicidade
+        // no cliente; o backend ainda rejeita duplicatas no submit.
+      },
+    });
   }
 
   getEstado(id: number) {

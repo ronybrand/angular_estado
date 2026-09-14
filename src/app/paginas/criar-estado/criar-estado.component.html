@@ -7,6 +7,7 @@
         <div class="card-body">
           <app-form-estado
             [desabilitado]="salvando()"
+            [siglasExistentes]="siglasExistentes()"
             (outputEstado)="addEstado($event)"
           ></app-form-estado>
         </div>
