@@ -18,7 +18,7 @@
         required
       />
       @if (!sigla.valid && sigla.touched) {
-        <div id="sigla-erro" class="text-danger">Digite a sigla do estado.</div>
+        <div id="sigla-erro" class="text-danger">Digite a sigla do estado com 2 letras.</div>
       }
     </div>
   </div>
@@ -41,7 +41,9 @@
         required
       />
       @if (!nome.valid && nome.touched) {
-        <div id="nome-erro" class="text-danger">Digite o nome do estado.</div>
+        <div id="nome-erro" class="text-danger">
+          Digite o nome do estado com pelo menos 3 e no máximo 100 caracteres.
+        </div>
       }
     </div>
   </div>
