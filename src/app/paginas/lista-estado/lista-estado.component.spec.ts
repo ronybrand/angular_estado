@@ -264,6 +264,37 @@ describe('ListaEstadoComponent', () => {
     expect(estadoService.getListaEstados).toHaveBeenCalledWith(undefined, 'sigla,asc');
   });
 
+  it('should sort by nome when the Nome column header is clicked', async () => {
+    const { component, fixture } = await setup();
+    estadoService.getListaEstados.mockClear();
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    const botoes = compiled.querySelectorAll<HTMLButtonElement>('th button');
+    const botaoNome = botoes[1];
+
+    botaoNome.click();
+
+    expect(component.sortCampo()).toBe('nome');
+    expect(estadoService.getListaEstados).toHaveBeenCalledWith(undefined, 'nome,asc');
+  });
+
+  it('should show a sort indicator icon on the active column, switching from ascending to descending on the second click', async () => {
+    const { fixture } = await setup();
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    const [siglaTh, nomeTh] = compiled.querySelectorAll('thead th');
+    const botaoSigla: HTMLButtonElement = siglaTh.querySelector('button')!;
+
+    botaoSigla.click();
+    fixture.detectChanges();
+
+    expect(siglaTh.querySelector('app-icon')).toBeTruthy();
+    expect(nomeTh.querySelector('app-icon')).toBeFalsy();
+
+    botaoSigla.click();
+    fixture.detectChanges();
+
+    expect(siglaTh.querySelector('app-icon')).toBeTruthy();
+  });
+
   it('should hide the loading indicator when loading the list fails', async () => {
     const { component } = await setup(
       throwError(
