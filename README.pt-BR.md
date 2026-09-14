@@ -8,7 +8,7 @@
 
 🔗 **[Aplicação em produção](https://d3bqbg07tehy1h.cloudfront.net/)**
 
-Front-end Angular do [Projeto Estado](https://github.com/ronybrand/estado) — CRUD de unidades federativas do Brasil (estados). Consome a API Spring Boot do backend em `/api/*`.
+Front-end Angular do [Projeto Estado](https://github.com/ronybrand/estado) — CRUD de unidades federativas do Brasil (estados). Consome a API Spring Boot do backend em `/api/*`. Veja o [CASE_STUDY.md](https://github.com/ronybrand/estado/blob/master/CASE_STUDY.md) do backend para o relato completo do sistema de ponta a ponta (arquitetura, decisões, trade-offs).
 
 Gerado originalmente com [Angular CLI](https://github.com/angular/angular-cli); hoje em Angular 22 (ver `package.json`).
 

@@ -8,7 +8,7 @@
 
 🔗 **[Live application](https://d3bqbg07tehy1h.cloudfront.net/)**
 
-Angular frontend for the [Estado project](https://github.com/ronybrand/estado) — CRUD for Brazilian federative units (states). Consumes the Spring Boot backend API at `/api/*`.
+Angular frontend for the [Estado project](https://github.com/ronybrand/estado) — CRUD for Brazilian federative units (states). Consumes the Spring Boot backend API at `/api/*`. See the backend's [CASE_STUDY.md](https://github.com/ronybrand/estado/blob/master/CASE_STUDY.md) for the end-to-end system write-up (architecture, decisions, trade-offs).
 
 Originally generated with [Angular CLI](https://github.com/angular/angular-cli); now on Angular 22 (see `package.json`).
 
