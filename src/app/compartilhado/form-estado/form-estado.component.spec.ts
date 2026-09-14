@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { vi } from 'vitest';
 
 import { FormEstadoComponent } from './form-estado.component';
 
@@ -126,5 +127,41 @@ describe('FormEstadoComponent', () => {
     const submitButton: HTMLButtonElement = compiled.querySelector('button[type="submit"]')!;
 
     expect(submitButton.disabled).toBe(false);
+  });
+
+  it('should not emit outputEstado when the form is submitted while invalid', () => {
+    const emitSpy = vi.fn();
+    component.outputEstado.subscribe(emitSpy);
+
+    component.form.controls.sigla.setValue('S');
+    component.form.controls.nome.setValue('AB');
+    component.onSubmit();
+
+    expect(emitSpy).not.toHaveBeenCalled();
+  });
+
+  it('should emit outputEstado preserving fields not present in the form (id, datas)', () => {
+    fixture.componentRef.setInput('estado', {
+      id: 42,
+      sigla: 'SP',
+      nome: 'São Paulo',
+      dataHoraCadastro: '2024-01-01T00:00:00Z',
+      dataHoraUltimaAtualizacao: '2024-01-01T00:00:00Z',
+    });
+    fixture.detectChanges();
+
+    const emitSpy = vi.fn();
+    component.outputEstado.subscribe(emitSpy);
+
+    component.form.controls.nome.setValue('São Paulo Atualizado');
+    component.onSubmit();
+
+    expect(emitSpy).toHaveBeenCalledWith({
+      id: 42,
+      sigla: 'SP',
+      nome: 'São Paulo Atualizado',
+      dataHoraCadastro: '2024-01-01T00:00:00Z',
+      dataHoraUltimaAtualizacao: '2024-01-01T00:00:00Z',
+    });
   });
 });

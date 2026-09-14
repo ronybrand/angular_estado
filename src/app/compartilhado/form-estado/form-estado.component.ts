@@ -1,13 +1,13 @@
-import { Component, input, output } from '@angular/core';
+import { Component, effect, inject, input, output } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Estado } from '../../interfaces/estado';
-import { FormsModule } from '@angular/forms';
 import { IconComponent } from '../icon/icon.component';
 
 @Component({
   selector: 'app-form-estado',
   templateUrl: './form-estado.component.html',
   styleUrls: ['./form-estado.component.scss'],
-  imports: [FormsModule, IconComponent],
+  imports: [ReactiveFormsModule, IconComponent],
 })
 export class FormEstadoComponent {
   readonly estado = input<Estado>({} as Estado);
@@ -15,8 +15,28 @@ export class FormEstadoComponent {
   readonly desabilitado = input(false);
   readonly outputEstado = output<Estado>();
 
+  private readonly fb = inject(FormBuilder).nonNullable;
+
+  readonly form = this.fb.group({
+    sigla: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(2)]],
+    nome: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
+  });
+
+  constructor() {
+    effect(() => {
+      const estado = this.estado();
+      this.form.patchValue(
+        { sigla: estado.sigla ?? '', nome: estado.nome ?? '' },
+        { emitEvent: false },
+      );
+    });
+  }
+
   onSubmit() {
-    this.outputEstado.emit(this.estado());
+    if (this.form.invalid) {
+      return;
+    }
+    this.outputEstado.emit({ ...this.estado(), ...this.form.getRawValue() });
   }
 
   alterado(): boolean {
@@ -24,6 +44,7 @@ export class FormEstadoComponent {
     if (!original) {
       return true;
     }
-    return this.estado().sigla !== original.sigla || this.estado().nome !== original.nome;
+    const { sigla, nome } = this.form.getRawValue();
+    return sigla !== original.sigla || nome !== original.nome;
   }
 }
