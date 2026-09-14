@@ -172,6 +172,14 @@ instead of migrating to Tailwind or another framework — less effort, zero
 risk of breaking the build, and keeps the project's focus on the backend.
 See [`src/styles.scss`](src/styles.scss).
 
+The state list fetches `size=100` in a single request instead of exposing
+page-size/pagination controls in the UI: the domain is closed at 27 items
+(the Brazilian states), so real pagination never triggers in practice. The
+backend only exposes the paginated endpoint (`/estado/paginado`, see ADR
+0018 in the `estado` repo) — `EstadoService.getListaEstados()` still
+consumes that contract, it just doesn't surface paging in the UI for a
+dataset that always fits on one page.
+
 ## CI/CD
 
 `.github/workflows/ci.yml` runs lint, unit tests, build and e2e on every push/PR to `master`. See the [Deploy](#deploy) section below for the publishing pipeline.
