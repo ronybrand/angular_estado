@@ -67,4 +67,28 @@ describe('FormEstadoComponent', () => {
 
     expect(submitButton.disabled).toBe(true);
   });
+
+  it('should disable the submit button when the form values match estadoOriginal', () => {
+    fixture.componentRef.setInput('estado', { sigla: 'SP', nome: 'São Paulo' });
+    fixture.componentRef.setInput('estadoOriginal', { sigla: 'SP', nome: 'São Paulo' });
+    fixture.detectChanges();
+
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    const submitButton: HTMLButtonElement = compiled.querySelector('button[type="submit"]')!;
+
+    expect(submitButton.disabled).toBe(true);
+  });
+
+  it('should enable the submit button when the form values differ from estadoOriginal', async () => {
+    fixture.componentRef.setInput('estado', { sigla: 'SP', nome: 'São Paulo' });
+    fixture.componentRef.setInput('estadoOriginal', { sigla: 'SP', nome: 'São Paulo Antigo' });
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    const submitButton: HTMLButtonElement = compiled.querySelector('button[type="submit"]')!;
+
+    expect(submitButton.disabled).toBe(false);
+  });
 });

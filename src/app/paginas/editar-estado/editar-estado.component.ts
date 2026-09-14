@@ -20,6 +20,7 @@ export class EditarEstadoComponent implements OnInit {
   readonly id = input.required<string>();
 
   estado = signal<Estado | undefined>(undefined);
+  estadoOriginal = signal<Estado | undefined>(undefined);
   carregando = signal(true);
   salvando = signal(false);
   readonly errorMsgComponent = viewChild.required(ErrorMsgComponent);
@@ -34,7 +35,10 @@ export class EditarEstadoComponent implements OnInit {
       this.carregando,
       this.errorMsgComponent(),
       'Falha ao buscar estado.',
-      (estado) => this.estado.set(estado),
+      (estado) => {
+        this.estado.set(estado);
+        this.estadoOriginal.set({ ...estado });
+      },
     );
   }
 
