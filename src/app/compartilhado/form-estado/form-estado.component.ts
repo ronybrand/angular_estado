@@ -11,10 +11,19 @@ import { IconComponent } from '../icon/icon.component';
 })
 export class FormEstadoComponent {
   readonly estado = input<Estado>({} as Estado);
+  readonly estadoOriginal = input<Estado>();
   readonly desabilitado = input(false);
   readonly outputEstado = output<Estado>();
 
   onSubmit() {
     this.outputEstado.emit(this.estado());
+  }
+
+  alterado(): boolean {
+    const original = this.estadoOriginal();
+    if (!original) {
+      return true;
+    }
+    return this.estado().sigla !== original.sigla || this.estado().nome !== original.nome;
   }
 }

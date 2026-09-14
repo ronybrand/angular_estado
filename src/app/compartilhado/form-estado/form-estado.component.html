@@ -46,7 +46,11 @@
     </div>
   </div>
   <div class="col-sm-12">
-    <button class="btn btn-primary float-end" type="submit" [disabled]="!f.valid || desabilitado()">
+    <button
+      class="btn btn-primary float-end"
+      type="submit"
+      [disabled]="!f.valid || desabilitado() || !alterado()"
+    >
       <app-icon name="check" [size]="14" />
       Salvar
     </button>
