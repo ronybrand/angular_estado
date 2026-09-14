@@ -41,6 +41,24 @@ describe('EstadoService', () => {
     });
   });
 
+  it('getListaEstados should include busca in the query string when provided', () => {
+    service.getListaEstados('santa').subscribe();
+
+    const req = httpMock.expectOne(`${environment.apiUrl}/estado/paginado?size=100&busca=santa`);
+    expect(req.request.method).toBe('GET');
+    req.flush({ content: [], page: { size: 100, number: 0, totalElements: 0, totalPages: 0 } });
+  });
+
+  it('getListaEstados should include sort in the query string when provided', () => {
+    service.getListaEstados(undefined, 'nome,asc').subscribe();
+
+    // HttpParams nao codifica virgula por padrao (e um sub-delim valido em
+    // query string, RFC 3986) - a URL de verdade mantem "," literal.
+    const req = httpMock.expectOne(`${environment.apiUrl}/estado/paginado?size=100&sort=nome,asc`);
+    expect(req.request.method).toBe('GET');
+    req.flush({ content: [], page: { size: 100, number: 0, totalElements: 0, totalPages: 0 } });
+  });
+
   it('getEstado should GET a single estado by id', () => {
     service.getEstado(1).subscribe((result) => {
       expect(result).toEqual(estado);

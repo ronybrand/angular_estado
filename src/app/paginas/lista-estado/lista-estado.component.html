@@ -14,6 +14,17 @@
   <div class="card">
     <div class="card-header">Estados</div>
     <div class="card-body">
+      <div class="mb-3">
+        <label for="busca-estado" class="visually-hidden">Buscar por nome ou sigla</label>
+        <input
+          id="busca-estado"
+          type="search"
+          class="form-control"
+          placeholder="Buscar por nome ou sigla..."
+          [value]="busca()"
+          (input)="onBuscaChange($any($event.target).value)"
+        />
+      </div>
       @if (carregando()) {
         <app-spinner></app-spinner>
       }
@@ -30,8 +41,36 @@
           <table class="table table-bordered text-center">
             <thead>
               <tr>
-                <th scope="col">Sigla</th>
-                <th scope="col">Nome</th>
+                <th scope="col">
+                  <button
+                    type="button"
+                    class="btn btn-link p-0 text-decoration-none text-reset"
+                    (click)="ordenarPor('sigla')"
+                  >
+                    Sigla
+                    @if (sortCampo() === 'sigla') {
+                      <app-icon
+                        [name]="sortDirecao() === 'asc' ? 'chevron-up' : 'chevron-down'"
+                        [size]="12"
+                      />
+                    }
+                  </button>
+                </th>
+                <th scope="col">
+                  <button
+                    type="button"
+                    class="btn btn-link p-0 text-decoration-none text-reset"
+                    (click)="ordenarPor('nome')"
+                  >
+                    Nome
+                    @if (sortCampo() === 'nome') {
+                      <app-icon
+                        [name]="sortDirecao() === 'asc' ? 'chevron-up' : 'chevron-down'"
+                        [size]="12"
+                      />
+                    }
+                  </button>
+                </th>
                 <th scope="col" class="d-none d-md-table-cell">Criado</th>
                 <th scope="col" class="d-none d-md-table-cell">Última Alteração</th>
                 <th scope="col">Ações</th>
