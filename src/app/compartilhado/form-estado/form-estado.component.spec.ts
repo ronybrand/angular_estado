@@ -31,7 +31,9 @@ describe('FormEstadoComponent', () => {
     sigla.dispatchEvent(new Event('blur'));
     fixture.detectChanges();
 
-    expect(compiled.querySelector('#sigla-erro')).toBeTruthy();
+    expect(compiled.querySelector('#sigla-erro')?.textContent?.trim()).toBe(
+      'Digite a sigla do estado com 2 letras.',
+    );
   });
 
   it('should associate the nome error message with its input via aria-describedby', () => {
@@ -43,7 +45,9 @@ describe('FormEstadoComponent', () => {
     nome.dispatchEvent(new Event('blur'));
     fixture.detectChanges();
 
-    expect(compiled.querySelector('#nome-erro')).toBeTruthy();
+    expect(compiled.querySelector('#nome-erro')?.textContent?.trim()).toBe(
+      'Digite o nome do estado com pelo menos 3 e no máximo 100 caracteres.',
+    );
   });
 
   it('should mark invalid, touched fields with aria-invalid="true"', () => {
@@ -55,6 +59,25 @@ describe('FormEstadoComponent', () => {
     fixture.detectChanges();
 
     expect(sigla.getAttribute('aria-invalid')).toBe('true');
+  });
+
+  it('should enable the submit button and show no errors when sigla and nome are valid without estadoOriginal', () => {
+    fixture.componentRef.setInput('estado', { sigla: 'SP', nome: 'São Paulo' });
+    fixture.detectChanges();
+
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    const sigla: HTMLInputElement = compiled.querySelector('#sigla')!;
+    const nome: HTMLInputElement = compiled.querySelector('#nome')!;
+    sigla.dispatchEvent(new Event('focus'));
+    sigla.dispatchEvent(new Event('blur'));
+    nome.dispatchEvent(new Event('focus'));
+    nome.dispatchEvent(new Event('blur'));
+    fixture.detectChanges();
+
+    const submitButton: HTMLButtonElement = compiled.querySelector('button[type="submit"]')!;
+    expect(submitButton.disabled).toBe(false);
+    expect(compiled.querySelector('#sigla-erro')).toBeFalsy();
+    expect(compiled.querySelector('#nome-erro')).toBeFalsy();
   });
 
   it('should disable the submit button when desabilitado is true, even with a valid form', () => {
@@ -82,6 +105,19 @@ describe('FormEstadoComponent', () => {
   it('should enable the submit button when the form values differ from estadoOriginal', async () => {
     fixture.componentRef.setInput('estado', { sigla: 'SP', nome: 'São Paulo' });
     fixture.componentRef.setInput('estadoOriginal', { sigla: 'SP', nome: 'São Paulo Antigo' });
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    const submitButton: HTMLButtonElement = compiled.querySelector('button[type="submit"]')!;
+
+    expect(submitButton.disabled).toBe(false);
+  });
+
+  it('should enable the submit button when only sigla differs from estadoOriginal', async () => {
+    fixture.componentRef.setInput('estado', { sigla: 'RJ', nome: 'São Paulo' });
+    fixture.componentRef.setInput('estadoOriginal', { sigla: 'SP', nome: 'São Paulo' });
     fixture.detectChanges();
     await fixture.whenStable();
     fixture.detectChanges();
