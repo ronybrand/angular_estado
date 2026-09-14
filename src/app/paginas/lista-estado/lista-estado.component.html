@@ -41,7 +41,7 @@
           <table class="table table-bordered text-center">
             <thead>
               <tr>
-                <th scope="col">
+                <th scope="col" [attr.aria-sort]="ariaSort('sigla')">
                   <button
                     type="button"
                     class="btn btn-link p-0 text-decoration-none text-reset"
@@ -56,7 +56,7 @@
                     }
                   </button>
                 </th>
-                <th scope="col">
+                <th scope="col" [attr.aria-sort]="ariaSort('nome')">
                   <button
                     type="button"
                     class="btn btn-link p-0 text-decoration-none text-reset"

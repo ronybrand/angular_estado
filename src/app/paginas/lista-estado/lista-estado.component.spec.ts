@@ -295,6 +295,27 @@ describe('ListaEstadoComponent', () => {
     expect(siglaTh.querySelector('app-icon')).toBeTruthy();
   });
 
+  it('should expose the sort state via aria-sort on the active column header', async () => {
+    const { fixture } = await setup();
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    const [siglaTh, nomeTh] = compiled.querySelectorAll('thead th');
+    const botaoSigla: HTMLButtonElement = siglaTh.querySelector('button')!;
+
+    expect(siglaTh.getAttribute('aria-sort')).toBe('none');
+    expect(nomeTh.getAttribute('aria-sort')).toBe('none');
+
+    botaoSigla.click();
+    fixture.detectChanges();
+
+    expect(siglaTh.getAttribute('aria-sort')).toBe('ascending');
+    expect(nomeTh.getAttribute('aria-sort')).toBe('none');
+
+    botaoSigla.click();
+    fixture.detectChanges();
+
+    expect(siglaTh.getAttribute('aria-sort')).toBe('descending');
+  });
+
   it('should hide the loading indicator when loading the list fails', async () => {
     const { component } = await setup(
       throwError(
