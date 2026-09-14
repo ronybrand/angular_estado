@@ -164,6 +164,63 @@ describe('ListaEstadoComponent', () => {
     expect(rowAfter).toBe(rowBefore);
   });
 
+  it('should debounce busca input, calling the service once after 300ms with the latest value', async () => {
+    vi.useFakeTimers();
+    const { component } = await setup();
+    estadoService.getListaEstados.mockClear();
+
+    component.onBuscaChange('s');
+    component.onBuscaChange('sa');
+    component.onBuscaChange('san');
+    vi.advanceTimersByTime(299);
+    expect(estadoService.getListaEstados).not.toHaveBeenCalled();
+
+    vi.advanceTimersByTime(1);
+    expect(estadoService.getListaEstados).toHaveBeenCalledTimes(1);
+    expect(estadoService.getListaEstados).toHaveBeenCalledWith('san', undefined);
+    vi.useRealTimers();
+  });
+
+  it('should clear the pending debounce timer on destroy', async () => {
+    vi.useFakeTimers();
+    const { component, fixture } = await setup();
+    estadoService.getListaEstados.mockClear();
+
+    component.onBuscaChange('sc');
+    fixture.destroy();
+    vi.advanceTimersByTime(300);
+
+    expect(estadoService.getListaEstados).not.toHaveBeenCalled();
+    vi.useRealTimers();
+  });
+
+  it('should sort ascending by the clicked field on first click, and toggle to descending on the next click of the same field', async () => {
+    const { component } = await setup();
+    estadoService.getListaEstados.mockClear();
+
+    component.ordenarPor('nome');
+    expect(component.sortCampo()).toBe('nome');
+    expect(component.sortDirecao()).toBe('asc');
+    expect(estadoService.getListaEstados).toHaveBeenLastCalledWith(undefined, 'nome,asc');
+
+    component.ordenarPor('nome');
+    expect(component.sortDirecao()).toBe('desc');
+    expect(estadoService.getListaEstados).toHaveBeenLastCalledWith(undefined, 'nome,desc');
+  });
+
+  it('should reset direction to ascending when switching the sorted field', async () => {
+    const { component } = await setup();
+
+    component.ordenarPor('nome');
+    component.ordenarPor('nome');
+    expect(component.sortDirecao()).toBe('desc');
+
+    component.ordenarPor('sigla');
+
+    expect(component.sortCampo()).toBe('sigla');
+    expect(component.sortDirecao()).toBe('asc');
+  });
+
   it('should show a loading indicator while fetching the list', async () => {
     const subject = new Subject<Estado[]>();
     const { component, fixture } = await setup(subject);
@@ -178,6 +235,64 @@ describe('ListaEstadoComponent', () => {
 
     expect(component.carregando()).toBe(false);
     expect(compiled.querySelector('app-spinner')).toBeFalsy();
+  });
+
+  it('should render a search input that triggers onBuscaChange on typing', async () => {
+    vi.useFakeTimers();
+    const { fixture } = await setup();
+    estadoService.getListaEstados.mockClear();
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    const input: HTMLInputElement = compiled.querySelector('#busca-estado')!;
+
+    input.value = 'catarina';
+    input.dispatchEvent(new Event('input'));
+    vi.advanceTimersByTime(300);
+
+    expect(estadoService.getListaEstados).toHaveBeenCalledWith('catarina', undefined);
+    vi.useRealTimers();
+  });
+
+  it('should sort by sigla when the Sigla column header is clicked', async () => {
+    const { component, fixture } = await setup();
+    estadoService.getListaEstados.mockClear();
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    const botaoSigla: HTMLButtonElement = compiled.querySelector('th button')!;
+
+    botaoSigla.click();
+
+    expect(component.sortCampo()).toBe('sigla');
+    expect(estadoService.getListaEstados).toHaveBeenCalledWith(undefined, 'sigla,asc');
+  });
+
+  it('should sort by nome when the Nome column header is clicked', async () => {
+    const { component, fixture } = await setup();
+    estadoService.getListaEstados.mockClear();
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    const botoes = compiled.querySelectorAll<HTMLButtonElement>('th button');
+    const botaoNome = botoes[1];
+
+    botaoNome.click();
+
+    expect(component.sortCampo()).toBe('nome');
+    expect(estadoService.getListaEstados).toHaveBeenCalledWith(undefined, 'nome,asc');
+  });
+
+  it('should show a sort indicator icon on the active column, switching from ascending to descending on the second click', async () => {
+    const { fixture } = await setup();
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    const [siglaTh, nomeTh] = compiled.querySelectorAll('thead th');
+    const botaoSigla: HTMLButtonElement = siglaTh.querySelector('button')!;
+
+    botaoSigla.click();
+    fixture.detectChanges();
+
+    expect(siglaTh.querySelector('app-icon')).toBeTruthy();
+    expect(nomeTh.querySelector('app-icon')).toBeFalsy();
+
+    botaoSigla.click();
+    fixture.detectChanges();
+
+    expect(siglaTh.querySelector('app-icon')).toBeTruthy();
   });
 
   it('should hide the loading indicator when loading the list fails', async () => {

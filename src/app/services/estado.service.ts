@@ -12,13 +12,21 @@ export class EstadoService {
   private http = inject(HttpClient);
   private readonly baseUrl = `${environment.apiUrl}/estado`;
 
-  getListaEstados(): Observable<Estado[]> {
+  getListaEstados(busca?: string, sort?: string): Observable<Estado[]> {
     // size=100 cobre o dataset inteiro (27 estados) numa unica pagina - o
     // backend clampa qualquer valor acima de app.pagination.max-size, entao
     // e seguro pedir mais do que existe. Ver ADR 0018 no backend (GET
     // /estado sem paginacao foi removido, /paginado e o unico endpoint de
-    // listagem agora).
-    const params = new HttpParams().set('size', '100');
+    // listagem agora). busca/sort so entram na query string quando
+    // preenchidos - o backend trata ausencia como "sem filtro"/"sem
+    // ordenacao explicita".
+    let params = new HttpParams().set('size', '100');
+    if (busca) {
+      params = params.set('busca', busca);
+    }
+    if (sort) {
+      params = params.set('sort', sort);
+    }
     return this.http
       .get<PaginaResponse<Estado>>(`${this.baseUrl}/paginado`, { params })
       .pipe(map((pagina) => pagina.content));
