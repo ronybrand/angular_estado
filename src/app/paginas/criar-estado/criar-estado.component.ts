@@ -18,6 +18,17 @@ export class CriarEstadoComponent {
 
   readonly errorMsgComponent = viewChild.required(ErrorMsgComponent);
   salvando = signal(false);
+  siglasExistentes = signal<string[]>([]);
+
+  constructor() {
+    this.estadoService.getListaEstados().subscribe({
+      next: (estados) => this.siglasExistentes.set(estados.map((e) => e.sigla)),
+      error: () => {
+        // Falha ao pre-carregar siglas so desativa a checagem de duplicidade
+        // no cliente; o backend ainda rejeita duplicatas no submit.
+      },
+    });
+  }
 
   addEstado(estado: Estado) {
     subscreveComProcessando(
