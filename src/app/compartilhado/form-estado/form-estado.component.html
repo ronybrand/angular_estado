@@ -1,4 +1,4 @@
-<form #f="ngForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
   <div class="mb-3">
     <label for="sigla" class="col-sm-4 col-form-label form-label-eyebrow">Sigla</label>
     <div class="col-sm-12">
@@ -6,18 +6,16 @@
         type="text"
         class="form-control col-sm-2"
         id="sigla"
-        name="sigla"
-        #sigla="ngModel"
-        minlength="2"
+        formControlName="sigla"
         maxlength="2"
         size="2"
-        [(ngModel)]="estado().sigla"
-        [class.is-invalid]="!sigla.valid && sigla.touched"
-        [attr.aria-invalid]="!sigla.valid && sigla.touched ? true : null"
+        [class.is-invalid]="form.controls.sigla.invalid && form.controls.sigla.touched"
+        [attr.aria-invalid]="
+          form.controls.sigla.invalid && form.controls.sigla.touched ? true : null
+        "
         aria-describedby="sigla-erro"
-        required
       />
-      @if (!sigla.valid && sigla.touched) {
+      @if (form.controls.sigla.invalid && form.controls.sigla.touched) {
         <div id="sigla-erro" class="text-danger">Digite a sigla do estado com 2 letras.</div>
       }
     </div>
@@ -29,18 +27,14 @@
         type="text"
         class="form-control"
         id="nome"
-        name="nome"
-        minlength="3"
+        formControlName="nome"
         maxlength="100"
         placeholder="Digite o nome do estado..."
-        #nome="ngModel"
-        [(ngModel)]="estado().nome"
-        [class.is-invalid]="!nome.valid && nome.touched"
-        [attr.aria-invalid]="!nome.valid && nome.touched ? true : null"
+        [class.is-invalid]="form.controls.nome.invalid && form.controls.nome.touched"
+        [attr.aria-invalid]="form.controls.nome.invalid && form.controls.nome.touched ? true : null"
         aria-describedby="nome-erro"
-        required
       />
-      @if (!nome.valid && nome.touched) {
+      @if (form.controls.nome.invalid && form.controls.nome.touched) {
         <div id="nome-erro" class="text-danger">
           Digite o nome do estado com pelo menos 3 e no máximo 100 caracteres.
         </div>
@@ -51,7 +45,7 @@
     <button
       class="btn btn-primary float-end"
       type="submit"
-      [disabled]="!f.valid || desabilitado() || !alterado()"
+      [disabled]="form.invalid || desabilitado() || !alterado()"
     >
       <app-icon name="check" [size]="14" />
       Salvar
