@@ -1,4 +1,4 @@
-import { Component, computed, input, output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { Estado } from '../../interfaces/estado';
 import { FormsModule } from '@angular/forms';
 import { IconComponent } from '../icon/icon.component';
@@ -19,11 +19,11 @@ export class FormEstadoComponent {
     this.outputEstado.emit(this.estado());
   }
 
-  readonly alterado = computed(() => {
+  alterado(): boolean {
     const original = this.estadoOriginal();
     if (!original) {
       return true;
     }
     return this.estado().sigla !== original.sigla || this.estado().nome !== original.nome;
-  });
+  }
 }
