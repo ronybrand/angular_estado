@@ -1,7 +1,10 @@
-export type IconName = 'plus' | 'pencil' | 'trash' | 'check' | 'chevron-up' | 'chevron-down';
+export type IconName =
+  'plus' | 'pencil' | 'trash' | 'check' | 'chevron-up' | 'chevron-down' | 'box-arrow-right';
 
 export const ICON_PATHS: Record<IconName, string> = {
   plus: 'M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2',
+  'box-arrow-right':
+    'M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0zm.354-6.854a.5.5 0 1 0-.708.708L7.293 7.5H1.5a.5.5 0 0 0 0 1h5.793l-1.647 1.646a.5.5 0 0 0 .708.708l2.5-2.5a.5.5 0 0 0 0-.708z',
   'chevron-up':
     'M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708z',
   'chevron-down':
