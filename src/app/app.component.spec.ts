@@ -3,6 +3,7 @@ import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { AppComponent } from './app.component';
+import { AuthService } from './auth/auth.service';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
@@ -36,5 +37,41 @@ describe('AppComponent', () => {
     fixture.detectChanges();
     const compiled = fixture.debugElement.nativeElement;
     expect(compiled.querySelector('app-error-msg')).toBeNull();
+  });
+
+  it('should not render the logout button when the user is not authenticated', () => {
+    const authService = TestBed.inject(AuthService);
+    vi.spyOn(authService, 'isAuthenticated').mockReturnValue(false);
+
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
+    const compiled = fixture.debugElement.nativeElement;
+
+    expect(compiled.querySelector('[data-testid="logout-button"]')).toBeNull();
+  });
+
+  it('should render the logout button when the user is authenticated', () => {
+    const authService = TestBed.inject(AuthService);
+    vi.spyOn(authService, 'isAuthenticated').mockReturnValue(true);
+
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
+    const compiled = fixture.debugElement.nativeElement;
+
+    expect(compiled.querySelector('[data-testid="logout-button"]')).not.toBeNull();
+  });
+
+  it('should call authService.logout() when the logout button is clicked', () => {
+    const authService = TestBed.inject(AuthService);
+    vi.spyOn(authService, 'isAuthenticated').mockReturnValue(true);
+    const logoutSpy = vi.spyOn(authService, 'logout').mockImplementation(() => undefined);
+
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
+    const compiled = fixture.debugElement.nativeElement;
+    const button: HTMLButtonElement = compiled.querySelector('[data-testid="logout-button"]');
+    button.click();
+
+    expect(logoutSpy).toHaveBeenCalled();
   });
 });
