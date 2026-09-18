@@ -22,6 +22,12 @@ jobs:
        github.event.workflow_run.event == 'push' &&
        github.event.workflow_run.head_repository.full_name == github.repository)
     runs-on: ubuntu-latest
+    # Requer a trust policy OIDC aceitar o sub repo:.../environment:production
+    # (estado PR #71) - sem isso, declarar `environment:` aqui muda o claim
+    # sub emitido pelo GitHub e quebra o AssumeRoleWithWebIdentity (ver #94/#95).
+    environment:
+      name: production
+      url: https://d3bqbg07tehy1h.cloudfront.net/
     permissions:
       id-token: write
       contents: read
