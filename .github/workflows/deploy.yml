@@ -22,9 +22,6 @@ jobs:
        github.event.workflow_run.event == 'push' &&
        github.event.workflow_run.head_repository.full_name == github.repository)
     runs-on: ubuntu-latest
-    environment:
-      name: production
-      url: https://d3bqbg07tehy1h.cloudfront.net/
     permissions:
       id-token: write
       contents: read
