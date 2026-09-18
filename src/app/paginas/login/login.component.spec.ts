@@ -32,6 +32,14 @@ describe('LoginComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should show the public demo credentials', () => {
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    const hint = compiled.querySelector('[data-testid="credenciais-demo"]');
+
+    expect(hint?.textContent).toContain('admin');
+    expect(hint?.textContent).toContain('Estado-Demo-2026');
+  });
+
   it('should store the token and navigate home after a successful login', () => {
     const router = TestBed.inject(Router);
     const navigateSpy = vi.spyOn(router, 'navigateByUrl').mockResolvedValue(true);
