@@ -200,6 +200,25 @@ describe('PerguntarIaComponent', () => {
     });
   });
 
+  it('should render the link title attribute when the Markdown link includes one', async () => {
+    aiAgentService.perguntar.mockReturnValue(
+      of({
+        answer: 'Fonte: [IBGE](https://www.ibge.gov.br/estados.html "Fonte oficial").',
+      }),
+    );
+    component.question.set('Qual a fonte dos dados?');
+
+    component.perguntar();
+    fixture.detectChanges();
+
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    await vi.waitFor(() => {
+      fixture.detectChanges();
+      const link: HTMLAnchorElement | null = compiled.querySelector('[data-testid="resposta"] a');
+      expect(link?.getAttribute('title')).toBe('Fonte oficial');
+    });
+  });
+
   it('should sanitize embedded HTML/script from the LLM answer', async () => {
     aiAgentService.perguntar.mockReturnValue(
       of({
