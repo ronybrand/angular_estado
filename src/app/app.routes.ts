@@ -25,5 +25,10 @@ export const routes: Routes = [
         (m) => m.EditarEstadoComponent,
       ),
   },
+  {
+    path: 'perguntar-ia',
+    loadComponent: () =>
+      import('./paginas/perguntar-ia/perguntar-ia.component').then((m) => m.PerguntarIaComponent),
+  },
   { path: '**', redirectTo: '' },
 ];

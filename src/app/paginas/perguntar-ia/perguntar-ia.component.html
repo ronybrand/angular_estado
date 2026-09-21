@@ -1,0 +1,44 @@
+<div class="container mt-3">
+  <div class="row">
+    <div class="col-md-7 mx-auto">
+      <app-error-msg></app-error-msg>
+      <div class="card">
+        <div class="card-header">Pergunte sobre os estados brasileiros</div>
+        <div class="card-body">
+          <div class="mb-3">
+            <textarea
+              class="form-control"
+              rows="3"
+              [maxlength]="MAX_QUESTION_LENGTH"
+              placeholder="Ex.: Quantos estados existem na região Sudeste?"
+              [ngModel]="question()"
+              (ngModelChange)="question.set($event)"
+              [disabled]="processando()"
+              data-testid="pergunta-textarea"
+            ></textarea>
+          </div>
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-testid="perguntar-button"
+            [disabled]="processando() || !question().trim()"
+            (click)="perguntar()"
+          >
+            @if (processando()) {
+              <span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>
+              Perguntando...
+            } @else {
+              Perguntar
+            }
+          </button>
+
+          @if (answer()) {
+            <div class="alert alert-secondary mt-3" role="status" data-testid="resposta">
+              {{ answer() }}
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

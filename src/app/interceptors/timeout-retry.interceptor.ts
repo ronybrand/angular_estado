@@ -1,12 +1,22 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { retry, throwError, timeout, timer } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export const TIMEOUT_MS = 15000;
+// O ai-agent chama o Gemini com tool-calling, que pode legitimamente
+// demorar bem mais que o CRUD simples de estados - 15s bastam para o
+// resto da API, mas cortariam uma resposta de IA em andamento.
+export const AI_AGENT_TIMEOUT_MS = 60000;
 export const RETRY_COUNT = 2;
 export const RETRY_DELAY_MS = 500;
 
+function ehRequisicaoDoAiAgent(url: string): boolean {
+  return url === environment.aiApiUrl || url.startsWith(`${environment.aiApiUrl}/`);
+}
+
 export const timeoutRetryInterceptor: HttpInterceptorFn = (req, next) => {
-  const response$ = next(req).pipe(timeout(TIMEOUT_MS));
+  const timeoutMs = ehRequisicaoDoAiAgent(req.url) ? AI_AGENT_TIMEOUT_MS : TIMEOUT_MS;
+  const response$ = next(req).pipe(timeout(timeoutMs));
 
   if (req.method !== 'GET') {
     return response$;

@@ -9,6 +9,7 @@ import { requestIdInterceptor } from './app/interceptors/request-id.interceptor'
 import { timeoutRetryInterceptor } from './app/interceptors/timeout-retry.interceptor';
 import { authInterceptor } from './app/interceptors/auth.interceptor';
 import { authErrorInterceptor } from './app/interceptors/auth-error.interceptor';
+import { aiApiKeyInterceptor } from './app/interceptors/ai-api-key.interceptor';
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 
@@ -31,10 +32,14 @@ bootstrapApplication(AppComponent, {
     // "vê" a resposta depois que ela passa de volta por quem vier depois
     // dele na lista - se authErrorInterceptor for movido para antes de
     // authInterceptor, essa garantia de ordem se perde silenciosamente.
+    // aiApiKeyInterceptor opera num namespace de URL disjunto (aiApiUrl, nao
+    // apiUrl) - independente dessa cadeia de ordering, colocado ao lado do
+    // authInterceptor so por afinidade (ambos anexam header de auth).
     provideHttpClient(
       withInterceptors([
         requestIdInterceptor,
         authInterceptor,
+        aiApiKeyInterceptor,
         authErrorInterceptor,
         timeoutRetryInterceptor,
       ]),
