@@ -171,4 +171,25 @@ describe('PerguntarIaComponent', () => {
       expect(resposta?.innerHTML).not.toContain('**');
     });
   });
+
+  it('should sanitize embedded HTML/script from the LLM answer', async () => {
+    aiAgentService.perguntar.mockReturnValue(
+      of({
+        answer: 'Texto normal <script>alert(1)</script> <img src="x" onerror="alert(1)">',
+      }),
+    );
+    component.question.set('pergunta qualquer');
+
+    component.perguntar();
+    fixture.detectChanges();
+
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    await vi.waitFor(() => {
+      fixture.detectChanges();
+      const resposta = compiled.querySelector('[data-testid="resposta"]');
+      expect(resposta?.innerHTML).not.toContain('<script');
+      expect(resposta?.innerHTML).not.toContain('onerror');
+      expect(resposta?.textContent).toContain('Texto normal');
+    });
+  });
 });

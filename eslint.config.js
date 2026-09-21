@@ -31,6 +31,14 @@ module.exports = defineConfig([
           style: 'kebab-case',
         },
       ],
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: "MemberExpression[object.name='SecurityContext'][property.name='NONE']",
+          message:
+            'SecurityContext.NONE desabilita a sanitizacao do Angular. Nao use - a resposta do ai-agent (ngx-markdown) e conteudo nao confiavel (LLM) e precisa ser sanitizada.',
+        },
+      ],
     },
   },
   {
