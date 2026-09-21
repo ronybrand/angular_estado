@@ -1,9 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subject, of, throwError } from 'rxjs';
+import { provideMarkdown, MARKED_OPTIONS } from 'ngx-markdown';
 
 import { PerguntarIaComponent } from './perguntar-ia.component';
 import { AiAgentService } from '../../services/ai-agent.service';
+import { externalLinkRenderer } from '../../compartilhado/markdown/external-link-renderer';
 
 describe('PerguntarIaComponent', () => {
   let component: PerguntarIaComponent;
@@ -15,7 +17,15 @@ describe('PerguntarIaComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [PerguntarIaComponent],
-      providers: [{ provide: AiAgentService, useValue: aiAgentService }],
+      providers: [
+        { provide: AiAgentService, useValue: aiAgentService },
+        provideMarkdown({
+          markedOptions: {
+            provide: MARKED_OPTIONS,
+            useValue: { renderer: externalLinkRenderer },
+          },
+        }),
+      ],
     }).compileComponents();
   });
 
@@ -137,7 +147,7 @@ describe('PerguntarIaComponent', () => {
     expect(compiled.querySelector('.spinner-border')).toBeTruthy();
   });
 
-  it('should render the answer after a successful question', () => {
+  it('should render the answer after a successful question', async () => {
     aiAgentService.perguntar.mockReturnValue(of({ answer: 'Existem 27 estados.' }));
     component.question.set('Quantos estados existem?');
 
@@ -145,8 +155,88 @@ describe('PerguntarIaComponent', () => {
     fixture.detectChanges();
 
     const compiled: HTMLElement = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('[data-testid="resposta"]')?.textContent).toContain(
-      'Existem 27 estados.',
+    await vi.waitFor(() => {
+      fixture.detectChanges();
+      expect(compiled.querySelector('[data-testid="resposta"]')?.textContent).toContain(
+        'Existem 27 estados.',
+      );
+    });
+  });
+
+  it('should render Markdown from the answer instead of showing raw syntax', async () => {
+    aiAgentService.perguntar.mockReturnValue(
+      of({ answer: '**Santa Catarina** (SC) e **Rio Grande do Sul** (RS).' }),
     );
+    component.question.set('Quais estados tem no sul do pais?');
+
+    component.perguntar();
+    fixture.detectChanges();
+
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    await vi.waitFor(() => {
+      fixture.detectChanges();
+      const resposta = compiled.querySelector('[data-testid="resposta"]');
+      expect(resposta?.querySelectorAll('strong').length).toBe(2);
+      expect(resposta?.innerHTML).not.toContain('**');
+    });
+  });
+
+  it('should open links from the answer in a new tab without leaking window.opener', async () => {
+    aiAgentService.perguntar.mockReturnValue(
+      of({ answer: 'Fonte: [IBGE](https://www.ibge.gov.br/estados.html).' }),
+    );
+    component.question.set('Qual a fonte dos dados?');
+
+    component.perguntar();
+    fixture.detectChanges();
+
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    await vi.waitFor(() => {
+      fixture.detectChanges();
+      const link: HTMLAnchorElement | null = compiled.querySelector('[data-testid="resposta"] a');
+      expect(link?.getAttribute('href')).toBe('https://www.ibge.gov.br/estados.html');
+      expect(link?.getAttribute('target')).toBe('_blank');
+      expect(link?.getAttribute('rel')).toBe('noopener noreferrer');
+    });
+  });
+
+  it('should render the link title attribute when the Markdown link includes one', async () => {
+    aiAgentService.perguntar.mockReturnValue(
+      of({
+        answer: 'Fonte: [IBGE](https://www.ibge.gov.br/estados.html "Fonte oficial").',
+      }),
+    );
+    component.question.set('Qual a fonte dos dados?');
+
+    component.perguntar();
+    fixture.detectChanges();
+
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    await vi.waitFor(() => {
+      fixture.detectChanges();
+      const link: HTMLAnchorElement | null = compiled.querySelector('[data-testid="resposta"] a');
+      expect(link?.getAttribute('title')).toBe('Fonte oficial');
+    });
+  });
+
+  it('should sanitize embedded HTML/script from the LLM answer', async () => {
+    aiAgentService.perguntar.mockReturnValue(
+      of({
+        answer: 'Texto normal <script>alert(1)</script> <img src="x" onerror="alert(1)">',
+      }),
+    );
+    component.question.set('pergunta qualquer');
+
+    component.perguntar();
+    fixture.detectChanges();
+
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    await vi.waitFor(() => {
+      fixture.detectChanges();
+      const resposta = compiled.querySelector('[data-testid="resposta"]');
+      expect(resposta?.innerHTML).not.toContain('<script');
+      expect(resposta?.innerHTML).not.toContain('onerror');
+      expect(resposta?.textContent).toContain('Texto normal');
+    });
   });
 });

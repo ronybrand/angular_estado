@@ -4,7 +4,9 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
+import { provideMarkdown, MARKED_OPTIONS } from 'ngx-markdown';
 
+import { externalLinkRenderer } from './app/compartilhado/markdown/external-link-renderer';
 import { requestIdInterceptor } from './app/interceptors/request-id.interceptor';
 import { timeoutRetryInterceptor } from './app/interceptors/timeout-retry.interceptor';
 import { authInterceptor } from './app/interceptors/auth.interceptor';
@@ -44,5 +46,15 @@ bootstrapApplication(AppComponent, {
         timeoutRetryInterceptor,
       ]),
     ),
+    // Renderiza a resposta em Markdown do /ask (ai-agent) sem interpretar
+    // HTML embutido nela - o texto vem de um LLM, entao e tratado como
+    // conteudo nao confiavel (sanitize default do ngx-markdown/marked).
+    // Ver docs/adr/0001-renderizacao-markdown-resposta-ia.md.
+    provideMarkdown({
+      markedOptions: {
+        provide: MARKED_OPTIONS,
+        useValue: { renderer: externalLinkRenderer },
+      },
+    }),
   ],
 }).catch((err) => console.error(err));
