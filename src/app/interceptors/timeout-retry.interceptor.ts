@@ -1,6 +1,6 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { retry, throwError, timeout, timer } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { ehRequisicaoDoAiAgent } from '../compartilhado/http/eh-requisicao-do-ai-agent';
 
 export const TIMEOUT_MS = 15000;
 // O ai-agent chama o Gemini com tool-calling, que pode legitimamente
@@ -9,10 +9,6 @@ export const TIMEOUT_MS = 15000;
 export const AI_AGENT_TIMEOUT_MS = 60000;
 export const RETRY_COUNT = 2;
 export const RETRY_DELAY_MS = 500;
-
-function ehRequisicaoDoAiAgent(url: string): boolean {
-  return url === environment.aiApiUrl || url.startsWith(`${environment.aiApiUrl}/`);
-}
 
 export const timeoutRetryInterceptor: HttpInterceptorFn = (req, next) => {
   const timeoutMs = ehRequisicaoDoAiAgent(req.url) ? AI_AGENT_TIMEOUT_MS : TIMEOUT_MS;
