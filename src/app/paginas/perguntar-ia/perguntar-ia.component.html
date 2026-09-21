@@ -34,7 +34,7 @@
 
           @if (answer()) {
             <div class="alert alert-secondary mt-3" role="status" data-testid="resposta">
-              {{ answer() }}
+              <markdown [data]="answer()"></markdown>
             </div>
           }
         </div>

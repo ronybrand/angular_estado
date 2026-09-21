@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subject, of, throwError } from 'rxjs';
+import { provideMarkdown } from 'ngx-markdown';
 
 import { PerguntarIaComponent } from './perguntar-ia.component';
 import { AiAgentService } from '../../services/ai-agent.service';
@@ -15,7 +16,7 @@ describe('PerguntarIaComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [PerguntarIaComponent],
-      providers: [{ provide: AiAgentService, useValue: aiAgentService }],
+      providers: [{ provide: AiAgentService, useValue: aiAgentService }, provideMarkdown()],
     }).compileComponents();
   });
 
@@ -137,7 +138,7 @@ describe('PerguntarIaComponent', () => {
     expect(compiled.querySelector('.spinner-border')).toBeTruthy();
   });
 
-  it('should render the answer after a successful question', () => {
+  it('should render the answer after a successful question', async () => {
     aiAgentService.perguntar.mockReturnValue(of({ answer: 'Existem 27 estados.' }));
     component.question.set('Quantos estados existem?');
 
@@ -145,8 +146,29 @@ describe('PerguntarIaComponent', () => {
     fixture.detectChanges();
 
     const compiled: HTMLElement = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('[data-testid="resposta"]')?.textContent).toContain(
-      'Existem 27 estados.',
+    await vi.waitFor(() => {
+      fixture.detectChanges();
+      expect(compiled.querySelector('[data-testid="resposta"]')?.textContent).toContain(
+        'Existem 27 estados.',
+      );
+    });
+  });
+
+  it('should render Markdown from the answer instead of showing raw syntax', async () => {
+    aiAgentService.perguntar.mockReturnValue(
+      of({ answer: '**Santa Catarina** (SC) e **Rio Grande do Sul** (RS).' }),
     );
+    component.question.set('Quais estados tem no sul do pais?');
+
+    component.perguntar();
+    fixture.detectChanges();
+
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    await vi.waitFor(() => {
+      fixture.detectChanges();
+      const resposta = compiled.querySelector('[data-testid="resposta"]');
+      expect(resposta?.querySelectorAll('strong').length).toBe(2);
+      expect(resposta?.innerHTML).not.toContain('**');
+    });
   });
 });

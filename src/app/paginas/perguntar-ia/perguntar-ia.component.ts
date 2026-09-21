@@ -1,5 +1,6 @@
 import { Component, inject, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MarkdownComponent } from 'ngx-markdown';
 import { AiAgentService } from '../../services/ai-agent.service';
 import { ErrorMsgComponent } from '../../compartilhado/error-msg/error-msg.component';
 import { subscreveComProcessando } from '../../compartilhado/erro/subscreve-com-processando';
@@ -8,13 +9,13 @@ import { subscreveComProcessando } from '../../compartilhado/erro/subscreve-com-
   selector: 'app-perguntar-ia',
   templateUrl: './perguntar-ia.component.html',
   styleUrls: ['./perguntar-ia.component.scss'],
-  imports: [FormsModule, ErrorMsgComponent],
+  imports: [FormsModule, ErrorMsgComponent, MarkdownComponent],
 })
 export class PerguntarIaComponent {
   private aiAgentService = inject(AiAgentService);
 
   readonly errorMsgComponent = viewChild.required(ErrorMsgComponent);
-  readonly MAX_QUESTION_LENGTH = 1000; // espelha AskController.MAX_QUESTION_LENGTH no backend
+  readonly MAX_QUESTION_LENGTH = 1000; // espelha @Size(max = 1000) de AskRequest no backend
 
   question = signal('');
   answer = signal<string | null>(null);
