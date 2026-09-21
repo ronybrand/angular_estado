@@ -3,11 +3,13 @@ import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 
 import {
+  AI_AGENT_TIMEOUT_MS,
   RETRY_COUNT,
   RETRY_DELAY_MS,
   TIMEOUT_MS,
   timeoutRetryInterceptor,
 } from './timeout-retry.interceptor';
+import { environment } from '../../environments/environment';
 
 describe('timeoutRetryInterceptor', () => {
   let http: HttpClient;
@@ -124,6 +126,50 @@ describe('timeoutRetryInterceptor', () => {
     const req = httpMock.expectOne('/api/estado/');
     req.flush('erro', { status: 500, statusText: 'Server Error' });
     await vi.advanceTimersByTimeAsync(RETRY_DELAY_MS);
+
+    expect(error).toBeTruthy();
+  });
+
+  it('should use the longer AI_AGENT_TIMEOUT_MS for requests against the ai-agent, not TIMEOUT_MS', async () => {
+    // O ai-agent chama o Gemini com tool-calling, que pode demorar bem mais
+    // que o CRUD simples de estados - se essa requisicao ainda estivesse
+    // usando TIMEOUT_MS (15s), ela seria abortada antes da resposta real
+    // chegar (bug encontrado testando a integracao em producao).
+    let error: unknown;
+    http.post(`${environment.aiApiUrl}/ask`, {}).subscribe({ error: (err) => (error = err) });
+
+    httpMock.expectOne(`${environment.aiApiUrl}/ask`);
+
+    await vi.advanceTimersByTimeAsync(TIMEOUT_MS + 1);
+    expect(error).toBeUndefined();
+
+    await vi.advanceTimersByTimeAsync(AI_AGENT_TIMEOUT_MS - TIMEOUT_MS - 1);
+    expect(error).toBeTruthy();
+  });
+
+  it('should not retry a failed POST to the ai-agent (non-idempotent, same as any other POST)', async () => {
+    let error: unknown;
+    http.post(`${environment.aiApiUrl}/ask`, {}).subscribe({ error: (err) => (error = err) });
+
+    const req = httpMock.expectOne(`${environment.aiApiUrl}/ask`);
+    req.flush('erro', { status: 500, statusText: 'Server Error' });
+
+    expect(error).toBeTruthy();
+  });
+
+  it('should keep TIMEOUT_MS for a URL that merely shares the aiApiUrl prefix', async () => {
+    let error: unknown;
+    const urlVizinha = `${environment.aiApiUrl}evil.example.com/recurso`;
+    http.get(urlVizinha).subscribe({ error: (err) => (error = err) });
+
+    httpMock.expectOne(urlVizinha);
+    await vi.advanceTimersByTimeAsync(TIMEOUT_MS + 1);
+    await vi.advanceTimersByTimeAsync(RETRY_DELAY_MS + 1);
+    httpMock.expectOne(urlVizinha);
+    await vi.advanceTimersByTimeAsync(TIMEOUT_MS + 1);
+    await vi.advanceTimersByTimeAsync(RETRY_DELAY_MS * 2 + 1);
+    httpMock.expectOne(urlVizinha);
+    await vi.advanceTimersByTimeAsync(TIMEOUT_MS + 1);
 
     expect(error).toBeTruthy();
   });
