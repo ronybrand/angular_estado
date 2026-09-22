@@ -8,9 +8,11 @@ import { subscreveComProcessando } from '../../compartilhado/erro/subscreve-com-
 type Lang = 'pt' | 'en';
 
 // Toggle local, nao um i18n do app (nao ha @angular/localize/ngx-translate
-// instalado): esta e a unica pagina do projeto com opcao de idioma porque e
-// usada como demo ao vivo em curriculos em ingles, entao precisa funcionar
-// nos dois idiomas mesmo sem o resto do app ser localizado.
+// instalado): por enquanto esta e a unica pagina do projeto com opcao de
+// idioma, porque e usada como demo ao vivo em curriculos em ingles, entao
+// precisa funcionar nos dois idiomas mesmo sem o resto do app ser
+// localizado. Se outra pagina precisar do mesmo, vale extrair pra um
+// service/dicionario compartilhado em vez de copiar este padrao local.
 const TRANSLATIONS: Record<
   Lang,
   {
@@ -19,6 +21,7 @@ const TRANSLATIONS: Record<
     askButton: string;
     askingButton: string;
     errorMsg: string;
+    onlyPageNote: string;
   }
 > = {
   pt: {
@@ -27,6 +30,7 @@ const TRANSLATIONS: Record<
     askButton: 'Perguntar',
     askingButton: 'Perguntando...',
     errorMsg: 'Falha ao consultar o assistente. Tente novamente em instantes.',
+    onlyPageNote: 'Por enquanto, esta é a única página do site disponível em inglês.',
   },
   en: {
     cardTitle: 'Ask about the Brazilian states',
@@ -34,6 +38,7 @@ const TRANSLATIONS: Record<
     askButton: 'Ask',
     askingButton: 'Asking...',
     errorMsg: 'Failed to reach the assistant. Please try again shortly.',
+    onlyPageNote: 'For now, this is the only page on the site available in English.',
   },
 };
 

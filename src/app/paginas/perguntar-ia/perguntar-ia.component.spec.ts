@@ -252,6 +252,22 @@ describe('PerguntarIaComponent', () => {
     expect(textarea.placeholder).toBe('Ex.: Quantos estados existem na região Sudeste?');
   });
 
+  it('should show a note that this is the only English-available page, in the current language', () => {
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+
+    expect(compiled.querySelector('[data-testid="lang-note"]')?.textContent).toContain(
+      'única página do site disponível em inglês',
+    );
+
+    const toggle: HTMLButtonElement = compiled.querySelector('[data-testid="lang-toggle"]')!;
+    toggle.click();
+    fixture.detectChanges();
+
+    expect(compiled.querySelector('[data-testid="lang-note"]')?.textContent).toContain(
+      'only page on the site available in English',
+    );
+  });
+
   it('should render English text when the language toggle is switched to EN', () => {
     const compiled: HTMLElement = fixture.debugElement.nativeElement;
     const toggle: HTMLButtonElement = compiled.querySelector('[data-testid="lang-toggle"]')!;
