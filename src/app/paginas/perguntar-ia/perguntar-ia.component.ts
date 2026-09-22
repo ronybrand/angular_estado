@@ -1,10 +1,15 @@
 import { Component, computed, inject, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { MarkdownComponent } from 'ngx-markdown';
 import { AiAgentService } from '../../services/ai-agent.service';
 import { ErrorMsgComponent } from '../../compartilhado/error-msg/error-msg.component';
 import { subscreveComProcessando } from '../../compartilhado/erro/subscreve-com-processando';
 import { Lang, LangService } from '../../services/lang.service';
+
+function isLang(value: string | null): value is Lang {
+  return value === 'pt' || value === 'en';
+}
 
 // Dicionario local de textos desta pagina; o estado do idioma em si vem do
 // LangService compartilhado (o header tambem le dele, ver app.component).
@@ -47,6 +52,7 @@ const TRANSLATIONS: Record<
 export class PerguntarIaComponent {
   private aiAgentService = inject(AiAgentService);
   private langService = inject(LangService);
+  private route = inject(ActivatedRoute);
 
   readonly errorMsgComponent = viewChild.required(ErrorMsgComponent);
   readonly MAX_QUESTION_LENGTH = 1000; // espelha @Size(max = 1000) de AskRequest no backend
@@ -56,6 +62,16 @@ export class PerguntarIaComponent {
   processando = signal(false);
   lang = this.langService.lang;
   translations = computed(() => TRANSLATIONS[this.lang()]);
+
+  constructor() {
+    // Permite abrir a pagina direto em EN via link (ex.: curriculo em
+    // ingles com ?lang=en), enquanto nao ha algo mais estruturado
+    // (deteccao de idioma do navegador, etc.).
+    const langParam = this.route.snapshot.queryParamMap.get('lang');
+    if (isLang(langParam)) {
+      this.langService.lang.set(langParam);
+    }
+  }
 
   toggleLang() {
     this.langService.toggle();
