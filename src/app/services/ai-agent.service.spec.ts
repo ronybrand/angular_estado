@@ -25,12 +25,12 @@ describe('AiAgentService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('perguntar should POST the question to aiApiUrl/ask and return the answer', () => {
+  it('perguntar should POST the question to apiUrl/ask and return the answer', () => {
     service.perguntar('Quantos estados tem o Brasil?').subscribe((result) => {
       expect(result).toEqual({ answer: '27 estados.' });
     });
 
-    const req = httpMock.expectOne(`${environment.aiApiUrl}/ask`);
+    const req = httpMock.expectOne(`${environment.apiUrl}/ask`);
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual({ question: 'Quantos estados tem o Brasil?' });
     req.flush({ answer: '27 estados.' });
