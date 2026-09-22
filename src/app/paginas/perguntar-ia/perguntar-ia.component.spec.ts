@@ -252,6 +252,20 @@ describe('PerguntarIaComponent', () => {
     expect(textarea.placeholder).toBe('Ex.: Quantos estados existem na região Sudeste?');
   });
 
+  it('should toggle back to Portuguese when clicked a second time', () => {
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    const toggle: HTMLButtonElement = compiled.querySelector('[data-testid="lang-toggle"]')!;
+
+    toggle.click();
+    fixture.detectChanges();
+    toggle.click();
+    fixture.detectChanges();
+
+    expect(compiled.querySelector('.card-header')?.textContent).toContain(
+      'Pergunte sobre os estados brasileiros',
+    );
+  });
+
   it('should show a note that this is the only English-available page, in the current language', () => {
     const compiled: HTMLElement = fixture.debugElement.nativeElement;
 
