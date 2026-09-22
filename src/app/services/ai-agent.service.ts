@@ -12,7 +12,9 @@ export interface AskResponse {
 })
 export class AiAgentService {
   private http = inject(HttpClient);
-  private readonly baseUrl = environment.aiApiUrl;
+  // /ask vive atras do proprio backend "estado" (BFF) - guarda a
+  // ASK_API_KEY server-side, nunca mais no bundle deste app.
+  private readonly baseUrl = environment.apiUrl;
 
   perguntar(question: string): Observable<AskResponse> {
     return this.http.post<AskResponse>(`${this.baseUrl}/ask`, { question });

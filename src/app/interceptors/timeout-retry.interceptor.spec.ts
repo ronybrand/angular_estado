@@ -136,9 +136,9 @@ describe('timeoutRetryInterceptor', () => {
     // usando TIMEOUT_MS (15s), ela seria abortada antes da resposta real
     // chegar (bug encontrado testando a integracao em producao).
     let error: unknown;
-    http.post(`${environment.aiApiUrl}/ask`, {}).subscribe({ error: (err) => (error = err) });
+    http.post(`${environment.apiUrl}/ask`, {}).subscribe({ error: (err) => (error = err) });
 
-    httpMock.expectOne(`${environment.aiApiUrl}/ask`);
+    httpMock.expectOne(`${environment.apiUrl}/ask`);
 
     await vi.advanceTimersByTimeAsync(TIMEOUT_MS + 1);
     expect(error).toBeUndefined();
@@ -149,17 +149,17 @@ describe('timeoutRetryInterceptor', () => {
 
   it('should not retry a failed POST to the ai-agent (non-idempotent, same as any other POST)', async () => {
     let error: unknown;
-    http.post(`${environment.aiApiUrl}/ask`, {}).subscribe({ error: (err) => (error = err) });
+    http.post(`${environment.apiUrl}/ask`, {}).subscribe({ error: (err) => (error = err) });
 
-    const req = httpMock.expectOne(`${environment.aiApiUrl}/ask`);
+    const req = httpMock.expectOne(`${environment.apiUrl}/ask`);
     req.flush('erro', { status: 500, statusText: 'Server Error' });
 
     expect(error).toBeTruthy();
   });
 
-  it('should keep TIMEOUT_MS for a URL that merely shares the aiApiUrl prefix', async () => {
+  it('should keep TIMEOUT_MS for a URL that merely shares the /ask prefix', async () => {
     let error: unknown;
-    const urlVizinha = `${environment.aiApiUrl}evil.example.com/recurso`;
+    const urlVizinha = `${environment.apiUrl}/asking`;
     http.get(urlVizinha).subscribe({ error: (err) => (error = err) });
 
     httpMock.expectOne(urlVizinha);
