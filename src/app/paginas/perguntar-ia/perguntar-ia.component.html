@@ -3,14 +3,24 @@
     <div class="col-md-7 mx-auto">
       <app-error-msg></app-error-msg>
       <div class="card">
-        <div class="card-header">Pergunte sobre os estados brasileiros</div>
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <span>{{ translations().cardTitle }}</span>
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-secondary"
+            data-testid="lang-toggle"
+            (click)="toggleLang()"
+          >
+            {{ lang() === 'pt' ? 'EN' : 'PT' }}
+          </button>
+        </div>
         <div class="card-body">
           <div class="mb-3">
             <textarea
               class="form-control"
               rows="3"
               [maxlength]="MAX_QUESTION_LENGTH"
-              placeholder="Ex.: Quantos estados existem na região Sudeste?"
+              [placeholder]="translations().placeholder"
               [ngModel]="question()"
               (ngModelChange)="question.set($event)"
               [disabled]="processando()"
@@ -26,9 +36,9 @@
           >
             @if (processando()) {
               <span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>
-              Perguntando...
+              {{ translations().askingButton }}
             } @else {
-              Perguntar
+              {{ translations().askButton }}
             }
           </button>
 

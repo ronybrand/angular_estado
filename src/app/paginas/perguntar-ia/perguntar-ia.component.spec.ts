@@ -239,4 +239,52 @@ describe('PerguntarIaComponent', () => {
       expect(resposta?.textContent).toContain('Texto normal');
     });
   });
+
+  it('should default to Portuguese', () => {
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+
+    expect(compiled.querySelector('.card-header')?.textContent).toContain(
+      'Pergunte sobre os estados brasileiros',
+    );
+    const textarea: HTMLTextAreaElement = compiled.querySelector(
+      '[data-testid="pergunta-textarea"]',
+    )!;
+    expect(textarea.placeholder).toBe('Ex.: Quantos estados existem na região Sudeste?');
+  });
+
+  it('should render English text when the language toggle is switched to EN', () => {
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    const toggle: HTMLButtonElement = compiled.querySelector('[data-testid="lang-toggle"]')!;
+
+    toggle.click();
+    fixture.detectChanges();
+
+    expect(compiled.querySelector('.card-header')?.textContent).toContain(
+      'Ask about the Brazilian states',
+    );
+    const textarea: HTMLTextAreaElement = compiled.querySelector(
+      '[data-testid="pergunta-textarea"]',
+    )!;
+    expect(textarea.placeholder).toBe('E.g.: How many states are in the Southeast region?');
+    const button: HTMLButtonElement = compiled.querySelector('[data-testid="perguntar-button"]')!;
+    expect(button.textContent).toContain('Ask');
+  });
+
+  it('should show the English error message when a call fails in EN mode', () => {
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    const toggle: HTMLButtonElement = compiled.querySelector('[data-testid="lang-toggle"]')!;
+    toggle.click();
+    fixture.detectChanges();
+
+    aiAgentService.perguntar.mockReturnValue(
+      throwError(() => new HttpErrorResponse({ status: 500 })),
+    );
+    component.question.set('How many states are there?');
+
+    component.perguntar();
+
+    expect(component.errorMsgComponent().error()).toBe(
+      'Failed to reach the assistant. Please try again shortly.',
+    );
+  });
 });

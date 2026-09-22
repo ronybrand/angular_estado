@@ -1,9 +1,41 @@
-import { Component, inject, signal, viewChild } from '@angular/core';
+import { Component, computed, inject, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MarkdownComponent } from 'ngx-markdown';
 import { AiAgentService } from '../../services/ai-agent.service';
 import { ErrorMsgComponent } from '../../compartilhado/error-msg/error-msg.component';
 import { subscreveComProcessando } from '../../compartilhado/erro/subscreve-com-processando';
+
+type Lang = 'pt' | 'en';
+
+// Toggle local, nao um i18n do app (nao ha @angular/localize/ngx-translate
+// instalado): esta e a unica pagina do projeto com opcao de idioma porque e
+// usada como demo ao vivo em curriculos em ingles, entao precisa funcionar
+// nos dois idiomas mesmo sem o resto do app ser localizado.
+const TRANSLATIONS: Record<
+  Lang,
+  {
+    cardTitle: string;
+    placeholder: string;
+    askButton: string;
+    askingButton: string;
+    errorMsg: string;
+  }
+> = {
+  pt: {
+    cardTitle: 'Pergunte sobre os estados brasileiros',
+    placeholder: 'Ex.: Quantos estados existem na região Sudeste?',
+    askButton: 'Perguntar',
+    askingButton: 'Perguntando...',
+    errorMsg: 'Falha ao consultar o assistente. Tente novamente em instantes.',
+  },
+  en: {
+    cardTitle: 'Ask about the Brazilian states',
+    placeholder: 'E.g.: How many states are in the Southeast region?',
+    askButton: 'Ask',
+    askingButton: 'Asking...',
+    errorMsg: 'Failed to reach the assistant. Please try again shortly.',
+  },
+};
 
 @Component({
   selector: 'app-perguntar-ia',
@@ -20,6 +52,12 @@ export class PerguntarIaComponent {
   question = signal('');
   answer = signal<string | null>(null);
   processando = signal(false);
+  lang = signal<Lang>('pt');
+  translations = computed(() => TRANSLATIONS[this.lang()]);
+
+  toggleLang() {
+    this.lang.set(this.lang() === 'pt' ? 'en' : 'pt');
+  }
 
   perguntar() {
     const pergunta = this.question().trim();
@@ -32,7 +70,7 @@ export class PerguntarIaComponent {
       this.aiAgentService.perguntar(pergunta),
       this.processando,
       this.errorMsgComponent(),
-      'Falha ao consultar o assistente. Tente novamente em instantes.',
+      this.translations().errorMsg,
       (res) => this.answer.set(res.answer),
     );
   }
