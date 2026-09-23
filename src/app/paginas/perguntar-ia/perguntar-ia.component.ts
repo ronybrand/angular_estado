@@ -23,6 +23,7 @@ const TRANSLATIONS: Record<
     askingButton: string;
     errorMsg: string;
     onlyPageNote: string;
+    languageLimitNote: string;
   }
 > = {
   pt: {
@@ -32,6 +33,7 @@ const TRANSLATIONS: Record<
     askingButton: 'Perguntando...',
     errorMsg: 'Falha ao consultar o assistente. Tente novamente em instantes.',
     onlyPageNote: 'Por enquanto, esta é a única página do site disponível em inglês.',
+    languageLimitNote: 'O assistente entende perguntas apenas em português ou inglês.',
   },
   en: {
     cardTitle: 'Ask about the Brazilian states',
@@ -40,6 +42,7 @@ const TRANSLATIONS: Record<
     askingButton: 'Asking...',
     errorMsg: 'Failed to reach the assistant. Please try again shortly.',
     onlyPageNote: 'For now, this is the only page on the site available in English.',
+    languageLimitNote: 'The assistant only understands questions in Portuguese or English.',
   },
 };
 

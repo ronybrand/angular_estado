@@ -304,6 +304,22 @@ describe('PerguntarIaComponent', () => {
     );
   });
 
+  it('should show a note that the assistant only understands Portuguese or English, in the current language', () => {
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+
+    expect(compiled.querySelector('[data-testid="language-limit-note"]')?.textContent).toContain(
+      'português ou inglês',
+    );
+
+    const toggle: HTMLButtonElement = compiled.querySelector('[data-testid="lang-toggle"]')!;
+    toggle.click();
+    fixture.detectChanges();
+
+    expect(compiled.querySelector('[data-testid="language-limit-note"]')?.textContent).toContain(
+      'Portuguese or English',
+    );
+  });
+
   it('should render English text when the language toggle is switched to EN', () => {
     const compiled: HTMLElement = fixture.debugElement.nativeElement;
     const toggle: HTMLButtonElement = compiled.querySelector('[data-testid="lang-toggle"]')!;
