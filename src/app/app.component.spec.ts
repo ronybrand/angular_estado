@@ -1,16 +1,26 @@
+import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { Router, provideRouter, Routes } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { AppComponent } from './app.component';
 import { AuthService } from './auth/auth.service';
 import { LangService } from './services/lang.service';
 
+@Component({ selector: 'app-dummy-page', template: '' })
+class DummyPageComponent {}
+
+const testRoutes: Routes = [
+  { path: '', component: DummyPageComponent },
+  { path: 'perguntar-ia', component: DummyPageComponent },
+  { path: 'outra-pagina', component: DummyPageComponent },
+];
+
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AppComponent],
-      providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()],
+      providers: [provideRouter(testRoutes), provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
   });
 
@@ -33,7 +43,9 @@ describe('AppComponent', () => {
     expect(compiled.querySelector('.navbar-brand').textContent).toContain('Crud UF - Angular/Java');
   });
 
-  it('should render the English title and nav link when the shared language is English', () => {
+  it('should render the English title and nav link when the shared language is English on the perguntar-ia page', async () => {
+    const router = TestBed.inject(Router);
+    await router.navigateByUrl('/perguntar-ia');
     const langService = TestBed.inject(LangService);
     langService.lang.set('en');
 
@@ -45,6 +57,27 @@ describe('AppComponent', () => {
       'States CRUD - Angular/Java',
     );
     expect(compiled.querySelector('[data-testid="ask-ia-link"]').textContent).toContain('Ask AI');
+  });
+
+  it('should reset the shared language to Portuguese when navigating away from perguntar-ia', async () => {
+    const router = TestBed.inject(Router);
+    await router.navigateByUrl('/perguntar-ia');
+    const langService = TestBed.inject(LangService);
+    langService.lang.set('en');
+
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
+    expect(langService.lang()).toBe('en');
+
+    await router.navigateByUrl('/outra-pagina');
+    fixture.detectChanges();
+    const compiled = fixture.debugElement.nativeElement;
+
+    expect(langService.lang()).toBe('pt');
+    expect(compiled.querySelector('.navbar-brand').textContent).toContain('Crud UF - Angular/Java');
+    expect(compiled.querySelector('[data-testid="ask-ia-link"]').textContent).toContain(
+      'Perguntar à IA',
+    );
   });
 
   it('should render the Portuguese nav link by default', () => {

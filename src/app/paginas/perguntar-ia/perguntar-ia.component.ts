@@ -64,12 +64,13 @@ export class PerguntarIaComponent {
   translations = computed(() => TRANSLATIONS[this.lang()]);
 
   constructor() {
-    // Permite abrir a pagina direto em EN via link (ex.: curriculo em
-    // ingles com ?lang=en), enquanto nao ha algo mais estruturado
-    // (deteccao de idioma do navegador, etc.).
+    // Prioridade: ?lang= explicito na URL (ex.: link do curriculo em ingles)
+    // > idioma do navegador > default PT do LangService.
     const langParam = this.route.snapshot.queryParamMap.get('lang');
     if (isLang(langParam)) {
       this.langService.lang.set(langParam);
+    } else if (window.navigator.language.toLowerCase().startsWith('en')) {
+      this.langService.lang.set('en');
     }
   }
 
