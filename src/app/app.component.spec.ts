@@ -4,6 +4,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { AppComponent } from './app.component';
 import { AuthService } from './auth/auth.service';
+import { LangService } from './services/lang.service';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
@@ -30,6 +31,30 @@ describe('AppComponent', () => {
     fixture.detectChanges();
     const compiled = fixture.debugElement.nativeElement;
     expect(compiled.querySelector('.navbar-brand').textContent).toContain('Crud UF - Angular/Java');
+  });
+
+  it('should render the English title and nav link when the shared language is English', () => {
+    const langService = TestBed.inject(LangService);
+    langService.lang.set('en');
+
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
+    const compiled = fixture.debugElement.nativeElement;
+
+    expect(compiled.querySelector('.navbar-brand').textContent).toContain(
+      'States CRUD - Angular/Java',
+    );
+    expect(compiled.querySelector('[data-testid="ask-ia-link"]').textContent).toContain('Ask AI');
+  });
+
+  it('should render the Portuguese nav link by default', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
+    const compiled = fixture.debugElement.nativeElement;
+
+    expect(compiled.querySelector('[data-testid="ask-ia-link"]').textContent).toContain(
+      'Perguntar à IA',
+    );
   });
 
   it('should not render an orphan app-error-msg (each page owns its own instance)', () => {

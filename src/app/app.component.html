@@ -1,7 +1,9 @@
 <nav class="navbar navbar-dark app-navbar">
   <div class="container d-flex justify-content-between align-items-center">
     <a class="navbar-brand" routerLink="">{{ title }}</a>
-    <a class="btn btn-link text-white" routerLink="perguntar-ia">Perguntar à IA</a>
+    <a class="btn btn-link text-white" routerLink="perguntar-ia" data-testid="ask-ia-link">{{
+      askIaLinkLabel
+    }}</a>
     @if (authService.isAuthenticated()) {
       <button
         type="button"

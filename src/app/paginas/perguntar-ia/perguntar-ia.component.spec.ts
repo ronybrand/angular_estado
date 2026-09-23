@@ -1,11 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { Subject, of, throwError } from 'rxjs';
 import { provideMarkdown, MARKED_OPTIONS } from 'ngx-markdown';
 
 import { PerguntarIaComponent } from './perguntar-ia.component';
 import { AiAgentService } from '../../services/ai-agent.service';
 import { externalLinkRenderer } from '../../compartilhado/markdown/external-link-renderer';
+
+function activatedRouteStub(queryParams: Record<string, string> = {}) {
+  return { snapshot: { queryParamMap: convertToParamMap(queryParams) } };
+}
 
 describe('PerguntarIaComponent', () => {
   let component: PerguntarIaComponent;
@@ -19,6 +24,7 @@ describe('PerguntarIaComponent', () => {
       imports: [PerguntarIaComponent],
       providers: [
         { provide: AiAgentService, useValue: aiAgentService },
+        { provide: ActivatedRoute, useValue: activatedRouteStub() },
         provideMarkdown({
           markedOptions: {
             provide: MARKED_OPTIONS,
@@ -315,6 +321,46 @@ describe('PerguntarIaComponent', () => {
 
     expect(component.errorMsgComponent().error()).toBe(
       'Failed to reach the assistant. Please try again shortly.',
+    );
+  });
+});
+
+describe('PerguntarIaComponent with a lang query param', () => {
+  async function createWithQueryParams(queryParams: Record<string, string>) {
+    await TestBed.configureTestingModule({
+      imports: [PerguntarIaComponent],
+      providers: [
+        { provide: AiAgentService, useValue: { perguntar: vi.fn() } },
+        { provide: ActivatedRoute, useValue: activatedRouteStub(queryParams) },
+        provideMarkdown({
+          markedOptions: {
+            provide: MARKED_OPTIONS,
+            useValue: { renderer: externalLinkRenderer },
+          },
+        }),
+      ],
+    }).compileComponents();
+
+    const fixture = TestBed.createComponent(PerguntarIaComponent);
+    fixture.detectChanges();
+    return fixture;
+  }
+
+  it('should open directly in English when the lang=en query param is present', async () => {
+    const fixture = await createWithQueryParams({ lang: 'en' });
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+
+    expect(compiled.querySelector('.card-header')?.textContent).toContain(
+      'Ask about the Brazilian states',
+    );
+  });
+
+  it('should ignore an invalid lang query param and default to Portuguese', async () => {
+    const fixture = await createWithQueryParams({ lang: 'fr' });
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+
+    expect(compiled.querySelector('.card-header')?.textContent).toContain(
+      'Pergunte sobre os estados brasileiros',
     );
   });
 });
