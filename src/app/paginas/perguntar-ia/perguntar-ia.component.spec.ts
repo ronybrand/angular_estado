@@ -12,12 +12,28 @@ function activatedRouteStub(queryParams: Record<string, string> = {}) {
   return { snapshot: { queryParamMap: convertToParamMap(queryParams) } };
 }
 
+function stubNavigatorLanguage(language: string) {
+  Object.defineProperty(window.navigator, 'language', {
+    value: language,
+    configurable: true,
+  });
+}
+
 describe('PerguntarIaComponent', () => {
   let component: PerguntarIaComponent;
   let fixture: ComponentFixture<PerguntarIaComponent>;
   let aiAgentService: { perguntar: ReturnType<typeof vi.fn> };
+  const originalLanguage = window.navigator.language;
+
+  afterEach(() => {
+    stubNavigatorLanguage(originalLanguage);
+  });
 
   beforeEach(async () => {
+    // Sem isso, os testes ficam reféns do idioma do navegador do ambiente
+    // de CI (jsdom usa 'en-US' por padrao), quebrando a expectativa de
+    // default PT quando nao ha ?lang= na URL.
+    stubNavigatorLanguage('pt-BR');
     aiAgentService = { perguntar: vi.fn() };
 
     await TestBed.configureTestingModule({
@@ -326,6 +342,16 @@ describe('PerguntarIaComponent', () => {
 });
 
 describe('PerguntarIaComponent with a lang query param', () => {
+  const originalLanguage = window.navigator.language;
+
+  beforeEach(() => {
+    stubNavigatorLanguage('pt-BR');
+  });
+
+  afterEach(() => {
+    stubNavigatorLanguage(originalLanguage);
+  });
+
   async function createWithQueryParams(queryParams: Record<string, string>) {
     await TestBed.configureTestingModule({
       imports: [PerguntarIaComponent],
@@ -357,6 +383,81 @@ describe('PerguntarIaComponent with a lang query param', () => {
 
   it('should ignore an invalid lang query param and default to Portuguese', async () => {
     const fixture = await createWithQueryParams({ lang: 'fr' });
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+
+    expect(compiled.querySelector('.card-header')?.textContent).toContain(
+      'Pergunte sobre os estados brasileiros',
+    );
+  });
+});
+
+describe('PerguntarIaComponent falling back to the browser language', () => {
+  const originalLanguage = window.navigator.language;
+
+  afterEach(() => {
+    stubNavigatorLanguage(originalLanguage);
+  });
+
+  async function createWithoutQueryParams() {
+    await TestBed.configureTestingModule({
+      imports: [PerguntarIaComponent],
+      providers: [
+        { provide: AiAgentService, useValue: { perguntar: vi.fn() } },
+        { provide: ActivatedRoute, useValue: activatedRouteStub() },
+        provideMarkdown({
+          markedOptions: {
+            provide: MARKED_OPTIONS,
+            useValue: { renderer: externalLinkRenderer },
+          },
+        }),
+      ],
+    }).compileComponents();
+
+    const fixture = TestBed.createComponent(PerguntarIaComponent);
+    fixture.detectChanges();
+    return fixture;
+  }
+
+  it('should default to English when there is no lang param and the browser language is English', async () => {
+    stubNavigatorLanguage('en-US');
+
+    const fixture = await createWithoutQueryParams();
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+
+    expect(compiled.querySelector('.card-header')?.textContent).toContain(
+      'Ask about the Brazilian states',
+    );
+  });
+
+  it('should default to Portuguese when there is no lang param and the browser language is not English', async () => {
+    stubNavigatorLanguage('pt-BR');
+
+    const fixture = await createWithoutQueryParams();
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+
+    expect(compiled.querySelector('.card-header')?.textContent).toContain(
+      'Pergunte sobre os estados brasileiros',
+    );
+  });
+
+  it('the lang query param should take priority over the browser language', async () => {
+    stubNavigatorLanguage('en-US');
+
+    await TestBed.configureTestingModule({
+      imports: [PerguntarIaComponent],
+      providers: [
+        { provide: AiAgentService, useValue: { perguntar: vi.fn() } },
+        { provide: ActivatedRoute, useValue: activatedRouteStub({ lang: 'pt' }) },
+        provideMarkdown({
+          markedOptions: {
+            provide: MARKED_OPTIONS,
+            useValue: { renderer: externalLinkRenderer },
+          },
+        }),
+      ],
+    }).compileComponents();
+    const fixture = TestBed.createComponent(PerguntarIaComponent);
+    fixture.detectChanges();
     const compiled: HTMLElement = fixture.debugElement.nativeElement;
 
     expect(compiled.querySelector('.card-header')?.textContent).toContain(
