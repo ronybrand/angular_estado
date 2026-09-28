@@ -262,6 +262,25 @@ describe('PerguntarIaComponent', () => {
     });
   });
 
+  it('should explain how the query works, in the current language', () => {
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+
+    expect(compiled.querySelector('[data-testid="how-it-works-note"]')?.textContent).toContain(
+      'Spring AI',
+    );
+
+    const toggle: HTMLButtonElement = compiled.querySelector('[data-testid="lang-toggle"]')!;
+    toggle.click();
+    fixture.detectChanges();
+
+    expect(compiled.querySelector('[data-testid="how-it-works-note"]')?.textContent).toContain(
+      'Spring AI',
+    );
+    expect(compiled.querySelector('[data-testid="how-it-works-note"]')?.textContent).toContain(
+      'live',
+    );
+  });
+
   it('should default to Portuguese', () => {
     const compiled: HTMLElement = fixture.debugElement.nativeElement;
 
