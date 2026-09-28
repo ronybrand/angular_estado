@@ -8,7 +8,7 @@
 
 🔗 **[Live application](https://d3bqbg07tehy1h.cloudfront.net/)**
 
-Angular frontend for the [Estado project](https://github.com/ronybrand/estado) — CRUD for Brazilian federative units (states). Consumes the Spring Boot backend API at `/api/*`. See the backend's [CASE_STUDY.md](https://github.com/ronybrand/estado/blob/master/CASE_STUDY.md) for the end-to-end system write-up (architecture, decisions, trade-offs).
+Angular frontend for the [Estado project](https://github.com/ronybrand/estado) — CRUD for Brazilian federative units (states). Consumes the Spring Boot backend API at `/api/*`. Also includes an "Ask the AI" page, which calls the backend's `/ask` endpoint — proxied to a separate LLM agent, [`estado-ai-agent`](https://github.com/ronybrand/estado-ai-agent) (Spring AI + Gemini, tool calling against the same states API). See the backend's [CASE_STUDY.md](https://github.com/ronybrand/estado/blob/master/CASE_STUDY.md) for the end-to-end system write-up (architecture, decisions, trade-offs).
 
 Originally generated with [Angular CLI](https://github.com/angular/angular-cli); now on Angular 22 (see `package.json`).
 
@@ -29,23 +29,29 @@ flowchart LR
         App["estado-app\n(Spring Boot)"]
         DB[("Postgres")]
         Alloy["Grafana Alloy"]
+        Agent["estado-ai-agent\n(Spring AI)"]
     end
 
     Grafana["Grafana Cloud"]
+    Gemini["Google Gemini"]
 
     Browser -- "/ (static)" --> S3
     Browser -- "/api/*" --> Caddy
     Caddy --> App
     App --> DB
+    App -- "/ask (AskProxyService)" --> Agent
+    Agent -- "tool calling: /estado/*" --> App
+    Agent --> Gemini
     Alloy -- "scrape /actuator/prometheus" --> App
     Alloy -- metrics/logs --> Grafana
 ```
 
 Frontend (S3/CloudFront, static) and backend (a single EC2 instance running
-the app, Postgres and Grafana Alloy as Docker containers) are published from
-separate repositories and pipelines — see the [Deploy](#deploy) section below
-and `docs/adr/` in the [`estado`](https://github.com/ronybrand/estado) repo
-for the decision history.
+the app, Postgres, Grafana Alloy and estado-ai-agent as Docker containers)
+are published from separate repositories and pipelines — see the
+[Deploy](#deploy) section below and `docs/adr/` in the
+[`estado`](https://github.com/ronybrand/estado) repo for the decision
+history.
 
 ## Stack
 

@@ -8,7 +8,7 @@
 
 🔗 **[Aplicação em produção](https://d3bqbg07tehy1h.cloudfront.net/)**
 
-Front-end Angular do [Projeto Estado](https://github.com/ronybrand/estado) — CRUD de unidades federativas do Brasil (estados). Consome a API Spring Boot do backend em `/api/*`. Veja o [CASE_STUDY.md](https://github.com/ronybrand/estado/blob/master/CASE_STUDY.md) do backend para o relato completo do sistema de ponta a ponta (arquitetura, decisões, trade-offs).
+Front-end Angular do [Projeto Estado](https://github.com/ronybrand/estado) — CRUD de unidades federativas do Brasil (estados). Consome a API Spring Boot do backend em `/api/*`. Também tem uma página "Pergunte à IA", que chama o endpoint `/ask` do backend — repassado pra um agente de LLM separado, o [`estado-ai-agent`](https://github.com/ronybrand/estado-ai-agent) (Spring AI + Gemini, com tool calling contra essa mesma API de estados). Veja o [CASE_STUDY.md](https://github.com/ronybrand/estado/blob/master/CASE_STUDY.md) do backend para o relato completo do sistema (arquitetura, decisões, trade-offs).
 
 Gerado originalmente com [Angular CLI](https://github.com/angular/angular-cli); hoje em Angular 22 (ver `package.json`).
 
@@ -29,23 +29,29 @@ flowchart LR
         App["estado-app\n(Spring Boot)"]
         DB[("Postgres")]
         Alloy["Grafana Alloy"]
+        Agent["estado-ai-agent\n(Spring AI)"]
     end
 
     Grafana["Grafana Cloud"]
+    Gemini["Google Gemini"]
 
     Browser -- "/ (estático)" --> S3
     Browser -- "/api/*" --> Caddy
     Caddy --> App
     App --> DB
+    App -- "/ask (AskProxyService)" --> Agent
+    Agent -- "tool calling: /estado/*" --> App
+    Agent --> Gemini
     Alloy -- "scrape /actuator/prometheus" --> App
     Alloy -- métricas/logs --> Grafana
 ```
 
-Front (S3/CloudFront, estático) e back (EC2 único rodando app, Postgres
-e Grafana Alloy em containers Docker) são publicados a partir de
-repositórios e pipelines separados — ver seção [Deploy](#deploy) abaixo
-e o `docs/adr/` do repo [`estado`](https://github.com/ronybrand/estado)
-para o histórico de decisões.
+Front (S3/CloudFront, estático) e back (EC2 único rodando app, Postgres,
+Grafana Alloy e estado-ai-agent em containers Docker) são publicados a
+partir de repositórios e pipelines separados — ver seção
+[Deploy](#deploy) abaixo e o `docs/adr/` do repo
+[`estado`](https://github.com/ronybrand/estado) para o histórico de
+decisões.
 
 ## Stack
 
