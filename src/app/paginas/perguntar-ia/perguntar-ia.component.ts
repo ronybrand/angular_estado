@@ -25,6 +25,7 @@ const TRANSLATIONS: Record<
     onlyPageNote: string;
     languageLimitNote: string;
     howItWorksNote: string;
+    sourceLinkText: string;
   }
 > = {
   pt: {
@@ -37,6 +38,7 @@ const TRANSLATIONS: Record<
     languageLimitNote: 'O assistente entende perguntas apenas em português ou inglês.',
     howItWorksNote:
       'Agente com tool calling (Spring AI + Gemini) consultando a API real do backend em tempo real, sem respostas roteirizadas.',
+    sourceLinkText: 'Ver código no GitHub',
   },
   en: {
     cardTitle: 'Ask about the Brazilian states',
@@ -48,8 +50,11 @@ const TRANSLATIONS: Record<
     languageLimitNote: 'The assistant only understands questions in Portuguese or English.',
     howItWorksNote:
       'Tool-calling agent (Spring AI + Gemini) querying the real backend API live, not a scripted response.',
+    sourceLinkText: 'View source on GitHub',
   },
 };
+
+const SOURCE_REPO_URL = 'https://github.com/ronybrand/estado-ai-agent';
 
 @Component({
   selector: 'app-perguntar-ia',
@@ -64,6 +69,7 @@ export class PerguntarIaComponent {
 
   readonly errorMsgComponent = viewChild.required(ErrorMsgComponent);
   readonly MAX_QUESTION_LENGTH = 1000; // espelha @Size(max = 1000) de AskRequest no backend
+  readonly sourceRepoUrl = SOURCE_REPO_URL;
 
   question = signal('');
   answer = signal<string | null>(null);
