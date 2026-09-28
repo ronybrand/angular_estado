@@ -24,6 +24,7 @@ const TRANSLATIONS: Record<
     errorMsg: string;
     onlyPageNote: string;
     languageLimitNote: string;
+    howItWorksNote: string;
   }
 > = {
   pt: {
@@ -34,6 +35,8 @@ const TRANSLATIONS: Record<
     errorMsg: 'Falha ao consultar o assistente. Tente novamente em instantes.',
     onlyPageNote: 'Por enquanto, esta é a única página do site disponível em inglês.',
     languageLimitNote: 'O assistente entende perguntas apenas em português ou inglês.',
+    howItWorksNote:
+      'Agente com tool calling (Spring AI + Gemini) consultando a API real do backend em tempo real, sem respostas roteirizadas.',
   },
   en: {
     cardTitle: 'Ask about the Brazilian states',
@@ -43,6 +46,8 @@ const TRANSLATIONS: Record<
     errorMsg: 'Failed to reach the assistant. Please try again shortly.',
     onlyPageNote: 'For now, this is the only page on the site available in English.',
     languageLimitNote: 'The assistant only understands questions in Portuguese or English.',
+    howItWorksNote:
+      'Tool-calling agent (Spring AI + Gemini) querying the real backend API live, not a scripted response.',
   },
 };
 
