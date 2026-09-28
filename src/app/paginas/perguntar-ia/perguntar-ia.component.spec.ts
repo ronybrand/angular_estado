@@ -338,6 +338,27 @@ describe('PerguntarIaComponent', () => {
     expect(button.textContent).toContain('Ask');
   });
 
+  it('should link to the source code repository', () => {
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    const link: HTMLAnchorElement | null = compiled.querySelector('[data-testid="source-link"]');
+
+    expect(link?.getAttribute('href')).toBe('https://github.com/ronybrand/estado-ai-agent');
+    expect(link?.getAttribute('target')).toBe('_blank');
+    expect(link?.getAttribute('rel')).toBe('noopener noreferrer');
+    expect(link?.textContent).toContain('Ver código no GitHub');
+  });
+
+  it('should render the source code link text in English when toggled', () => {
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    const toggle: HTMLButtonElement = compiled.querySelector('[data-testid="lang-toggle"]')!;
+
+    toggle.click();
+    fixture.detectChanges();
+
+    const link: HTMLAnchorElement | null = compiled.querySelector('[data-testid="source-link"]');
+    expect(link?.textContent).toContain('View source on GitHub');
+  });
+
   it('should show the English error message when a call fails in EN mode', () => {
     const compiled: HTMLElement = fixture.debugElement.nativeElement;
     const toggle: HTMLButtonElement = compiled.querySelector('[data-testid="lang-toggle"]')!;
