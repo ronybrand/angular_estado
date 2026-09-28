@@ -24,6 +24,7 @@ const TRANSLATIONS: Record<
     errorMsg: string;
     onlyPageNote: string;
     languageLimitNote: string;
+    sourceLinkText: string;
   }
 > = {
   pt: {
@@ -34,6 +35,7 @@ const TRANSLATIONS: Record<
     errorMsg: 'Falha ao consultar o assistente. Tente novamente em instantes.',
     onlyPageNote: 'Por enquanto, esta é a única página do site disponível em inglês.',
     languageLimitNote: 'O assistente entende perguntas apenas em português ou inglês.',
+    sourceLinkText: 'Ver código no GitHub',
   },
   en: {
     cardTitle: 'Ask about the Brazilian states',
@@ -43,8 +45,11 @@ const TRANSLATIONS: Record<
     errorMsg: 'Failed to reach the assistant. Please try again shortly.',
     onlyPageNote: 'For now, this is the only page on the site available in English.',
     languageLimitNote: 'The assistant only understands questions in Portuguese or English.',
+    sourceLinkText: 'View source on GitHub',
   },
 };
+
+const SOURCE_REPO_URL = 'https://github.com/ronybrand/estado-ai-agent';
 
 @Component({
   selector: 'app-perguntar-ia',
@@ -59,6 +64,7 @@ export class PerguntarIaComponent {
 
   readonly errorMsgComponent = viewChild.required(ErrorMsgComponent);
   readonly MAX_QUESTION_LENGTH = 1000; // espelha @Size(max = 1000) de AskRequest no backend
+  readonly sourceRepoUrl = SOURCE_REPO_URL;
 
   question = signal('');
   answer = signal<string | null>(null);
