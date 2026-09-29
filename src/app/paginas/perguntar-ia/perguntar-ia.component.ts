@@ -1,5 +1,6 @@
-import { Component, computed, inject, signal, viewChild } from '@angular/core';
+import { Component, DestroyRef, computed, effect, inject, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { MarkdownComponent } from 'ngx-markdown';
 import { AiAgentService } from '../../services/ai-agent.service';
@@ -66,6 +67,8 @@ export class PerguntarIaComponent {
   private aiAgentService = inject(AiAgentService);
   private langService = inject(LangService);
   private route = inject(ActivatedRoute);
+  private titleService = inject(Title);
+  private destroyRef = inject(DestroyRef);
 
   readonly errorMsgComponent = viewChild.required(ErrorMsgComponent);
   readonly MAX_QUESTION_LENGTH = 1000; // espelha @Size(max = 1000) de AskRequest no backend
@@ -86,6 +89,13 @@ export class PerguntarIaComponent {
     } else if (window.navigator.language.toLowerCase().startsWith('en')) {
       this.langService.lang.set('en');
     }
+
+    // Reaproveita o cardTitle (mesmo texto do heading da pagina) em vez de
+    // duplicar uma frase parecida so pro <title> - reage ao toggle de idioma
+    // e volta ao titulo padrao do index.html ao sair da pagina.
+    const defaultTitle = this.titleService.getTitle();
+    effect(() => this.titleService.setTitle(`${this.translations().cardTitle} · Estado`));
+    this.destroyRef.onDestroy(() => this.titleService.setTitle(defaultTitle));
   }
 
   toggleLang() {
