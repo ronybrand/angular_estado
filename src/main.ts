@@ -1,7 +1,7 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { LOCALE_ID } from '@angular/core';
+import { ErrorHandler, LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import { provideMarkdown, MARKED_OPTIONS } from 'ngx-markdown';
@@ -11,6 +11,7 @@ import { requestIdInterceptor } from './app/interceptors/request-id.interceptor'
 import { timeoutRetryInterceptor } from './app/interceptors/timeout-retry.interceptor';
 import { authInterceptor } from './app/interceptors/auth.interceptor';
 import { authErrorInterceptor } from './app/interceptors/auth-error.interceptor';
+import { GlobalErrorHandler } from './app/services/global-error-handler';
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 
@@ -21,6 +22,7 @@ registerLocaleData(localePt, 'pt-BR');
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: LOCALE_ID, useValue: 'pt-BR' },
+    { provide: ErrorHandler, useExisting: GlobalErrorHandler },
     provideRouter(routes, withComponentInputBinding()),
     // requestIdInterceptor precisa vir ANTES do timeoutRetryInterceptor:
     // gera o id uma vez por ação do usuário, não uma vez por tentativa de

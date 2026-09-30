@@ -5,6 +5,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { AppComponent } from './app.component';
 import { AuthService } from './auth/auth.service';
+import { GlobalErrorHandler } from './services/global-error-handler';
 import { LangService } from './services/lang.service';
 
 @Component({ selector: 'app-dummy-page', template: '' })
@@ -131,5 +132,22 @@ describe('AppComponent', () => {
     button.click();
 
     expect(logoutSpy).toHaveBeenCalled();
+  });
+
+  it('should show a dismissible alert when a global error occurs', () => {
+    vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    const fixture = TestBed.createComponent(AppComponent);
+    const handler = TestBed.inject(GlobalErrorHandler);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('[data-testid="global-error"]')).toBeNull();
+
+    handler.handleError(new Error('boom'));
+    fixture.detectChanges();
+    const alert = fixture.nativeElement.querySelector('[data-testid="global-error"]');
+    expect(alert.getAttribute('role')).toBe('alert');
+
+    fixture.nativeElement.querySelector('[data-testid="global-error-close"]').click();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('[data-testid="global-error"]')).toBeNull();
   });
 });

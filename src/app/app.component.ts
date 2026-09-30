@@ -5,6 +5,7 @@ import { filter } from 'rxjs';
 import { FooterComponent } from './compartilhado/footer/footer.component';
 import { IconComponent } from './compartilhado/icon/icon.component';
 import { AuthService } from './auth/auth.service';
+import { GlobalErrorHandler } from './services/global-error-handler';
 import { Lang, LangService } from './services/lang.service';
 
 const TITLES: Record<Lang, string> = {
@@ -26,6 +27,7 @@ const ASK_IA_LINK_LABELS: Record<Lang, string> = {
 export class AppComponent {
   protected readonly authService = inject(AuthService);
   protected readonly langService = inject(LangService);
+  protected readonly globalError = inject(GlobalErrorHandler);
   private readonly router = inject(Router);
 
   constructor() {
