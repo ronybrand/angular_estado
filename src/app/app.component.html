@@ -18,6 +18,24 @@
     }
   </div>
 </nav>
+@if (globalError.mensagem(); as mensagem) {
+  <div class="container mt-3">
+    <div
+      class="alert alert-danger d-flex justify-content-between align-items-center"
+      role="alert"
+      data-testid="global-error"
+    >
+      {{ mensagem }}
+      <button
+        type="button"
+        class="btn-close"
+        aria-label="Fechar"
+        data-testid="global-error-close"
+        (click)="globalError.limpar()"
+      ></button>
+    </div>
+  </div>
+}
 <div class="mt-4">
   <router-outlet></router-outlet>
 </div>
