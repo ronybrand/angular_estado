@@ -1,0 +1,11 @@
+# So pro docker-compose local do ecossistema (ver estado/docker-compose.yml) -
+# nunca usado em producao, onde o frontend e um build estatico servido via
+# S3 + CloudFront (ver ADR 0013 no repo estado). Aqui sobe o dev server do
+# Angular (ng serve) com live-reload, apontando pro backend via proxy.config.js.
+FROM node:22-slim
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci
+COPY . .
+EXPOSE 4200
+CMD ["npm", "start", "--", "--host", "0.0.0.0"]
