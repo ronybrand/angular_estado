@@ -30,5 +30,11 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./paginas/perguntar-ia/perguntar-ia.component').then((m) => m.PerguntarIaComponent),
   },
+  {
+    // Rota curta usada no README/perfil do GitHub - a /perguntar-ia continua
+    // existindo sem alteracoes porque ja esta linkada em curriculos enviados.
+    path: 'ask-ai',
+    redirectTo: () => '/perguntar-ia?lang=en',
+  },
   { path: '**', redirectTo: '' },
 ];
