@@ -20,8 +20,8 @@ const TITLES: Record<Lang, string> = {
 // index.html ficam fixas em ingles porque crawlers de redes sociais nao
 // executam JS para ler isso dinamicamente.
 const BROWSER_TAB_TITLES: Record<Lang, string> = {
-  pt: 'Estado — API Java/Spring Boot com agente de IA',
-  en: 'Brazilian States — Java/Spring Boot API with an AI agent',
+  pt: 'Estado — Demo ao Vivo com Agente de IA',
+  en: 'Brazilian States — Live AI Agent Demo',
 };
 
 const ASK_IA_LINK_LABELS: Record<Lang, string> = {

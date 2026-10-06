@@ -88,7 +88,7 @@ describe('AppComponent', () => {
     TestBed.createComponent(AppComponent);
 
     const titleService = TestBed.inject(Title);
-    expect(titleService.getTitle()).toBe('Estado — API Java/Spring Boot com agente de IA');
+    expect(titleService.getTitle()).toBe('Estado — Demo ao Vivo com Agente de IA');
   });
 
   it('should set the browser tab title in English when the browser language is not Portuguese', () => {
@@ -97,9 +97,7 @@ describe('AppComponent', () => {
     TestBed.createComponent(AppComponent);
 
     const titleService = TestBed.inject(Title);
-    expect(titleService.getTitle()).toBe(
-      'Brazilian States — Java/Spring Boot API with an AI agent',
-    );
+    expect(titleService.getTitle()).toBe('Brazilian States — Live AI Agent Demo');
   });
 
   it('should render the Portuguese nav link by default', () => {
