@@ -21,7 +21,7 @@ const TITLES: Record<Lang, string> = {
 // executam JS para ler isso dinamicamente.
 const BROWSER_TAB_TITLES: Record<Lang, string> = {
   pt: 'Estado — API Java/Spring Boot com agente de IA',
-  en: 'Estado — Java/Spring Boot API with an AI agent',
+  en: 'Brazilian States — Java/Spring Boot API with an AI agent',
 };
 
 const ASK_IA_LINK_LABELS: Record<Lang, string> = {

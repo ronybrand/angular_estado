@@ -97,7 +97,9 @@ describe('AppComponent', () => {
     TestBed.createComponent(AppComponent);
 
     const titleService = TestBed.inject(Title);
-    expect(titleService.getTitle()).toBe('Estado — Java/Spring Boot API with an AI agent');
+    expect(titleService.getTitle()).toBe(
+      'Brazilian States — Java/Spring Boot API with an AI agent',
+    );
   });
 
   it('should render the Portuguese nav link by default', () => {
