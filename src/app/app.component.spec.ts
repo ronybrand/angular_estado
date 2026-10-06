@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { Title } from '@angular/platform-browser';
 import { Router, provideRouter, Routes } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
@@ -78,6 +79,26 @@ describe('AppComponent', () => {
     expect(compiled.querySelector('.navbar-brand').textContent).toContain('Crud UF - Angular/Java');
     expect(compiled.querySelector('[data-testid="ask-ia-link"]').textContent).toContain(
       'Perguntar à IA',
+    );
+  });
+
+  it('should set the browser tab title in Portuguese when the browser language is Portuguese', () => {
+    vi.spyOn(navigator, 'language', 'get').mockReturnValue('pt-BR');
+
+    TestBed.createComponent(AppComponent);
+
+    const titleService = TestBed.inject(Title);
+    expect(titleService.getTitle()).toBe('Estado — API Java/Spring Boot com agente de IA');
+  });
+
+  it('should set the browser tab title in English when the browser language is not Portuguese', () => {
+    vi.spyOn(navigator, 'language', 'get').mockReturnValue('en-US');
+
+    TestBed.createComponent(AppComponent);
+
+    const titleService = TestBed.inject(Title);
+    expect(titleService.getTitle()).toBe(
+      'Brazilian States — Java/Spring Boot API with an AI agent',
     );
   });
 

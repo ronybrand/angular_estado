@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Title } from '@angular/platform-browser';
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
 import { FooterComponent } from './compartilhado/footer/footer.component';
@@ -11,6 +12,16 @@ import { Lang, LangService } from './services/lang.service';
 const TITLES: Record<Lang, string> = {
   pt: 'Crud UF - Angular/Java',
   en: 'States CRUD - Angular/Java',
+};
+
+// Titulo da aba do navegador (distinto do header acima) - detectado uma vez
+// a partir do idioma do navegador do visitante, nao do toggle de idioma
+// (que so existe na pagina perguntar-ia). As meta tags og:*/twitter:* do
+// index.html ficam fixas em ingles porque crawlers de redes sociais nao
+// executam JS para ler isso dinamicamente.
+const BROWSER_TAB_TITLES: Record<Lang, string> = {
+  pt: 'Estado — API Java/Spring Boot com agente de IA',
+  en: 'Brazilian States — Java/Spring Boot API with an AI agent',
 };
 
 const ASK_IA_LINK_LABELS: Record<Lang, string> = {
@@ -29,8 +40,12 @@ export class AppComponent {
   protected readonly langService = inject(LangService);
   protected readonly globalError = inject(GlobalErrorHandler);
   private readonly router = inject(Router);
+  private readonly titleService = inject(Title);
 
   constructor() {
+    const browserLang: Lang = navigator.language.toLowerCase().startsWith('pt') ? 'pt' : 'en';
+    this.titleService.setTitle(BROWSER_TAB_TITLES[browserLang]);
+
     // O idioma compartilhado so faz sentido enquanto a pagina perguntar-ia
     // esta ativa (unica com opcao de EN); ao navegar pra fora dela, volta
     // pro default PT pra nao "vazar" EN pro resto do site.
