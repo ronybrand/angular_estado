@@ -36,4 +36,13 @@ describe('extraiMensagemErro', () => {
 
     expect(extraiMensagemErro(error, fallback)).toBe(fallback);
   });
+
+  it('should return the localized fallback instead of the backend message when priorizarMensagemBackend is false', () => {
+    const error = new HttpErrorResponse({
+      error: { message: 'Sigla já cadastrada.' },
+      status: 400,
+    });
+
+    expect(extraiMensagemErro(error, fallback, false)).toBe(fallback);
+  });
 });

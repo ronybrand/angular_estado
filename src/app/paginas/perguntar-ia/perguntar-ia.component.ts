@@ -115,6 +115,7 @@ export class PerguntarIaComponent {
       this.errorMsgComponent(),
       this.translations().errorMsg,
       (res) => this.answer.set(res.answer),
+      this.lang() === 'pt',
     );
   }
 }
