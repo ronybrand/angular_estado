@@ -11,6 +11,7 @@ export function subscreveComProcessando<T>(
   errorMsgComponent: ErrorMsgComponent,
   mensagemErro: string,
   onSuccess: (valor: T) => void,
+  priorizarMensagemBackend = true,
 ): void {
   processando.set(true);
   observable.subscribe({
@@ -21,7 +22,7 @@ export function subscreveComProcessando<T>(
     },
     error: (error: HttpErrorResponse) => {
       errorMsgComponent.setError(
-        extraiMensagemErro(error, mensagemErro),
+        extraiMensagemErro(error, mensagemErro, priorizarMensagemBackend),
         extraiRequestIdErro(error),
       );
       processando.set(false);

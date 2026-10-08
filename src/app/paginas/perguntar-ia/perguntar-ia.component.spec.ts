@@ -395,6 +395,24 @@ describe('PerguntarIaComponent', () => {
       'Failed to reach the assistant. Please try again shortly.',
     );
   });
+
+  it('should show the English fallback, not the backend raw message, when the backend returns a message in EN mode', () => {
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    const toggle: HTMLButtonElement = compiled.querySelector('[data-testid="lang-toggle"]')!;
+    toggle.click();
+    fixture.detectChanges();
+
+    aiAgentService.perguntar.mockReturnValue(
+      throwError(() => new HttpErrorResponse({ status: 500, error: { message: 'Erro interno.' } })),
+    );
+    component.question.set('How many states are there?');
+
+    component.perguntar();
+
+    expect(component.errorMsgComponent().error()).toBe(
+      'Failed to reach the assistant. Please try again shortly.',
+    );
+  });
 });
 
 describe('PerguntarIaComponent with a lang query param', () => {
