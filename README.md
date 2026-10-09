@@ -6,7 +6,7 @@
 [![CodeQL](https://github.com/ronybrand/angular_estado/actions/workflows/codeql.yml/badge.svg)](https://github.com/ronybrand/angular_estado/actions/workflows/codeql.yml)
 [![codecov](https://codecov.io/gh/ronybrand/angular_estado/graph/badge.svg)](https://codecov.io/gh/ronybrand/angular_estado)
 
-🔗 **[Live application](https://d3bqbg07tehy1h.cloudfront.net/)** · **[Ask AI](https://d3bqbg07tehy1h.cloudfront.net/ask-ai)**
+🔗 **[Live application](https://ronybrand.click/)** · **[Ask AI](https://ronybrand.click/ask-ai)**
 
 Angular frontend for the [Estado project](https://github.com/ronybrand/estado) — CRUD for Brazilian federative units (states). Consumes the Spring Boot backend API at `/api/*`. Also includes an "Ask the AI" page, which calls the backend's `/ask` endpoint — proxied to a separate LLM agent, [`estado-ai-agent`](https://github.com/ronybrand/estado-ai-agent) (Spring AI + Gemini, tool calling against the same states API). See the backend's [CASE_STUDY.md](https://github.com/ronybrand/estado/blob/master/CASE_STUDY.md) for the end-to-end system write-up (architecture, decisions, trade-offs).
 
