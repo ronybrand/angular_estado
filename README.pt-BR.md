@@ -6,7 +6,7 @@
 [![CodeQL](https://github.com/ronybrand/angular_estado/actions/workflows/codeql.yml/badge.svg)](https://github.com/ronybrand/angular_estado/actions/workflows/codeql.yml)
 [![codecov](https://codecov.io/gh/ronybrand/angular_estado/graph/badge.svg)](https://codecov.io/gh/ronybrand/angular_estado)
 
-🔗 **[Aplicação em produção](https://d3bqbg07tehy1h.cloudfront.net/)** · **[Pergunte à IA](https://d3bqbg07tehy1h.cloudfront.net/ask-ai)**
+🔗 **[Aplicação em produção](https://ronybrand.click/)** · **[Pergunte à IA](https://ronybrand.click/ask-ai)**
 
 Front-end Angular do [Projeto Estado](https://github.com/ronybrand/estado) — CRUD de unidades federativas do Brasil (estados). Consome a API Spring Boot do backend em `/api/*`. Também tem uma página "Pergunte à IA", que chama o endpoint `/ask` do backend — repassado pra um agente de LLM separado, o [`estado-ai-agent`](https://github.com/ronybrand/estado-ai-agent) (Spring AI + Gemini, com tool calling contra essa mesma API de estados). Veja o [CASE_STUDY.md](https://github.com/ronybrand/estado/blob/master/CASE_STUDY.md) do backend para o relato completo do sistema (arquitetura, decisões, trade-offs).
 

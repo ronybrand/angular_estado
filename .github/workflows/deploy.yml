@@ -27,7 +27,7 @@ jobs:
     # sub emitido pelo GitHub e quebra o AssumeRoleWithWebIdentity (ver #94/#95).
     environment:
       name: production
-      url: https://d3bqbg07tehy1h.cloudfront.net/
+      url: https://ronybrand.click/
     permissions:
       id-token: write
       contents: read
