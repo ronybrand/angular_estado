@@ -74,4 +74,30 @@ test.describe('Acessibilidade (axe-core, WCAG 2.1 A/AA)', () => {
 
     expect(results.violations).toEqual([]);
   });
+
+  test('pergunte à IA não tem violações', async ({ page }) => {
+    await page.goto('/perguntar-ia');
+
+    const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
+
+    expect(results.violations).toEqual([]);
+  });
+
+  test('pergunte à IA com resposta exibida não tem violações', async ({ page }) => {
+    await page.route('**/api/ask', (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ answer: 'O Brasil tem 26 estados e o Distrito Federal.' }),
+      }),
+    );
+    await page.goto('/perguntar-ia');
+    await page.getByTestId('pergunta-textarea').fill('Quantos estados tem o Brasil?');
+    await page.getByTestId('perguntar-button').click();
+    await expect(page.getByTestId('resposta')).toBeVisible();
+
+    const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
+
+    expect(results.violations).toEqual([]);
+  });
 });
