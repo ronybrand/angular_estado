@@ -46,14 +46,28 @@ jobs:
       - run: npm ci
       - run: npm run build
 
+  # A imagem do job e2e precisa ter a mesma versao do Playwright que o
+  # package.json declara; um bump do Dependabot sem acompanhar a imagem
+  # quebra o launch do browser. "container.image" aceita output de outro job,
+  # entao a versao sai do package.json em vez de ser escrita a mao.
+  playwright-version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.lock.outputs.version }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - id: lock
+        run: echo "version=$(node -p "require('./package.json').devDependencies['@playwright/test'].replace(/^[\^~]/, '')")" >> "$GITHUB_OUTPUT"
+
   e2e:
+    needs: playwright-version
     runs-on: ubuntu-latest
     # Imagem oficial já traz os browsers instalados - evita o
     # "npx playwright install --with-deps" (apt-get contra archive.ubuntu.com,
     # que já travou o job por 15min+ em mirrors instáveis). Versão precisa
-    # bater com @playwright/test do package.json.
+    # bater com @playwright/test do package.json (job playwright-version).
     container:
-      image: mcr.microsoft.com/playwright:v1.63.0-noble
+      image: mcr.microsoft.com/playwright:v${{ needs.playwright-version.outputs.version }}-noble
     env:
       # O container roda como root, mas $HOME aponta pro workspace montado
       # pelo runner (dono pwuser) - Firefox recusa rodar assim (ver doc da
