@@ -21,4 +21,9 @@ jobs:
         run: gh pr merge --auto --squash "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Merge feito com o GITHUB_TOKEN nao dispara os workflows de push
+          # (CI, publish, deploy): o bump entra no master mas nao vai pro ar.
+          # Com AUTO_MERGE_TOKEN (PAT, cadastrado como Dependabot secret) o
+          # merge conta como de um usuario e dispara o pipeline. Sem o secret,
+          # cai no comportamento anterior.
+          GH_TOKEN: ${{ secrets.AUTO_MERGE_TOKEN || secrets.GITHUB_TOKEN }}
