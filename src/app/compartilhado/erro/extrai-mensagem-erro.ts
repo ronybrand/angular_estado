@@ -13,7 +13,7 @@ export function urlLigarApi(paginaAtual: string, idioma: 'pt' | 'en' = 'pt'): st
 }
 
 export const MENSAGEM_API_INDISPONIVEL =
-  'A API está temporariamente fora do ar (pausada para economizar custo). Tente novamente em alguns minutos.';
+  'A API está fora do ar (pausada para economizar custo). Ligue-a pelo link abaixo; leva cerca de 1 minuto.';
 
 // Sem resposta HTTP util do backend: rede/DNS (status 0), gateway/origem fora
 // (502/503/504 do CloudFront) ou o timeout do interceptor (TimeoutError, que
