@@ -118,6 +118,14 @@ CloudFront que serve este app, nao neste repositorio: ver
 [`terraform/modules/frontend-static/main.tf`](https://github.com/ronybrand/estado/blob/master/terraform/modules/frontend-static/main.tf#L113-L144)
 no repo `estado`.
 
+### Quando a API está desligada
+
+Para gastar o mínimo, a instância do backend fica parada enquanto o projeto não está em uso. Quando a
+API não responde (sem resposta, timeout ou 502/503/504), a mensagem de erro avisa e oferece o link
+**Ligar a API**. Ele abre uma página servida pela Lambda `start-api` do backend (desafio anti-bot, liga
+a instância e espera a API voltar; a instância desliga sozinha depois de 2 horas), ver
+[ADR 0026](https://github.com/ronybrand/estado/blob/master/docs/adr/0026-ligar-api-sob-demanda.md). Implementado em `src/app/compartilhado/erro/extrai-mensagem-erro.ts`.
+
 ## Pré-requisitos
 
 Requer o backend do [Projeto Estado](https://github.com/ronybrand/estado) rodando localmente em `http://localhost:8090` — sem ele, `npm start` sobe a UI mas as chamadas a `/api/*` falham.
