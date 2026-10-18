@@ -35,6 +35,14 @@ flowchart LR
     Grafana["Grafana Cloud"]
     Gemini["Google Gemini"]
 
+
+    subgraph OnDemand["Turn on the API on demand"]
+        direction LR
+        Lambda["Lambda start-api\n(Function URL)"]
+        Turnstile["Cloudflare Turnstile"]
+        Autostop["EventBridge\n(autostop rule)"]
+    end
+
     Browser -- "/ (static)" --> S3
     Browser -- "/api/*" --> Caddy
     Caddy --> App
@@ -44,6 +52,10 @@ flowchart LR
     Agent --> Gemini
     Alloy -- "scrape /actuator/prometheus" --> App
     Alloy -- metrics/logs --> Grafana
+    Browser -. "API unreachable:\nTurn on the API" .-> Lambda
+    Lambda -. "validates the challenge" .-> Turnstile
+    Lambda -. "starts / stops" .-> EC2
+    Autostop -. "stops it 2h after" .-> Lambda
 ```
 
 Frontend (S3/CloudFront, static) and backend (a single EC2 instance running
