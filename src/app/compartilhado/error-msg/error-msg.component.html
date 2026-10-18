@@ -2,9 +2,9 @@
   <div class="alert alert-danger" role="alert" aria-live="assertive">
     {{ error() }}
     @if (apiIndisponivel()) {
-      <a class="d-block mt-2" [href]="urlLigarApi" target="_blank" rel="noopener noreferrer"
-        >Ligar a API (Turn on the API)</a
-      >
+      <a class="d-block mt-2" [href]="urlLigarApi()" target="_blank" rel="noopener noreferrer">{{
+        textoLigarApi()
+      }}</a>
     }
     @if (requestId()) {
       <small class="d-block text-muted">ID de referência: {{ requestId() }}</small>

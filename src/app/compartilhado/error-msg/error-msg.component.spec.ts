@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { URL_LIGAR_API } from '../erro/extrai-mensagem-erro';
+import { urlLigarApi } from '../erro/extrai-mensagem-erro';
 import { ErrorMsgComponent } from './error-msg.component';
 
 describe('ErrorMsgComponent', () => {
@@ -84,8 +84,18 @@ describe('ErrorMsgComponent', () => {
     fixture.detectChanges();
 
     const link: HTMLAnchorElement | null = fixture.debugElement.nativeElement.querySelector('a');
-    expect(link?.getAttribute('href')).toBe(URL_LIGAR_API);
+    expect(link?.getAttribute('href')).toBe(urlLigarApi(window.location.href, 'pt'));
+    expect(link?.getAttribute('href')).toContain(
+      'lang=pt&back=' + encodeURIComponent(window.location.href),
+    );
     expect(link?.getAttribute('rel')).toBe('noopener noreferrer');
+
+    fixture.componentRef.setInput('idioma', 'en');
+    fixture.detectChanges();
+
+    const linkEn: HTMLAnchorElement | null = fixture.debugElement.nativeElement.querySelector('a');
+    expect(linkEn?.textContent?.trim()).toBe('Turn on the API');
+    expect(linkEn?.getAttribute('href')).toContain('lang=en');
 
     component.setError('Falha comum');
     fixture.detectChanges();

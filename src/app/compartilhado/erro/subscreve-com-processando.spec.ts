@@ -1,4 +1,5 @@
 import { signal } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { HttpErrorResponse } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
 import { MENSAGEM_API_INDISPONIVEL } from './extrai-mensagem-erro';
@@ -8,10 +9,13 @@ import {
 } from './subscreve-com-processando';
 import { ErrorMsgComponent } from '../error-msg/error-msg.component';
 
+// input() do ErrorMsgComponent exige contexto de injecao, entao nao da pra usar `new` direto.
+const criaErrorMsg = () => TestBed.runInInjectionContext(() => new ErrorMsgComponent());
+
 describe('subscreveComProcessando', () => {
   it('clears a previously set error once the observable succeeds', () => {
     const processando = signal(false);
-    const errorMsgComponent = new ErrorMsgComponent();
+    const errorMsgComponent = criaErrorMsg();
     errorMsgComponent.setError('Falha ao deletar estado.', 'req-1');
 
     subscreveComProcessando(
@@ -28,7 +32,7 @@ describe('subscreveComProcessando', () => {
 
   it('sets the error message when the observable fails', () => {
     const processando = signal(false);
-    const errorMsgComponent = new ErrorMsgComponent();
+    const errorMsgComponent = criaErrorMsg();
     const error = new HttpErrorResponse({ status: 500, statusText: 'Internal Server Error' });
 
     subscreveComProcessando(
@@ -47,7 +51,7 @@ describe('subscreveComProcessando', () => {
 
     function falhaComStatus(status: number) {
       vi.useFakeTimers();
-      const errorMsgComponent = new ErrorMsgComponent();
+      const errorMsgComponent = criaErrorMsg();
       subscreveComProcessando(
         throwError(() => new HttpErrorResponse({ status })),
         signal(false),

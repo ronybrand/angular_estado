@@ -5,6 +5,13 @@ import { HttpErrorResponse } from '@angular/common/http';
 export const URL_LIGAR_API =
   'https://pizowbnhivr3vholalz5r7ajta0mkvqn.lambda-url.us-east-1.on.aws/';
 
+// ?back: a pagina volta pra URL exata de onde veio (ex.: a perguntar-ia), mas
+// so se a origem estiver na lista dela (anti redirecionamento aberto). ?lang: a perguntar-ia e a unica
+// pagina com toggle de idioma; as demais ficam em PT.
+export function urlLigarApi(paginaAtual: string, idioma: 'pt' | 'en' = 'pt'): string {
+  return `${URL_LIGAR_API}?lang=${idioma}&back=${encodeURIComponent(paginaAtual)}`;
+}
+
 export const MENSAGEM_API_INDISPONIVEL =
   'A API está temporariamente fora do ar (pausada para economizar custo). Tente novamente em alguns minutos.';
 

@@ -1,5 +1,5 @@
-import { Component, signal } from '@angular/core';
-import { URL_LIGAR_API } from '../erro/extrai-mensagem-erro';
+import { Component, computed, input, signal } from '@angular/core';
+import { urlLigarApi } from '../erro/extrai-mensagem-erro';
 
 @Component({
   selector: 'app-error-msg',
@@ -10,7 +10,11 @@ export class ErrorMsgComponent {
   public error = signal<string | null>(null);
   public requestId = signal<string | null>(null);
   public apiIndisponivel = signal(false);
-  readonly urlLigarApi = URL_LIGAR_API;
+  readonly idioma = input<'pt' | 'en'>('pt');
+  readonly urlLigarApi = computed(() => urlLigarApi(window.location.href, this.idioma()));
+  readonly textoLigarApi = computed(() =>
+    this.idioma() === 'en' ? 'Turn on the API' : 'Ligar a API',
+  );
   private limpezaTimeoutId: ReturnType<typeof setTimeout> | undefined;
 
   setError(error: string, requestId: string | null = null, tempo = 5000, apiIndisponivel = false) {
