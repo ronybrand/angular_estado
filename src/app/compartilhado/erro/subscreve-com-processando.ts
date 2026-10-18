@@ -30,6 +30,7 @@ export function subscreveComProcessando<T>(
         extraiMensagemErro(error, mensagemErro, priorizarMensagemBackend, mensagemApiIndisponivel),
         extraiRequestIdErro(error),
         ehApiIndisponivel(error) ? TEMPO_MENSAGEM_API_INDISPONIVEL_MS : undefined,
+        ehApiIndisponivel(error),
       );
       processando.set(false);
     },

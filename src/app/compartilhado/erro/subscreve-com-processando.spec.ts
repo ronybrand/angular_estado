@@ -68,6 +68,11 @@ describe('subscreveComProcessando', () => {
       expect(errorMsgComponent.error()).toBeNull();
     });
 
+    it('flags the error so the turn-on link is offered', () => {
+      expect(falhaComStatus(0).apiIndisponivel()).toBe(true);
+      expect(falhaComStatus(500).apiIndisponivel()).toBe(false);
+    });
+
     it('keeps the default 5s for an ordinary error', () => {
       const errorMsgComponent = falhaComStatus(500);
 
