@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MarkdownComponent } from 'ngx-markdown';
 import { AiAgentService } from '../../services/ai-agent.service';
 import { ErrorMsgComponent } from '../../compartilhado/error-msg/error-msg.component';
+import { MENSAGEM_API_INDISPONIVEL } from '../../compartilhado/erro/extrai-mensagem-erro';
 import { subscreveComProcessando } from '../../compartilhado/erro/subscreve-com-processando';
 import { Lang, LangService } from '../../services/lang.service';
 
@@ -23,6 +24,7 @@ const TRANSLATIONS: Record<
     askButton: string;
     askingButton: string;
     errorMsg: string;
+    apiUnavailableMsg: string;
     onlyPageNote: string;
     languageLimitNote: string;
     howItWorksNote: string;
@@ -35,6 +37,7 @@ const TRANSLATIONS: Record<
     askButton: 'Perguntar',
     askingButton: 'Perguntando...',
     errorMsg: 'Falha ao consultar o assistente. Tente novamente em instantes.',
+    apiUnavailableMsg: MENSAGEM_API_INDISPONIVEL,
     onlyPageNote: 'Por enquanto, esta é a única página do site disponível em inglês.',
     languageLimitNote: 'O assistente entende perguntas apenas em português ou inglês.',
     howItWorksNote:
@@ -47,6 +50,8 @@ const TRANSLATIONS: Record<
     askButton: 'Ask',
     askingButton: 'Asking...',
     errorMsg: 'Failed to reach the assistant. Please try again shortly.',
+    apiUnavailableMsg:
+      'The API is temporarily offline (paused to save cost). Please try again in a few minutes.',
     onlyPageNote: 'For now, this is the only page on the site available in English.',
     languageLimitNote: 'The assistant only understands questions in Portuguese or English.',
     howItWorksNote:
@@ -116,6 +121,7 @@ export class PerguntarIaComponent {
       this.translations().errorMsg,
       (res) => this.answer.set(res.answer),
       this.lang() === 'pt',
+      this.translations().apiUnavailableMsg,
     );
   }
 }
