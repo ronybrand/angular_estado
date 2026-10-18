@@ -51,7 +51,7 @@ const TRANSLATIONS: Record<
     askingButton: 'Asking...',
     errorMsg: 'Failed to reach the assistant. Please try again shortly.',
     apiUnavailableMsg:
-      'The API is temporarily offline (paused to save cost). Please try again in a few minutes.',
+      'The API is offline (paused to save cost). Turn it on with the link below; it takes about 1 minute.',
     onlyPageNote: 'For now, this is the only page on the site available in English.',
     languageLimitNote: 'The assistant only understands questions in Portuguese or English.',
     howItWorksNote:
