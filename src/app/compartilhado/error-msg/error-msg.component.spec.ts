@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { URL_LIGAR_API } from '../erro/extrai-mensagem-erro';
 import { ErrorMsgComponent } from './error-msg.component';
 
 describe('ErrorMsgComponent', () => {
@@ -76,5 +77,19 @@ describe('ErrorMsgComponent', () => {
     expect(component.requestId()).toBeNull();
 
     vi.useRealTimers();
+  });
+
+  it('should offer the turn-on link only when the API is unavailable', () => {
+    component.setError('API fora do ar', null, 5000, true);
+    fixture.detectChanges();
+
+    const link: HTMLAnchorElement | null = fixture.debugElement.nativeElement.querySelector('a');
+    expect(link?.getAttribute('href')).toBe(URL_LIGAR_API);
+    expect(link?.getAttribute('rel')).toBe('noopener noreferrer');
+
+    component.setError('Falha comum');
+    fixture.detectChanges();
+
+    expect(fixture.debugElement.nativeElement.querySelector('a')).toBeNull();
   });
 });

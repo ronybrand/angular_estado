@@ -1,5 +1,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
 
+// Pagina servida pela Lambda start-api (repo do backend, ADR 0026): desafio
+// anti-bot, liga a EC2 e espera a API voltar.
+export const URL_LIGAR_API =
+  'https://pizowbnhivr3vholalz5r7ajta0mkvqn.lambda-url.us-east-1.on.aws/';
+
 export const MENSAGEM_API_INDISPONIVEL =
   'A API está temporariamente fora do ar (pausada para economizar custo). Tente novamente em alguns minutos.';
 
