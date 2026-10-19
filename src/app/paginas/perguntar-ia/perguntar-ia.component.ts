@@ -13,6 +13,25 @@ function isLang(value: string | null): value is Lang {
   return value === 'pt' || value === 'en';
 }
 
+function detectAnswerLang(answer: string): Lang | null {
+  if (/[áéíóúãâêôç]/i.test(answer)) {
+    return 'pt';
+  }
+
+  const hasPortugueseWords =
+    /\b(?:resposta|estados|brasileiros|existem|região|são|está|também|para|com|sobre|entre)\b/i.test(
+      answer,
+    );
+  const hasEnglishWords =
+    /\b(?:answer|states|brazilian|there|are|the|region|have|with|from|this|that)\b/i.test(answer);
+
+  if (hasPortugueseWords === hasEnglishWords) {
+    return null;
+  }
+
+  return hasPortugueseWords ? 'pt' : 'en';
+}
+
 // Dicionario local de textos desta pagina; o estado do idioma em si vem do
 // LangService compartilhado (o header tambem le dele, ver app.component).
 // Nao e um i18n do app inteiro: paginas sem traducao continuam fixas em PT.
@@ -86,12 +105,10 @@ export class PerguntarIaComponent {
   lang = this.langService.lang;
   translations = computed(() => TRANSLATIONS[this.lang()]);
 
-  // Detect the language of the received answer (naive detection based on Portuguese characters)
+  // Short or language-neutral answers should not be treated as a mismatch.
   answerLang = computed(() => {
     const ans = this.answer();
-    if (!ans) return null;
-    const hasPortugueseChars = /[áéíóúãâêôç]/i.test(ans);
-    return hasPortugueseChars ? 'pt' : 'en';
+    return ans ? detectAnswerLang(ans) : null;
   });
 
   // Flag indicating answer language mismatch with current UI language
