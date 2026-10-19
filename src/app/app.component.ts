@@ -4,7 +4,6 @@ import { Title } from '@angular/platform-browser';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { FooterComponent } from './compartilhado/footer/footer.component';
 import { IconComponent } from './compartilhado/icon/icon.component';
-import { HasTranslationPipe } from './compartilhado/pipes/has-translation.pipe';
 import { AuthService } from './auth/auth.service';
 import { GlobalErrorHandler } from './services/global-error-handler';
 import { LangService } from './services/lang.service';
@@ -19,7 +18,7 @@ const BROWSER_TAB_TITLES = {
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  imports: [RouterLink, RouterOutlet, FooterComponent, IconComponent, HasTranslationPipe],
+  imports: [RouterLink, RouterOutlet, FooterComponent, IconComponent],
 })
 export class AppComponent {
   private readonly router = inject(Router);

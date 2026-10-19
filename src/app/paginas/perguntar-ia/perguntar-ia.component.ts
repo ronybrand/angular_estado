@@ -66,7 +66,7 @@ const SOURCE_REPO_URL = 'https://github.com/ronybrand/estado-ai-agent';
   selector: 'app-perguntar-ia',
   templateUrl: './perguntar-ia.component.html',
   styleUrls: ['./perguntar-ia.component.scss'],
-  imports: [FormsModule, ErrorMsgComponent, MarkdownComponent, HasTranslationPipe],
+  imports: [FormsModule, ErrorMsgComponent, MarkdownComponent],
 })
 export class PerguntarIaComponent {
   private aiAgentService = inject(AiAgentService);
