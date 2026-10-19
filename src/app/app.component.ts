@@ -1,5 +1,4 @@
 import { Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { FooterComponent } from './compartilhado/footer/footer.component';
@@ -21,7 +20,6 @@ const BROWSER_TAB_TITLES = {
   imports: [RouterLink, RouterOutlet, FooterComponent, IconComponent],
 })
 export class AppComponent {
-  private readonly router = inject(Router);
   protected readonly authService = inject(AuthService);
   protected readonly langService = inject(LangService);
   protected readonly translationService = inject(TranslationService);
@@ -43,14 +41,6 @@ export class AppComponent {
 
   toggleLang(): void {
     this.langService.toggle();
-  }
-
-  /**
-   * Returns true if the current route supports English translation.
-   * Currently only the 'perguntar-ia' page has EN translations.
-   */
-  get supportsEn(): boolean {
-    return this.router.url.includes('perguntar-ia');
   }
 
   logout(): void {
