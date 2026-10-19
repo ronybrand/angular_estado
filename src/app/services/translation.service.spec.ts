@@ -25,6 +25,35 @@ describe('TranslationService', () => {
     expect(translationService.t('newStateButton')).toBe('New state');
   });
 
+  it('should support new dictionary keys for list, form and navigation', () => {
+    expect(translationService.t('statesTitle')).toBe('Estados');
+    expect(translationService.t('saveButton')).toBe('Salvar');
+    expect(translationService.t('searchPlaceholder')).toBe('Buscar por nome ou sigla...');
+    expect(translationService.t('confirmDelete')).toBe(
+      'Tem certeza que deseja excluir este estado?',
+    );
+    expect(translationService.t('editButton')).toBe('Editar');
+    expect(translationService.t('deleteButton')).toBe('Excluir');
+    expect(translationService.t('cancelButton')).toBe('Cancelar');
+    expect(translationService.t('confirmButton')).toBe('Confirmar');
+    expect(translationService.t('loginTitle')).toBe('Login');
+    expect(translationService.t('enterButton')).toBe('Entrar');
+
+    langService.lang.set('en');
+    expect(translationService.t('statesTitle')).toBe('States');
+    expect(translationService.t('saveButton')).toBe('Save');
+    expect(translationService.t('searchPlaceholder')).toBe('Search by name or abbreviation...');
+    expect(translationService.t('confirmDelete')).toBe(
+      'Are you sure you want to delete this state?',
+    );
+    expect(translationService.t('editButton')).toBe('Edit');
+    expect(translationService.t('deleteButton')).toBe('Delete');
+    expect(translationService.t('cancelButton')).toBe('Cancel');
+    expect(translationService.t('confirmButton')).toBe('Confirm');
+    expect(translationService.t('loginTitle')).toBe('Login');
+    expect(translationService.t('enterButton')).toBe('Log in');
+  });
+
   it('should fallback to the key when translation is missing', () => {
     expect(translationService.t('nonExistentKey')).toBe('nonExistentKey');
   });
