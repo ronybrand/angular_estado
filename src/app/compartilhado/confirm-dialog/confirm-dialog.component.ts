@@ -1,4 +1,5 @@
 import { Component, ElementRef, input, output, viewChild } from '@angular/core';
+import { TranslatePipe } from '../pipes/translate.pipe';
 
 // <dialog> nativo em vez de window.confirm() - acessivel por padrao
 // (foco preso dentro do modal, Escape fecha via evento (cancel) nativo,
@@ -7,6 +8,7 @@ import { Component, ElementRef, input, output, viewChild } from '@angular/core';
   selector: 'app-confirm-dialog',
   templateUrl: './confirm-dialog.component.html',
   styleUrls: ['./confirm-dialog.component.scss'],
+  imports: [TranslatePipe],
 })
 export class ConfirmDialogComponent {
   mensagem = input.required<string>();

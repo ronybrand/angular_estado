@@ -6,7 +6,9 @@ import { ErrorMsgComponent } from '../../compartilhado/error-msg/error-msg.compo
 import { SpinnerComponent } from '../../compartilhado/spinner/spinner.component';
 import { IconComponent } from '../../compartilhado/icon/icon.component';
 import { ConfirmDialogComponent } from '../../compartilhado/confirm-dialog/confirm-dialog.component';
+import { TranslatePipe } from '../../compartilhado/pipes/translate.pipe';
 import { EstadoService } from '../../services/estado.service';
+import { TranslationService } from '../../services/translation.service';
 import { subscreveComProcessando } from '../../compartilhado/erro/subscreve-com-processando';
 
 type CampoOrdenavel = 'nome' | 'sigla';
@@ -21,12 +23,14 @@ type Direcao = 'asc' | 'desc';
     SpinnerComponent,
     IconComponent,
     ConfirmDialogComponent,
+    TranslatePipe,
     RouterLink,
     DatePipe,
   ],
 })
 export class ListaEstadoComponent implements OnInit, OnDestroy {
   private readonly estadoService = inject(EstadoService);
+  protected readonly translationService = inject(TranslationService);
 
   public estados = signal<Estado[]>([]);
   public carregando = signal(true);

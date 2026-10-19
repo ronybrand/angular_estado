@@ -6,6 +6,7 @@ import { Observable, Subject, of, throwError } from 'rxjs';
 import { ListaEstadoComponent } from './lista-estado.component';
 import { EstadoService } from '../../services/estado.service';
 import { Estado } from '../../interfaces/estado';
+import { LangService } from '../../services/lang.service';
 
 describe('ListaEstadoComponent', () => {
   const estados: Estado[] = [{ id: 1, sigla: 'SP', nome: 'São Paulo' } as Estado];
@@ -49,6 +50,22 @@ describe('ListaEstadoComponent', () => {
 
     expect(editar.getAttribute('aria-label')).toBe('Editar SP');
     expect(excluir.getAttribute('aria-label')).toBe('Excluir SP');
+  });
+
+  it('should render table headers and buttons in English when language is switched to en', async () => {
+    const { fixture } = await setup();
+    const langService = TestBed.inject(LangService);
+    langService.setLang('en');
+    fixture.detectChanges();
+
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('.card-header')?.textContent).toContain('States');
+    expect(compiled.querySelector('button.btn-success')?.textContent).toContain('New state');
+
+    const editar: HTMLButtonElement = compiled.querySelector('button.btn-primary')!;
+    const excluir: HTMLButtonElement = compiled.querySelector('button.btn-danger')!;
+    expect(editar.getAttribute('aria-label')).toBe('Edit SP');
+    expect(excluir.getAttribute('aria-label')).toBe('Delete SP');
   });
 
   it('should surface the backend error message when loading the list fails', async () => {

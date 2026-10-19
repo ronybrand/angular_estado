@@ -90,9 +90,11 @@ export class PerguntarIaComponent {
     // > idioma do navegador > default PT do LangService.
     const langParam = this.route.snapshot.queryParamMap.get('lang');
     if (isLang(langParam)) {
-      this.langService.lang.set(langParam);
+      this.langService.setLang(langParam);
     } else if (window.navigator.language.toLowerCase().startsWith('en')) {
-      this.langService.lang.set('en');
+      this.langService.setLang('en');
+    } else {
+      this.langService.setLang('pt');
     }
 
     // Reaproveita o cardTitle (mesmo texto do heading da pagina) em vez de

@@ -5,12 +5,13 @@ import { ErrorMsgComponent } from '../../compartilhado/error-msg/error-msg.compo
 import { EstadoService } from '../../services/estado.service';
 import { subscreveComProcessando } from '../../compartilhado/erro/subscreve-com-processando';
 import { FormEstadoComponent } from '../../compartilhado/form-estado/form-estado.component';
+import { TranslatePipe } from '../../compartilhado/pipes/translate.pipe';
 
 @Component({
   selector: 'app-criar-estado',
   templateUrl: './criar-estado.component.html',
   styleUrls: ['./criar-estado.component.scss'],
-  imports: [ErrorMsgComponent, FormEstadoComponent],
+  imports: [ErrorMsgComponent, FormEstadoComponent, TranslatePipe],
 })
 export class CriarEstadoComponent {
   private estadoService = inject(EstadoService);
@@ -21,8 +22,8 @@ export class CriarEstadoComponent {
   siglasExistentes = signal<string[]>([]);
 
   constructor() {
-    this.estadoService.getListaEstados().subscribe({
-      next: (estados) => this.siglasExistentes.set(estados.map((e) => e.sigla)),
+    this.estadoService.getSiglasExistentes().subscribe({
+      next: (siglas) => this.siglasExistentes.set(siglas),
       error: () => {
         // Falha ao pre-carregar siglas so desativa a checagem de duplicidade
         // no cliente; o backend ainda rejeita duplicatas no submit.

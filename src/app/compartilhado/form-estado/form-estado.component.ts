@@ -9,12 +9,13 @@ import { Component, effect, inject, input, output } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Estado } from '../../interfaces/estado';
 import { IconComponent } from '../icon/icon.component';
+import { TranslatePipe } from '../pipes/translate.pipe';
 
 @Component({
   selector: 'app-form-estado',
   templateUrl: './form-estado.component.html',
   styleUrls: ['./form-estado.component.scss'],
-  imports: [ReactiveFormsModule, IconComponent],
+  imports: [ReactiveFormsModule, IconComponent, TranslatePipe],
 })
 export class FormEstadoComponent {
   readonly estado = input<Estado>({} as Estado);

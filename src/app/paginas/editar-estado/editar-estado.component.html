@@ -3,7 +3,7 @@
     <div class="col-md-8 mx-auto">
       <app-error-msg></app-error-msg>
       <div class="card">
-        <div class="card-header">Editar</div>
+        <div class="card-header">{{ 'editTitle' | translate }}</div>
         <div class="card-body">
           @if (carregando()) {
             <app-spinner></app-spinner>

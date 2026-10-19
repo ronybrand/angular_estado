@@ -1,21 +1,31 @@
 <nav class="navbar navbar-dark app-navbar">
   <div class="container d-flex justify-content-between align-items-center">
     <a class="navbar-brand" routerLink="">{{ title }}</a>
-    <a class="btn btn-link text-white" routerLink="perguntar-ia" data-testid="ask-ia-link">{{
-      askIaLinkLabel
-    }}</a>
-    @if (authService.isAuthenticated()) {
+    <div class="d-flex align-items-center">
+      <a class="btn btn-link text-white me-2" routerLink="perguntar-ia" data-testid="ask-ia-link">{{
+        askIaLinkLabel
+      }}</a>
       <button
         type="button"
-        class="btn btn-link text-white"
-        data-testid="logout-button"
-        aria-label="Sair"
-        title="Sair"
-        (click)="logout()"
+        class="btn btn-sm btn-outline-light me-2"
+        data-testid="global-lang-toggle"
+        (click)="toggleLang()"
       >
-        <app-icon name="box-arrow-right" />
+        {{ langService.lang() === 'pt' ? 'EN' : 'PT' }}
       </button>
-    }
+      @if (authService.isAuthenticated()) {
+        <button
+          type="button"
+          class="btn btn-link text-white"
+          data-testid="logout-button"
+          aria-label="Sair"
+          title="Sair"
+          (click)="logout()"
+        >
+          <app-icon name="box-arrow-right" />
+        </button>
+      }
+    </div>
   </div>
 </nav>
 @if (globalError.mensagem(); as mensagem) {

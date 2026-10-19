@@ -5,6 +5,7 @@ import { Subject, of, throwError } from 'rxjs';
 
 import { LoginComponent } from './login.component';
 import { AuthService } from '../../auth/auth.service';
+import { LangService } from '../../services/lang.service';
 import { getToken } from '../../auth/token-storage';
 
 describe('LoginComponent', () => {
@@ -30,6 +31,21 @@ describe('LoginComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should render login card and buttons in English when language is set to en', () => {
+    const langService = TestBed.inject(LangService);
+    langService.setLang('en');
+    fixture.detectChanges();
+
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('.card-header')?.textContent).toContain('Login');
+    expect(compiled.querySelector('label[for="username"]')?.textContent).toContain('Username');
+    expect(compiled.querySelector('label[for="password"]')?.textContent).toContain('Password');
+    expect(compiled.querySelector('button[type="submit"]')?.textContent).toContain('Log in');
+    expect(compiled.querySelector('[data-testid="credenciais-demo"]')?.textContent).toContain(
+      'Demo credentials',
+    );
   });
 
   it('should show the public demo credentials', () => {
@@ -76,5 +92,42 @@ describe('LoginComponent', () => {
     subject.next({ token: 'token-emitido', expiresInSeconds: 3600 });
 
     expect(component.autenticando()).toBe(false);
+  });
+
+  it('should show username and password error messages when fields are touched and invalid', async () => {
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    const usernameInput: HTMLInputElement = compiled.querySelector('#username')!;
+    const passwordInput: HTMLInputElement = compiled.querySelector('#password')!;
+
+    usernameInput.dispatchEvent(new Event('focus'));
+    usernameInput.dispatchEvent(new Event('blur'));
+    passwordInput.dispatchEvent(new Event('focus'));
+    passwordInput.dispatchEvent(new Event('blur'));
+    fixture.detectChanges();
+
+    expect(compiled.querySelector('#username-erro')?.textContent).toContain('Digite o usuário.');
+    expect(compiled.querySelector('#password-erro')?.textContent).toContain('Digite a senha.');
+
+    const langService = TestBed.inject(LangService);
+    langService.setLang('en');
+    fixture.detectChanges();
+
+    expect(compiled.querySelector('#username-erro')?.textContent).toContain('Enter the username.');
+    expect(compiled.querySelector('#password-erro')?.textContent).toContain('Enter the password.');
+  });
+
+  it('should render authenticating button text while login is in flight', () => {
+    component.autenticando.set(true);
+    fixture.detectChanges();
+
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    const button = compiled.querySelector('button[type="submit"]');
+    expect(button?.textContent).toContain('Entrando...');
+
+    const langService = TestBed.inject(LangService);
+    langService.setLang('en');
+    fixture.detectChanges();
+
+    expect(button?.textContent).toContain('Logging in...');
   });
 });

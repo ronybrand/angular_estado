@@ -12,3 +12,12 @@ if (!HTMLDialogElement.prototype.showModal) {
     this.removeAttribute('open');
   };
 }
+
+beforeEach(() => {
+  try {
+    localStorage.clear();
+    localStorage.setItem('app_lang', 'pt');
+  } catch {
+    // ignore
+  }
+});

@@ -13,12 +13,17 @@ describe('CriarEstadoComponent', () => {
   let estadoService: {
     addEstado: ReturnType<typeof vi.fn>;
     getListaEstados: ReturnType<typeof vi.fn>;
+    getSiglasExistentes: ReturnType<typeof vi.fn>;
   };
 
   const estado: Estado = { id: 1, sigla: 'SP', nome: 'São Paulo' } as Estado;
 
   beforeEach(async () => {
-    estadoService = { addEstado: vi.fn(), getListaEstados: vi.fn().mockReturnValue(of([])) };
+    estadoService = {
+      addEstado: vi.fn(),
+      getListaEstados: vi.fn().mockReturnValue(of([])),
+      getSiglasExistentes: vi.fn().mockReturnValue(of([])),
+    };
 
     await TestBed.configureTestingModule({
       imports: [CriarEstadoComponent],
