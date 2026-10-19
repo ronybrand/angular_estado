@@ -59,6 +59,22 @@ describe('EstadoService', () => {
     req.flush({ content: [], page: { size: 100, number: 0, totalElements: 0, totalPages: 0 } });
   });
 
+  it('getSiglasExistentes should map estados to an array of uppercase siglas', () => {
+    service.getSiglasExistentes().subscribe((siglas) => {
+      expect(siglas).toEqual(['SP', 'RJ']);
+    });
+
+    const req = httpMock.expectOne(`${environment.apiUrl}/estado/paginado?size=100`);
+    expect(req.request.method).toBe('GET');
+    req.flush({
+      content: [
+        { id: 1, sigla: 'SP', nome: 'São Paulo' },
+        { id: 2, sigla: 'RJ', nome: 'Rio de Janeiro' },
+      ],
+      page: { size: 100, number: 0, totalElements: 2, totalPages: 1 },
+    });
+  });
+
   it('getEstado should GET a single estado by id', () => {
     service.getEstado(1).subscribe((result) => {
       expect(result).toEqual(estado);

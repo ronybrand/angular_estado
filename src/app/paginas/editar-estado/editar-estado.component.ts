@@ -6,12 +6,13 @@ import { SpinnerComponent } from '../../compartilhado/spinner/spinner.component'
 import { EstadoService } from '../../services/estado.service';
 import { subscreveComProcessando } from '../../compartilhado/erro/subscreve-com-processando';
 import { FormEstadoComponent } from '../../compartilhado/form-estado/form-estado.component';
+import { TranslatePipe } from '../../compartilhado/pipes/translate.pipe';
 
 @Component({
   selector: 'app-editar-estado',
   templateUrl: './editar-estado.component.html',
   styleUrls: ['./editar-estado.component.scss'],
-  imports: [ErrorMsgComponent, SpinnerComponent, FormEstadoComponent],
+  imports: [ErrorMsgComponent, SpinnerComponent, FormEstadoComponent, TranslatePipe],
 })
 export class EditarEstadoComponent implements OnInit {
   private estadoService = inject(EstadoService);
@@ -28,8 +29,8 @@ export class EditarEstadoComponent implements OnInit {
 
   ngOnInit() {
     this.getEstado(Number(this.id()));
-    this.estadoService.getListaEstados().subscribe({
-      next: (estados) => this.siglasExistentes.set(estados.map((e) => e.sigla)),
+    this.estadoService.getSiglasExistentes().subscribe({
+      next: (siglas) => this.siglasExistentes.set(siglas),
       error: () => {
         // Falha ao pre-carregar siglas so desativa a checagem de duplicidade
         // no cliente; o backend ainda rejeita duplicatas no submit.

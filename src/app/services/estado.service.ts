@@ -32,6 +32,12 @@ export class EstadoService {
       .pipe(map((pagina) => pagina.content));
   }
 
+  getSiglasExistentes(): Observable<string[]> {
+    return this.getListaEstados().pipe(
+      map((estados) => estados.map((e) => e.sigla?.toUpperCase()).filter((s): s is string => !!s)),
+    );
+  }
+
   getEstado(id: number): Observable<Estado> {
     return this.http.get<Estado>(`${this.baseUrl}/${id}`);
   }

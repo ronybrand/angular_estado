@@ -13,6 +13,7 @@ describe('EditarEstadoComponent', () => {
     getEstado: ReturnType<typeof vi.fn>;
     atualizaEstado: ReturnType<typeof vi.fn>;
     getListaEstados: ReturnType<typeof vi.fn>;
+    getSiglasExistentes: ReturnType<typeof vi.fn>;
   };
 
   async function setup(getEstadoReturn: Observable<Estado> = of(estado), routeId = '1') {
@@ -20,6 +21,7 @@ describe('EditarEstadoComponent', () => {
       getEstado: vi.fn(() => getEstadoReturn),
       atualizaEstado: vi.fn(),
       getListaEstados: vi.fn().mockReturnValue(of([])),
+      getSiglasExistentes: vi.fn().mockReturnValue(of([])),
     };
 
     await TestBed.configureTestingModule({
