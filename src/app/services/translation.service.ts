@@ -38,7 +38,7 @@ export class TranslationService {
    */
   t(key: string): string {
     const lang = this._currentLang();
-    const langTranslations = (TRANSLATIONS as Record<Lang, Record<string, string>>)[lang] ?? {};
+    const langTranslations = TRANSLATIONS[lang];
     return langTranslations[key] ?? key;
   }
 }
