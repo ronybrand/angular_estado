@@ -10,6 +10,7 @@
         class="btn btn-sm btn-outline-light me-2"
         data-testid="global-lang-toggle"
         (click)="toggleLang()"
+        [disabled]="!supportsEn"
       >
         {{ langService.lang() === 'pt' ? 'EN' : 'PT' }}
       </button>

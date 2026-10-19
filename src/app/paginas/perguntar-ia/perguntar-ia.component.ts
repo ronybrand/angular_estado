@@ -66,7 +66,7 @@ const SOURCE_REPO_URL = 'https://github.com/ronybrand/estado-ai-agent';
   selector: 'app-perguntar-ia',
   templateUrl: './perguntar-ia.component.html',
   styleUrls: ['./perguntar-ia.component.scss'],
-  imports: [FormsModule, ErrorMsgComponent, MarkdownComponent],
+  imports: [FormsModule, ErrorMsgComponent, MarkdownComponent, HasTranslationPipe],
 })
 export class PerguntarIaComponent {
   private aiAgentService = inject(AiAgentService);
@@ -79,11 +79,26 @@ export class PerguntarIaComponent {
   readonly MAX_QUESTION_LENGTH = 1000; // espelha @Size(max = 1000) de AskRequest no backend
   readonly sourceRepoUrl = SOURCE_REPO_URL;
 
+  // User input question
   question = signal('');
   answer = signal<string | null>(null);
   processando = signal(false);
   lang = this.langService.lang;
   translations = computed(() => TRANSLATIONS[this.lang()]);
+
+  // Detect the language of the received answer (naive detection based on Portuguese characters)
+  answerLang = computed(() => {
+    const ans = this.answer();
+    if (!ans) return null;
+    const hasPortugueseChars = /[áéíóúãâêôç]/i.test(ans);
+    return hasPortugueseChars ? 'pt' : 'en';
+  });
+
+  // Flag indicating answer language mismatch with current UI language
+  isAnswerMismatched = computed(() => {
+    const ansLang = this.answerLang();
+    return ansLang !== null && ansLang !== this.lang();
+  });
 
   constructor() {
     // Prioridade: ?lang= explicito na URL (ex.: link do curriculo em ingles)
