@@ -5,22 +5,24 @@
       <div class="text-end">
         <button type="button" class="btn btn-success" routerLink="/estado/criar">
           <app-icon name="plus" />
-          Novo estado
+          {{ 'newStateButton' | translate }}
         </button>
       </div>
     </div>
   </div>
   <p></p>
   <div class="card">
-    <div class="card-header">Estados</div>
+    <div class="card-header">{{ 'statesTitle' | translate }}</div>
     <div class="card-body">
       <div class="mb-3">
-        <label for="busca-estado" class="visually-hidden">Buscar por nome ou sigla</label>
+        <label for="busca-estado" class="visually-hidden">{{
+          'searchPlaceholder' | translate
+        }}</label>
         <input
           id="busca-estado"
           type="search"
           class="form-control"
-          placeholder="Buscar por nome ou sigla..."
+          [placeholder]="'searchPlaceholder' | translate"
           [value]="busca()"
           (input)="onBuscaChange($any($event.target).value)"
         />
@@ -30,9 +32,9 @@
       }
       @if (!carregando() && !existemEstados()) {
         <div class="text-center text-muted py-3">
-          <p>Nenhum estado cadastrado.</p>
+          <p>{{ 'noStates' | translate }}</p>
           <button type="button" class="btn btn-success btn-sm" routerLink="/estado/criar">
-            Criar o primeiro estado
+            {{ 'createFirstState' | translate }}
           </button>
         </div>
       }
@@ -47,7 +49,7 @@
                     class="btn btn-link p-0 text-decoration-none text-reset"
                     (click)="ordenarPor('sigla')"
                   >
-                    Sigla
+                    {{ 'siglaHeader' | translate }}
                     @if (sortCampo() === 'sigla') {
                       <app-icon
                         [name]="sortDirecao() === 'asc' ? 'chevron-up' : 'chevron-down'"
@@ -62,7 +64,7 @@
                     class="btn btn-link p-0 text-decoration-none text-reset"
                     (click)="ordenarPor('nome')"
                   >
-                    Nome
+                    {{ 'nomeHeader' | translate }}
                     @if (sortCampo() === 'nome') {
                       <app-icon
                         [name]="sortDirecao() === 'asc' ? 'chevron-up' : 'chevron-down'"
@@ -71,9 +73,13 @@
                     }
                   </button>
                 </th>
-                <th scope="col" class="d-none d-md-table-cell">Criado</th>
-                <th scope="col" class="d-none d-md-table-cell">Última Alteração</th>
-                <th scope="col">Ações</th>
+                <th scope="col" class="d-none d-md-table-cell">
+                  {{ 'createdHeader' | translate }}
+                </th>
+                <th scope="col" class="d-none d-md-table-cell">
+                  {{ 'updatedHeader' | translate }}
+                </th>
+                <th scope="col">{{ 'actionsHeader' | translate }}</th>
               </tr>
             </thead>
             <tbody>
@@ -93,21 +99,21 @@
                     <button
                       type="button"
                       class="btn btn-primary btn-sm ms-1"
-                      [attr.aria-label]="'Editar ' + estado.sigla"
+                      [attr.aria-label]="('editButton' | translate) + ' ' + estado.sigla"
                       routerLink="/estado/editar/{{ estado.id }}"
                     >
                       <app-icon name="pencil" [size]="14" />
-                      <span class="d-none d-md-inline">Editar</span>
+                      <span class="d-none d-md-inline">{{ 'editButton' | translate }}</span>
                     </button>
                     <button
                       type="button"
                       class="btn btn-danger btn-sm ms-1"
-                      [attr.aria-label]="'Excluir ' + estado.sigla"
+                      [attr.aria-label]="('deleteButton' | translate) + ' ' + estado.sigla"
                       [disabled]="excluindo()"
                       (click)="deletaEstado(estado.id)"
                     >
                       <app-icon name="trash" [size]="14" />
-                      <span class="d-none d-md-inline">Excluir</span>
+                      <span class="d-none d-md-inline">{{ 'deleteButton' | translate }}</span>
                     </button>
                   </td>
                 </tr>
@@ -120,7 +126,7 @@
   </div>
 </div>
 <app-confirm-dialog
-  mensagem="Tem certeza que deseja excluir este estado?"
+  [mensagem]="'confirmDelete' | translate"
   (confirmar)="confirmaExclusao()"
   (cancelar)="cancelaExclusao()"
 ></app-confirm-dialog>

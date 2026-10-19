@@ -30,6 +30,7 @@ describe('PerguntarIaComponent', () => {
   });
 
   beforeEach(async () => {
+    localStorage.clear();
     // Sem isso, os testes ficam reféns do idioma do navegador do ambiente
     // de CI (jsdom usa 'en-US' por padrao), quebrando a expectativa de
     // default PT quando nao ha ?lang= na URL.
@@ -419,6 +420,7 @@ describe('PerguntarIaComponent with a lang query param', () => {
   const originalLanguage = window.navigator.language;
 
   beforeEach(() => {
+    localStorage.clear();
     stubNavigatorLanguage('pt-BR');
   });
 
@@ -468,7 +470,12 @@ describe('PerguntarIaComponent with a lang query param', () => {
 describe('PerguntarIaComponent falling back to the browser language', () => {
   const originalLanguage = window.navigator.language;
 
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
   afterEach(() => {
+    localStorage.clear();
     stubNavigatorLanguage(originalLanguage);
   });
 

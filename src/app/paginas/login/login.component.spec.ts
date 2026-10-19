@@ -5,6 +5,7 @@ import { Subject, of, throwError } from 'rxjs';
 
 import { LoginComponent } from './login.component';
 import { AuthService } from '../../auth/auth.service';
+import { LangService } from '../../services/lang.service';
 import { getToken } from '../../auth/token-storage';
 
 describe('LoginComponent', () => {
@@ -30,6 +31,21 @@ describe('LoginComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should render login card and buttons in English when language is set to en', () => {
+    const langService = TestBed.inject(LangService);
+    langService.setLang('en');
+    fixture.detectChanges();
+
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('.card-header')?.textContent).toContain('Login');
+    expect(compiled.querySelector('label[for="username"]')?.textContent).toContain('Username');
+    expect(compiled.querySelector('label[for="password"]')?.textContent).toContain('Password');
+    expect(compiled.querySelector('button[type="submit"]')?.textContent).toContain('Log in');
+    expect(compiled.querySelector('[data-testid="credenciais-demo"]')?.textContent).toContain(
+      'Demo credentials',
+    );
   });
 
   it('should show the public demo credentials', () => {

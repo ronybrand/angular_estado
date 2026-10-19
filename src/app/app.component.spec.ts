@@ -45,11 +45,9 @@ describe('AppComponent', () => {
     expect(compiled.querySelector('.navbar-brand').textContent).toContain('Crud UF - Angular/Java');
   });
 
-  it('should render the English title and nav link when the shared language is English on the perguntar-ia page', async () => {
-    const router = TestBed.inject(Router);
-    await router.navigateByUrl('/perguntar-ia');
+  it('should render the English title and nav link when the shared language is English', () => {
     const langService = TestBed.inject(LangService);
-    langService.lang.set('en');
+    langService.setLang('en');
 
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
@@ -61,11 +59,11 @@ describe('AppComponent', () => {
     expect(compiled.querySelector('[data-testid="ask-ia-link"]').textContent).toContain('Ask AI');
   });
 
-  it('should reset the shared language to Portuguese when navigating away from perguntar-ia', async () => {
+  it('should keep the user selected language when navigating between routes', async () => {
     const router = TestBed.inject(Router);
     await router.navigateByUrl('/perguntar-ia');
     const langService = TestBed.inject(LangService);
-    langService.lang.set('en');
+    langService.setLang('en');
 
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
@@ -75,11 +73,35 @@ describe('AppComponent', () => {
     fixture.detectChanges();
     const compiled = fixture.debugElement.nativeElement;
 
-    expect(langService.lang()).toBe('pt');
-    expect(compiled.querySelector('.navbar-brand').textContent).toContain('Crud UF - Angular/Java');
-    expect(compiled.querySelector('[data-testid="ask-ia-link"]').textContent).toContain(
-      'Perguntar à IA',
+    expect(langService.lang()).toBe('en');
+    expect(compiled.querySelector('.navbar-brand').textContent).toContain(
+      'States CRUD - Angular/Java',
     );
+    expect(compiled.querySelector('[data-testid="ask-ia-link"]').textContent).toContain('Ask AI');
+  });
+
+  it('should toggle language globally from the header button', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
+    const langService = TestBed.inject(LangService);
+    langService.setLang('pt');
+    fixture.detectChanges();
+
+    const compiled = fixture.debugElement.nativeElement;
+    const toggleBtn: HTMLButtonElement = compiled.querySelector(
+      '[data-testid="global-lang-toggle"]',
+    );
+    expect(toggleBtn).toBeTruthy();
+    expect(toggleBtn.textContent.trim()).toBe('EN');
+
+    toggleBtn.click();
+    fixture.detectChanges();
+
+    expect(langService.lang()).toBe('en');
+    expect(compiled.querySelector('.navbar-brand').textContent).toContain(
+      'States CRUD - Angular/Java',
+    );
+    expect(toggleBtn.textContent.trim()).toBe('PT');
   });
 
   it('should set the browser tab title in Portuguese when the browser language is Portuguese', () => {

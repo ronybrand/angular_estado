@@ -2,8 +2,10 @@
   <p>{{ mensagem() }}</p>
   <div class="text-end">
     <button type="button" class="btn btn-secondary btn-sm me-1" (click)="onCancelar()">
-      Cancelar
+      {{ 'cancelButton' | translate }}
     </button>
-    <button type="button" class="btn btn-danger btn-sm" (click)="onConfirmar()">Confirmar</button>
+    <button type="button" class="btn btn-danger btn-sm" (click)="onConfirmar()">
+      {{ 'confirmButton' | translate }}
+    </button>
   </div>
 </dialog>

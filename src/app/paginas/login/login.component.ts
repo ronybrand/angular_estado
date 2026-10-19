@@ -5,16 +5,19 @@ import { ErrorMsgComponent } from '../../compartilhado/error-msg/error-msg.compo
 import { AuthService, LoginRequest } from '../../auth/auth.service';
 import { setToken } from '../../auth/token-storage';
 import { subscreveComProcessando } from '../../compartilhado/erro/subscreve-com-processando';
+import { TranslatePipe } from '../../compartilhado/pipes/translate.pipe';
+import { TranslationService } from '../../services/translation.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  imports: [FormsModule, ErrorMsgComponent],
+  imports: [FormsModule, ErrorMsgComponent, TranslatePipe],
 })
 export class LoginComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
+  private translationService = inject(TranslationService);
 
   readonly errorMsgComponent = viewChild.required(ErrorMsgComponent);
   autenticando = signal(false);
@@ -25,7 +28,7 @@ export class LoginComponent {
       this.authService.login(this.credenciais),
       this.autenticando,
       this.errorMsgComponent(),
-      'Usuário ou senha inválidos.',
+      this.translationService.t('invalidCredentialsError'),
       (resposta) => {
         setToken(resposta.token);
         this.router.navigateByUrl('/');

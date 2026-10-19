@@ -1,6 +1,8 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
   <div class="mb-3">
-    <label for="sigla" class="col-sm-4 col-form-label form-label-eyebrow">Sigla</label>
+    <label for="sigla" class="col-sm-4 col-form-label form-label-eyebrow">{{
+      'siglaHeader' | translate
+    }}</label>
     <div class="col-sm-12">
       <input
         type="text"
@@ -18,16 +20,18 @@
       @if (form.controls.sigla.invalid && form.controls.sigla.touched) {
         <div id="sigla-erro" class="text-danger">
           @if (form.controls.sigla.hasError('siglaDuplicada')) {
-            Já existe um estado cadastrado com essa sigla.
+            {{ 'siglaDuplicateError' | translate }}
           } @else {
-            Digite a sigla do estado com 2 letras maiúsculas.
+            {{ 'siglaFormatError' | translate }}
           }
         </div>
       }
     </div>
   </div>
   <div class="mb-3">
-    <label for="nome" class="col-sm-4 col-form-label form-label-eyebrow">Nome</label>
+    <label for="nome" class="col-sm-4 col-form-label form-label-eyebrow">{{
+      'nomeHeader' | translate
+    }}</label>
     <div class="col-sm-12">
       <input
         type="text"
@@ -35,14 +39,14 @@
         id="nome"
         formControlName="nome"
         maxlength="100"
-        placeholder="Digite o nome do estado..."
+        [placeholder]="'nomeHeader' | translate"
         [class.is-invalid]="form.controls.nome.invalid && form.controls.nome.touched"
         [attr.aria-invalid]="form.controls.nome.invalid && form.controls.nome.touched ? true : null"
         aria-describedby="nome-erro"
       />
       @if (form.controls.nome.invalid && form.controls.nome.touched) {
         <div id="nome-erro" class="text-danger">
-          Digite o nome do estado com pelo menos 3 e no máximo 100 caracteres.
+          {{ 'nomeFormatError' | translate }}
         </div>
       }
     </div>
@@ -54,7 +58,7 @@
       [disabled]="form.invalid || desabilitado() || !alterado()"
     >
       <app-icon name="check" [size]="14" />
-      Salvar
+      {{ (desabilitado() ? 'savingButton' : 'saveButton') | translate }}
     </button>
   </div>
 </form>

@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
 
 import { FormEstadoComponent } from './form-estado.component';
+import { LangService } from '../../services/lang.service';
 
 describe('FormEstadoComponent', () => {
   let component: FormEstadoComponent;
@@ -21,6 +22,17 @@ describe('FormEstadoComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should render labels and submit button in English when language is set to en', () => {
+    const langService = TestBed.inject(LangService);
+    langService.setLang('en');
+    fixture.detectChanges();
+
+    const compiled: HTMLElement = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('button[type="submit"]')?.textContent).toContain('Save');
+    expect(compiled.querySelector('label[for="sigla"]')?.textContent).toContain('Abbreviation');
+    expect(compiled.querySelector('label[for="nome"]')?.textContent).toContain('Name');
   });
 
   it('should associate the sigla error message with its input via aria-describedby', () => {
