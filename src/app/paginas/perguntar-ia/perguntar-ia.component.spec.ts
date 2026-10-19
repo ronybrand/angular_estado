@@ -88,6 +88,26 @@ describe('PerguntarIaComponent', () => {
     expect(component.answer()).toBe('Existem 27 estados.');
   });
 
+  it('should allow another question after an unaccented Portuguese answer', () => {
+    aiAgentService.perguntar.mockReturnValue(of({ answer: 'Resposta.' }));
+    component.question.set('Pergunta qualquer');
+
+    component.perguntar();
+
+    expect(component.answerLang()).toBe('pt');
+    expect(component.isAnswerMismatched()).toBe(false);
+  });
+
+  it('should require switching languages only when the answer language is clear', () => {
+    aiAgentService.perguntar.mockReturnValue(of({ answer: 'The answer is 27 states.' }));
+    component.question.set('Quantos estados existem?');
+
+    component.perguntar();
+
+    expect(component.answerLang()).toBe('en');
+    expect(component.isAnswerMismatched()).toBe(true);
+  });
+
   it('should clear the previous answer before a new question is sent', () => {
     const subject = new Subject<{ answer: string }>();
     aiAgentService.perguntar.mockReturnValue(subject);

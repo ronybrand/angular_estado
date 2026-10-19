@@ -40,7 +40,7 @@
             type="button"
             class="btn btn-primary"
             data-testid="perguntar-button"
-            [disabled]="processando() || !question().trim()"
+            [disabled]="processando() || !question().trim() || isAnswerMismatched()"
             (click)="perguntar()"
           >
             @if (processando()) {

@@ -92,6 +92,7 @@ describe('AppComponent', () => {
       '[data-testid="global-lang-toggle"]',
     );
     expect(toggleBtn).toBeTruthy();
+    expect(toggleBtn.disabled).toBe(false);
     expect(toggleBtn.textContent.trim()).toBe('EN');
 
     toggleBtn.click();
