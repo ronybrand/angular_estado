@@ -1,4 +1,4 @@
-import { Injectable, computed } from '@angular/core';
+import { Injectable, computed, inject } from '@angular/core';
 import { LangService, Lang } from './lang.service';
 
 type Translations = Record<Lang, Record<string, string>>;
@@ -38,7 +38,7 @@ export class TranslationService {
    */
   t(key: string): string {
     const lang = this._currentLang();
-    const langTranslations = TRANSLATIONS[lang] ?? {};
+    const langTranslations = (TRANSLATIONS as Record<Lang, Record<string, string>>)[lang] ?? {};
     return langTranslations[key] ?? key;
   }
 }
