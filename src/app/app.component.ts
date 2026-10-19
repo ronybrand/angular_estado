@@ -1,10 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { HasTranslationPipe } from './compartilhado/pipes/has-translation.pipe';
 import { Title } from '@angular/platform-browser';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { FooterComponent } from './compartilhado/footer/footer.component';
 import { IconComponent } from './compartilhado/icon/icon.component';
+import { HasTranslationPipe } from './compartilhado/pipes/has-translation.pipe';
 import { AuthService } from './auth/auth.service';
 import { GlobalErrorHandler } from './services/global-error-handler';
 import { LangService } from './services/lang.service';
