@@ -1,4 +1,4 @@
-import { Injectable, computed, inject } from '@angular/core';
+import { Injectable, Signal, computed, inject } from '@angular/core';
 import { LangService, Lang } from './lang.service';
 
 type Translations = Record<Lang, Record<string, string>>;
@@ -22,10 +22,11 @@ const TRANSLATIONS: Translations = {
   },
 };
 
+export type TranslationKey = keyof (typeof TRANSLATIONS)['pt'];
+
 /**
  * Simple translation service that resolves a string based on the current language.
- * It reacts to LangService.lang changes using a computed signal, so any component
- * that reads `t(key)` will automatically update when the language toggles.
+ * Offers both snapshot translation `t()` and a fully reactive Signal `translate()`.
  */
 @Injectable({ providedIn: 'root' })
 export class TranslationService {
@@ -35,10 +36,33 @@ export class TranslationService {
   /**
    * Returns the translation for the provided key according to the current language.
    * If the key does not exist for the language, the key itself is returned as a fallback.
+   * Supports optional interpolation parameters, e.g. `{name}` in translations.
    */
-  t(key: string): string {
+  t(key: TranslationKey | (string & {}), params?: Record<string, string | number>): string {
     const lang = this._currentLang();
     const langTranslations = TRANSLATIONS[lang];
-    return langTranslations[key] ?? key;
+    let translation = langTranslations[key] ?? key;
+
+    if (params) {
+      for (const [paramKey, value] of Object.entries(params)) {
+        translation = translation.replaceAll(`{${paramKey}}`, String(value));
+      }
+    }
+
+    return translation;
+  }
+
+  /**
+   * Returns a reactive `Signal<string>` that automatically re-evaluates whenever
+   * the active language changes, ideal for OnPush templates and computed state.
+   */
+  translate(
+    key: TranslationKey | (string & {}),
+    params?: Record<string, string | number> | (() => Record<string, string | number>),
+  ): Signal<string> {
+    return computed(() => {
+      const resolvedParams = typeof params === 'function' ? params() : params;
+      return this.t(key, resolvedParams);
+    });
   }
 }
