@@ -30,10 +30,10 @@ test.describe('Pergunte à IA', () => {
 
     await expect(page.getByTestId('perguntar-button')).toHaveText('Perguntar');
 
-    await page.getByTestId('lang-toggle').click();
+    await page.getByTestId('global-lang-toggle').click();
 
     await expect(page.getByTestId('perguntar-button')).toHaveText('Ask');
-    await expect(page.getByTestId('lang-toggle')).toHaveText('PT');
+    await expect(page.getByTestId('global-lang-toggle')).toHaveText('PT');
   });
 
   // Regressao do bug corrigido no PR #123 (angular_estado): extraiMensagemErro
@@ -47,7 +47,7 @@ test.describe('Pergunte à IA', () => {
     await mockAsk(page, { message: 'Limite de requisicoes excedido' }, 429);
     await page.goto('/perguntar-ia');
 
-    await page.getByTestId('lang-toggle').click();
+    await page.getByTestId('global-lang-toggle').click();
     await page.getByTestId('pergunta-textarea').fill('How many states are there?');
     await page.getByTestId('perguntar-button').click();
 
