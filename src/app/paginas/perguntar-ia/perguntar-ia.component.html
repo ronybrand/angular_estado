@@ -3,23 +3,12 @@
     <div class="col-md-7 mx-auto">
       <app-error-msg [idioma]="lang()"></app-error-msg>
       <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <span>{{ translations().cardTitle }}</span>
-          <button
-            type="button"
-            class="btn btn-sm btn-outline-secondary"
-            data-testid="lang-toggle"
-            (click)="toggleLang()"
-          >
-            {{ lang() === 'pt' ? 'EN' : 'PT' }}
-          </button>
+        <div class="card-header">
+          {{ translations().cardTitle }}
         </div>
         <div class="card-body">
           <p class="small mb-2" data-testid="how-it-works-note">
             {{ translations().howItWorksNote }}
-          </p>
-          <p class="text-muted small mb-1" data-testid="lang-note">
-            {{ translations().onlyPageNote }}
           </p>
           <p class="text-muted small mb-3" data-testid="language-limit-note">
             {{ translations().languageLimitNote }}
