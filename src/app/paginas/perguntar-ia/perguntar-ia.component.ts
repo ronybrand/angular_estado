@@ -44,7 +44,6 @@ const TRANSLATIONS: Record<
     askingButton: string;
     errorMsg: string;
     apiUnavailableMsg: string;
-    onlyPageNote: string;
     languageLimitNote: string;
     howItWorksNote: string;
     sourceLinkText: string;
@@ -57,7 +56,6 @@ const TRANSLATIONS: Record<
     askingButton: 'Perguntando...',
     errorMsg: 'Falha ao consultar o assistente. Tente novamente em instantes.',
     apiUnavailableMsg: MENSAGEM_API_INDISPONIVEL,
-    onlyPageNote: 'Por enquanto, esta é a única página do site disponível em inglês.',
     languageLimitNote: 'O assistente entende perguntas apenas em português ou inglês.',
     howItWorksNote:
       'Agente com tool calling (Spring AI + Gemini) consultando a API real do backend em tempo real, sem respostas roteirizadas.',
@@ -71,7 +69,6 @@ const TRANSLATIONS: Record<
     errorMsg: 'Failed to reach the assistant. Please try again shortly.',
     apiUnavailableMsg:
       'The API is offline (paused to save cost). Turn it on with the link below; it takes about 1 minute.',
-    onlyPageNote: 'For now, this is the only page on the site available in English.',
     languageLimitNote: 'The assistant only understands questions in Portuguese or English.',
     howItWorksNote:
       'Tool-calling agent (Spring AI + Gemini) querying the real backend API live, not a scripted response.',
@@ -135,10 +132,6 @@ export class PerguntarIaComponent {
     const defaultTitle = this.titleService.getTitle();
     effect(() => this.titleService.setTitle(`${this.translations().cardTitle} · Estado`));
     this.destroyRef.onDestroy(() => this.titleService.setTitle(defaultTitle));
-  }
-
-  toggleLang() {
-    this.langService.toggle();
   }
 
   perguntar() {

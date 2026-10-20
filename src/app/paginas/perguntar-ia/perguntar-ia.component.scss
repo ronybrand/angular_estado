@@ -1,9 +1,0 @@
-// Achado real rodando o teste e2e de acessibilidade desta pagina (axe-core):
-// .btn-outline-secondary padrao do Bootstrap (#6c757d) sobre o fundo do
-// card-header (#f8f8f9) da 4.41:1 de contraste, abaixo do minimo de 4.5:1
-// do WCAG 2 AA (color-contrast, impact "serious"). Nenhuma outra pagina do
-// app usa esse par cor/fundo, por isso o gap nunca apareceu antes.
-[data-testid='lang-toggle'] {
-  color: #495057;
-  border-color: #495057;
-}

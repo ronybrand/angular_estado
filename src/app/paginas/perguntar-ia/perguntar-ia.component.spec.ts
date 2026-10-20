@@ -6,6 +6,7 @@ import { provideMarkdown, MARKED_OPTIONS } from 'ngx-markdown';
 
 import { PerguntarIaComponent } from './perguntar-ia.component';
 import { AiAgentService } from '../../services/ai-agent.service';
+import { LangService } from '../../services/lang.service';
 import { externalLinkRenderer } from '../../compartilhado/markdown/external-link-renderer';
 
 function activatedRouteStub(queryParams: Record<string, string> = {}) {
@@ -17,6 +18,11 @@ function stubNavigatorLanguage(language: string) {
     value: language,
     configurable: true,
   });
+}
+
+function setLanguage(fixture: ComponentFixture<PerguntarIaComponent>, language: 'pt' | 'en') {
+  TestBed.inject(LangService).setLang(language);
+  fixture.detectChanges();
 }
 
 describe('PerguntarIaComponent', () => {
@@ -290,9 +296,7 @@ describe('PerguntarIaComponent', () => {
       'Spring AI',
     );
 
-    const toggle: HTMLButtonElement = compiled.querySelector('[data-testid="lang-toggle"]')!;
-    toggle.click();
-    fixture.detectChanges();
+    setLanguage(fixture, 'en');
 
     expect(compiled.querySelector('[data-testid="how-it-works-note"]')?.textContent).toContain(
       'Spring AI',
@@ -314,34 +318,23 @@ describe('PerguntarIaComponent', () => {
     expect(textarea.placeholder).toBe('Ex.: Quantos estados existem na região Sudeste?');
   });
 
-  it('should toggle back to Portuguese when clicked a second time', () => {
+  it('should reflect the shared language setting', () => {
     const compiled: HTMLElement = fixture.debugElement.nativeElement;
-    const toggle: HTMLButtonElement = compiled.querySelector('[data-testid="lang-toggle"]')!;
 
-    toggle.click();
-    fixture.detectChanges();
-    toggle.click();
-    fixture.detectChanges();
+    setLanguage(fixture, 'en');
+    setLanguage(fixture, 'pt');
 
     expect(compiled.querySelector('.card-header')?.textContent).toContain(
       'Pergunte sobre os estados brasileiros',
     );
   });
 
-  it('should show a note that this is the only English-available page, in the current language', () => {
+  it('should not show the obsolete English availability note or a duplicate language toggle', () => {
     const compiled: HTMLElement = fixture.debugElement.nativeElement;
 
-    expect(compiled.querySelector('[data-testid="lang-note"]')?.textContent).toContain(
-      'única página do site disponível em inglês',
-    );
-
-    const toggle: HTMLButtonElement = compiled.querySelector('[data-testid="lang-toggle"]')!;
-    toggle.click();
-    fixture.detectChanges();
-
-    expect(compiled.querySelector('[data-testid="lang-note"]')?.textContent).toContain(
-      'only page on the site available in English',
-    );
+    expect(compiled.textContent).not.toContain('única página do site disponível em inglês');
+    expect(compiled.textContent).not.toContain('only page on the site available in English');
+    expect(compiled.querySelector('[data-testid="lang-toggle"]')).toBeNull();
   });
 
   it('should show a note that the assistant only understands Portuguese or English, in the current language', () => {
@@ -351,9 +344,7 @@ describe('PerguntarIaComponent', () => {
       'português ou inglês',
     );
 
-    const toggle: HTMLButtonElement = compiled.querySelector('[data-testid="lang-toggle"]')!;
-    toggle.click();
-    fixture.detectChanges();
+    setLanguage(fixture, 'en');
 
     expect(compiled.querySelector('[data-testid="language-limit-note"]')?.textContent).toContain(
       'Portuguese or English',
@@ -362,10 +353,7 @@ describe('PerguntarIaComponent', () => {
 
   it('should render English text when the language toggle is switched to EN', () => {
     const compiled: HTMLElement = fixture.debugElement.nativeElement;
-    const toggle: HTMLButtonElement = compiled.querySelector('[data-testid="lang-toggle"]')!;
-
-    toggle.click();
-    fixture.detectChanges();
+    setLanguage(fixture, 'en');
 
     expect(compiled.querySelector('.card-header')?.textContent).toContain(
       'Ask about the Brazilian states',
@@ -390,20 +378,14 @@ describe('PerguntarIaComponent', () => {
 
   it('should render the source code link text in English when toggled', () => {
     const compiled: HTMLElement = fixture.debugElement.nativeElement;
-    const toggle: HTMLButtonElement = compiled.querySelector('[data-testid="lang-toggle"]')!;
-
-    toggle.click();
-    fixture.detectChanges();
+    setLanguage(fixture, 'en');
 
     const link: HTMLAnchorElement | null = compiled.querySelector('[data-testid="source-link"]');
     expect(link?.textContent).toContain('View source on GitHub');
   });
 
   it('should show the English error message when a call fails in EN mode', () => {
-    const compiled: HTMLElement = fixture.debugElement.nativeElement;
-    const toggle: HTMLButtonElement = compiled.querySelector('[data-testid="lang-toggle"]')!;
-    toggle.click();
-    fixture.detectChanges();
+    setLanguage(fixture, 'en');
 
     aiAgentService.perguntar.mockReturnValue(
       throwError(() => new HttpErrorResponse({ status: 500 })),
@@ -418,10 +400,7 @@ describe('PerguntarIaComponent', () => {
   });
 
   it('should show the English fallback, not the backend raw message, when the backend returns a message in EN mode', () => {
-    const compiled: HTMLElement = fixture.debugElement.nativeElement;
-    const toggle: HTMLButtonElement = compiled.querySelector('[data-testid="lang-toggle"]')!;
-    toggle.click();
-    fixture.detectChanges();
+    setLanguage(fixture, 'en');
 
     aiAgentService.perguntar.mockReturnValue(
       throwError(() => new HttpErrorResponse({ status: 500, error: { message: 'Erro interno.' } })),
