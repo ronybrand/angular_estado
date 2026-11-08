@@ -52,7 +52,7 @@ jobs:
 
       - run: npm run build
 
-      - uses: aws-actions/configure-aws-credentials@451ce2a72e8d729a59ebeaacab82dbce58e7af4c # v6
+      - uses: aws-actions/configure-aws-credentials@f95a14875b75259d2a3105bff6460ac2e653eea1 # v6
         with:
           role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
           aws-region: sa-east-1
